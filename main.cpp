@@ -19,7 +19,7 @@ extern "C"
     extern char * __fastcall ASM_strrchr(char *string, char val);
     extern int __fastcall ASM_strlen(char *string);
     extern char * __fastcall ASM_memchr(char *buffer, char character, unsigned count);
-    extern unsigned __fastcall ASM_getbits(unsigned num, int position, int numBits);
+    extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
     extern int __fastcall ASM_bitcount(unsigned num);
     extern char * __fastcall ASM_reverseString(char *string);
     extern long long __fastcall ASM_atoi(const char *string);
@@ -31,7 +31,7 @@ extern "C"
 
 int main(int argc, char *argv[])
 {
-    const int searchedNum = 888293849;
+    const unsigned int searchedNum = 888293849;
     cout << "First 5 bits from 24th bit in " << searchedNum << " are equal to : "
          << ASM_getbits(searchedNum, 24, 5) << '\n';
     cout << "There are " << ASM_bitcount(searchedNum) << " 1 bits in " << searchedNum << '\n';

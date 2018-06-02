@@ -37,6 +37,12 @@
 			<Add option="-std=c++1z" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="atoi.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="bitcount.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="copyInputToOutput.asm">
 			<Option compilerVar="CC" />
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
@@ -49,11 +55,18 @@
 			<Option compilerVar="CC" />
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
+		<Unit filename="getbits.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="getbits64.asm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="memchr.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="pow.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="reverseString.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="strlen.asm">

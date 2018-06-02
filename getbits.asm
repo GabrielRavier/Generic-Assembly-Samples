@@ -9,20 +9,23 @@ segment text
 ;               }
 
 ; Also calling proc is fastcall
+%define regNumBits dl
+%define result eax
 %define number ecx
 %define position edx
-%define loNumber cl
-%define result eax
 %define numBits 4
-%define regNumBits cl
+%define temp ecx
+%define loTemp cl
+%define temp2 edx
 @ASM_getbits@12:
     mov result, number
-    lea number, [position + 1]
-    sub number, [esp + numBits]
-    or position, -1
-    shr result, loNumber
-    mov regNumBits, byte [esp + numBits]
-    shl position, regNumBits
-    not position
-    and result, position
+    sub regNumBits, byte [esp + numBits]
+    lea temp, [position + 1]  ; Discard number
+    shr result, loTemp
+    mov temp2, -1   ; Discard
+    mov loTemp, byte [esp + numBits]
+    sal temp2, loTemp
+    not temp2
+    and result, temp2
     ret 4
+
