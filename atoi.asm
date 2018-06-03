@@ -11,6 +11,8 @@ segment text
 %define loCharFromString bl
 %define retIsSpace eax
 %define checkIsDigit eax
+%define loResult eax
+%define hiResult edx
 %define sign 18h
 
 @ASM_atoi@4:
@@ -44,20 +46,20 @@ segment text
     cmp checkIsDigit, 9
     ja .return0
     lea ecx, [stringCopy + stringIndex]
-    xor eax, eax
-    xor edx, edx
+    xor loResult, loResult
+    xor hiResult, hiResult
     mov stringCopy, ecx
     mov ebp, 10
     align 16
 .innerLoop:
-    imul ecx, edx, 10
+    imul ecx, hiResult, 10
     mul ebp
-    add edx, ecx
+    add hiResult, ecx
     lea ecx, [ebx - `0`]
     mov ebx, ecx
     sar ebx, 1Fh
-    add eax, ecx
-    adc edx, ebx
+    add loResult, ecx
+    adc hiReslt, ebx
     inc esi
     movsx ebx, byte [stringCopy]
     lea ecx, [ebx - 30h]
@@ -66,11 +68,11 @@ segment text
     mov edi, [esp + sign]
     mov esi, [esp + sign+4]
     mov ecx, edi
-    imul esi, eax
-    imul ecx, edx
+    imul esi, loResult
+    imul ecx, hiResult
     mul edi
     add ecx, esi
-    add edx, ecx
+    add hiResult, ecx
 .return:
     add esp, 2Ch
     pop charFromString
@@ -87,6 +89,6 @@ segment text
     inc stringIndex
     jmp .makeNumLoop
 .return0:
-    xor eax, eax
-    xor edx, edx
+    xor loResult, loResult
+    xor hiResult, hiResult
     jmp .return

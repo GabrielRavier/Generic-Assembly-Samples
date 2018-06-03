@@ -23,16 +23,20 @@ extern "C"
     extern int __fastcall ASM_bitcount(unsigned int num);
     extern char * __fastcall ASM_reverseString(char *string);
     extern long long __fastcall ASM_atoi(const char *string);
-    extern void __fastcall ASM_countDigitsWhiteSpaceOther();
-    extern void __fastcall ASM_shellSort(int *v);
-    extern char * __fastcall ASM_itoa(int n, char *string);
-    extern int __fastcall ASM_trim(char *string);
     extern int __fastcall ASM_floorLog2(int num);
     extern long double __stdcall ASM_ldsquare(long double num);
+    extern float __stdcall ASM_fsquare(float num);
+    extern long long int __fastcall ASM_square64(long long int num);
+    extern int __fastcall ASM_square(int num);
 }
 
 int main(int argc, char *argv[])
 {
+    cout << "Square of " << 8934 << " : " << ASM_square(8934) << '\n';
+    const long long int sample64 = 6736847109;
+    cout << "Square of " << sample64 << " : " << ASM_square64(sample64) << '\n';
+    const float fSample = 4837.1838;
+    cout << "Square of " << fSample << " : " << ASM_fsquare(fSample) << '\n';
     const long double ldSample = 28574638.29735498;
     cout << "Square of " << ldSample << " : " << ASM_ldsquare(ldSample) << '\n';
     cout << "Enter a power of 2 : \n";
