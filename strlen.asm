@@ -8,10 +8,13 @@ segment text
 @ASM_strlen@4:
     xor result, result
     cmp byte [string], 0
-    jz .return
+    jz .returnAligned
 .loop:
     inc result
     cmp byte [string + result], 0
     jnz .loop
 .return:
+    ret
+    align 16
+.returnAligned:
     ret

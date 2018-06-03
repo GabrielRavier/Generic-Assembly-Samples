@@ -20,17 +20,25 @@ extern "C"
     extern int __fastcall ASM_strlen(char *string);
     extern char * __fastcall ASM_memchr(char *buffer, char character, unsigned count);
     extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
-    extern int __fastcall ASM_bitcount(unsigned num);
+    extern int __fastcall ASM_bitcount(unsigned int num);
     extern char * __fastcall ASM_reverseString(char *string);
     extern long long __fastcall ASM_atoi(const char *string);
     extern void __fastcall ASM_countDigitsWhiteSpaceOther();
     extern void __fastcall ASM_shellSort(int *v);
     extern char * __fastcall ASM_itoa(int n, char *string);
     extern int __fastcall ASM_trim(char *string);
+    extern int __fastcall ASM_floorLog2(int num);
+    extern long double __stdcall ASM_ldsquare(long double num);
 }
 
 int main(int argc, char *argv[])
 {
+    const long double ldSample = 28574638.29735498;
+    cout << "Square of " << ldSample << " : " << ASM_ldsquare(ldSample) << '\n';
+    cout << "Enter a power of 2 : \n";
+    int powerOf2 = 0;
+    cin >> powerOf2;
+    cout << "This is the " << ASM_floorLog2(powerOf2) << "th power of 2\n";
     const unsigned int searchedNum = 888293849;
     cout << "First 5 bits from 24th bit in " << searchedNum << " are equal to : "
          << ASM_getbits(searchedNum, 24, 5) << '\n';

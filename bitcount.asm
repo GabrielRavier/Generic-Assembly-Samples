@@ -8,12 +8,15 @@ segment text
 @ASM_bitcount@4:
     xor result, result  ; bitCount = 0
     test number, number ; Check number equal to 0
-    jz .return
+    je .returnAligned
 .loop:
     mov andComp, number
     and andComp, 1
-    add result, andComp ; Add 1 if next byte 1
-    shr number, 1   ; Discard first byte
-    jnz .loop   ; Loop if number not zero (shr sets flags)
-.return:
+    cmp andComp, 1
+    sbb result, -1
+    shr number, 1
+    jne .loop
+    ret
+    align 16
+.returnAligned:
     ret
