@@ -59,7 +59,7 @@ segment text
     mov ebx, ecx
     sar ebx, 1Fh
     add loResult, ecx
-    adc hiReslt, ebx
+    adc hiResult, ebx
     inc esi
     movsx ebx, byte [stringCopy]
     lea ecx, [ebx - 30h]
