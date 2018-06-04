@@ -17,7 +17,7 @@ segment text
     align 16
 ; ------------------------------------------------------------------------------------------------------------------------
 .exponentNotZero:
-    fstp st0    ; Trash st0 ?
+    fstp st0    ; Pop float stack
     push startExponent  ; Function prolog cos we didn't need it before lol
     mov startExponent, exponent
     sub esp, 20
