@@ -1,4 +1,4 @@
-global _ASM_countCharsInLine
+global _ASM_countCharsInInput
 extern _getchar
 extern _printf
 
@@ -10,7 +10,7 @@ segment text
 
 %define currentChar eax
 %define charCount esi   ; int
-_ASM_countCharsInLine:
+_ASM_countCharsInInput:
     push charCount
     sub esp, 8
     call _getchar
@@ -21,7 +21,6 @@ _ASM_countCharsInLine:
     inc charCount
     cmp currentChar, `\\`
     jne .countLoop
-
     sub esp, 8  ; Allocate space for arguments
     push charCount
     push format

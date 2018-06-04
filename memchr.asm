@@ -30,6 +30,7 @@ segment test
     xor result, result
     pop regCount
     ret 4
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .returnResult:
     dec result

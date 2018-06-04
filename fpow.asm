@@ -1,4 +1,5 @@
-global _ASM_fpow
+global @ASM_fpow@8
+%define ASM_fpow @ASM_fpow@8
 
 segment text
 
@@ -8,22 +9,23 @@ segment text
 %define loStartExponent bl
 %define result st0
 %define startBase st1
-_ASM_fpow:
+@ASM_fpow@8:
     fld1    ; Return 1 if exponent 0 (loads 1)
     test exponent, exponent
     jne .exponentNotZero
     ret 4
     align 16
+; ------------------------------------------------------------------------------------------------------------------------
 .exponentNotZero:
-    fstp result    ; Trash st0 ?
-    push startExponent
+    fstp st0    ; Trash st0 ?
+    push startExponent  ; Function prolog cos we didn't need it before lol
     mov startExponent, exponent
     sub esp, 20
     shr exponent, 31
     add exponent, startExponent
     sar exponent, 1
     push dword [esp + 20 + base]
-    call _ASM_fpow
+    call ASM_fpow   ; Recursive call with base (and exponent / 2)
     add esp, 12
     test loStartExponent, 1 ; test exponent % 2 == 0
     je .returnTempByTemp
@@ -36,12 +38,16 @@ _ASM_fpow:
     add esp, 8
     pop startExponent
     ret 4
+    align 16
+; ------------------------------------------------------------------------------------------------------------------------
 .returnTempByTempDividedByBase:
     fmul result, result
     fdiv dword [esp + 8 + base]
     add esp, 8
     pop startExponent
     ret 4
+    align 16
+; ------------------------------------------------------------------------------------------------------------------------
 .returnTempByTemp:
     fmul result, result
     add esp, 8

@@ -11,7 +11,7 @@ using std::string;
 extern "C"
 {
     extern void __cdecl ASM_copyInputToOutput();
-    extern void __cdecl ASM_countCharsInLine();
+    extern void __cdecl ASM_countCharsInInput();
     extern void __cdecl ASM_countLinesWordsCharsInInput();
     extern int __fastcall ASM_pow(int base, unsigned int exponent);
     extern float __fastcall ASM_fpow(float base, int exponent);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     cout << "Counting characters, lines and words until next backslash \n";
     ASM_countLinesWordsCharsInInput();
     cout << "Counting characters until next backslash\n";
-    ASM_countCharsInLine();
+    ASM_countCharsInInput();
     cout << "Copying input to output until next backslash\n";
     ASM_copyInputToOutput();
     return 0;

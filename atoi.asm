@@ -24,6 +24,7 @@ segment text
     mov stringCopy, string
     sub esp, 2Ch
     jmp .skipWhitespaces
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .incStringIndex:
     inc stringIndex
@@ -80,6 +81,7 @@ segment text
     pop stringIndex
     pop tempChar
     ret
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .setMinus:
     mov dword [esp + sign], -1
@@ -88,6 +90,8 @@ segment text
     movsx charFromString, byte [stringCopy + stringIndex]
     inc stringIndex
     jmp .makeNumLoop
+    align 16
+; ------------------------------------------------------------------------------------------------------------------------
 .return0:
     xor loResult, loResult
     xor hiResult, hiResult

@@ -9,6 +9,7 @@ segment text
 _ASM_copyInputToOutput:
     sub esp, 12
     jmp .getTheChar
+; ------------------------------------------------------------------------------------------------------------------------
     align 16    ; Dunno why but aligning gives better performance
 .putTheChar:
     mov dword [esp], currentChar

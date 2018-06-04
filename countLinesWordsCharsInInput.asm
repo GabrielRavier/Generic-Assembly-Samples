@@ -42,6 +42,7 @@ _ASM_countLinesWordsCharsInInput:
 .isNotInWord:
     xor isInWord, isInWord
     jmp .startLoop
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .checkOutWordChars:
     cmp currentChar, ` `
@@ -53,6 +54,7 @@ _ASM_countLinesWordsCharsInInput:
     inc wordCount
     inc isInWord
     jmp .startLoop
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .printAndReturn:
     push charCount
