@@ -13,7 +13,8 @@ extern "C"
     extern void __cdecl ASM_copyInputToOutput();
     extern void __cdecl ASM_countCharsInLine();
     extern void __cdecl ASM_countLinesWordsCharsInInput();
-    extern int __fastcall ASM_pow(int number, int power);
+    extern int __fastcall ASM_pow(int base, unsigned int exponent);
+    extern float __fastcall ASM_fpow(float base, int exponent);
     extern char * __fastcall ASM_strset(char *string, char val);
     extern char * __fastcall ASM_strnset(char *string, char val, int count);
     extern char * __fastcall ASM_strrchr(char *string, char val);
@@ -32,6 +33,12 @@ extern "C"
 
 int main(int argc, char *argv[])
 {
+    cout << "Enter two numbers : \n";
+    float fTestNum;
+    int testExponent;
+    cin >> fTestNum;
+    cin >> testExponent;
+    cout << fTestNum << " ^ " << testExponent << " = " << ASM_fpow(fTestNum, testExponent) << '\n';
     cout << "Square of " << 8934 << " : " << ASM_square(8934) << '\n';
     const long long int sample64 = 6736847109;
     cout << "Square of " << sample64 << " : " << ASM_square64(sample64) << '\n';

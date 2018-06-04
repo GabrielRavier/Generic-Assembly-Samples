@@ -4,7 +4,7 @@ extern _printf
 
 segment data
 
-    format db `%d\n`, 0
+    format db `%d characters\n`, 0
 
 segment text
 

@@ -6,14 +6,36 @@ segment test
 %define base ecx  ; int
 %define exponent edx   ; int
 %define result eax  ; int
+%define startBase ebx
+%define startExponent esi
 
 @ASM_pow@8:
-    mov base, 1
+    mov result, 1
     test exponent, exponent
-    jle .return   ; power smaller than 1, return 1
-.loop:
-    imul base, base
-    dec exponent
-    jnz .loop   ; while power above 0
-.return:
+    jne .exponentNotZero
+    ret ; Return immediately on exponent 0
+    align 16
+.exponentNotZero:
+    push startExponent  ; We do the function prolog here because it's not needed until here
+    push startBase
+    mov startExponent, exponent
+    mov startBase, base
+    sub esp, 4
+    shr exponent, 1
+    call @ASM_pow@8 ; Do recursive call with exponent divided by 2
+    and startExponent, 1    ; Test exponent % 2 == 0
+    jne .returnBaseByTempByTemp ; If not use the base
+.returnTempByTemp:
+    imul result, result ; result is also the recursive call's retval (temp)
+    add esp, 4
+    pop startBase
+    pop startExponent
+    ret
+    align 16
+.returnBaseByTempByTemp:
+    imul startBase, result  ; result is also the recursive call's retval (temp)
+    imul result, startBase
+    add esp, 4
+    pop startBase
+    pop startExponent
     ret
