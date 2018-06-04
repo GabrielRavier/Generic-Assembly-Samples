@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1528115287 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1528118263 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	<iostream>
 	<iomanip>
 	<string>
@@ -18,23 +18,23 @@
 
 1527773435 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm_strrchr.asm
 
-1527861003 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\copyinputtooutput.asm
+1528117886 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\copyinputtooutput.asm
 
 1528114783 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countcharsinline.asm
 
-1527870914 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countlineswordscharsininput.asm
+1528117949 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countlineswordscharsininput.asm
 
-1527861138 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memchr.asm
+1528118021 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memchr.asm
 
-1528114726 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\pow.asm
+1528118032 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\pow.asm
 
-1528104559 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strlen.asm
+1528131948 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strlen.asm
 
 1527765127 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strnset.asm
 
-1527773435 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strrchr.asm
+1528135208 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strrchr.asm
 
-1527764526 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strset.asm
+1528130751 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strset.asm
 
 1527971235 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getbits.asm
 
@@ -42,7 +42,7 @@
 
 1527867698 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\reversestring.asm
 
-1528053658 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\atoi.asm
+1528117876 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\atoi.asm
 
 1528014916 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\floorlog2.asm
 
@@ -51,4 +51,8 @@
 1528040789 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\fsquare.asm
 
 1528041974 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\square32-64.asm
+
+1528118247 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countcharsininput.asm
+
+1528127947 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\fpow.asm
 

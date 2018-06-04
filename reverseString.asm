@@ -5,34 +5,44 @@ extern @ASM_strlen@4
 segment text
 
 %define string ecx
-%define stringBackup ebx
-%define backwards eax   ; Index in the string (goes backwards)
-%define forwards edx    ; Index in the string (goes forwards)
-%define character cl
-%define charBackup si
-%define retString eax
-
+%define stringBackup esi
+%define strlenRet eax
+%define pEnd eax
+%define result eax
+%define pStart edx
+%define currentStartChar cl
+%define currentEndChar bl
+%define currentEndChar16 bx
 @ASM_reverseString@4:
-    push charBackup
     push stringBackup
-    mov stringBackup, string    ; __fastcall specifies that ecx may be trashed
-    call ASM_strlen  ; Argument (string) already in ecx
-    dec backwards   ; backwards = ASM_strlen - 1
-    test backwards, backwards
-    jle .return
-    xor forwards, forwards
+    push currentEndChar16
+    sub esp, 4
+
+    mov stringBackup, string
+
+    call ASM_strlen
+    lea pEnd, [stringBackup - 1 + strlenRet]    ; pEnd = string + strlen(string) - 1;
+
+    cmp stringBackup, pEnd
+    jnb .return
+    mov pStart, stringBackup
+
 .loop:
-    movzx charBackup, byte [stringBackup + forwards]
-    mov character, byte [stringBackup + backwards]
-    mov [stringBackup + forwards], character
-    mov cx, charBackup  ; same as mov character, charBackup (except that's invalid)
-    mov [stringBackup + backwards], character
-    inc forwards
-    dec backwards
-    cmp forwards, backwards
-    jl .loop    ; While backwards bigger than forwards
+    mov currentStartChar, byte [pStart]
+    mov currentEndChar, byte [pEnd]
+
+    mov [pStart], currentEndChar
+    mov [pEnd], currentStartChar
+
+    inc pStart
+    dec pEnd
+
+    cmp pStart, pEnd
+    jb .loop
+
 .return:
-    mov retString, stringBackup
+    mov result, stringBackup
+    add esp, 4
+    pop currentEndChar16
     pop stringBackup
-    pop charBackup
     ret

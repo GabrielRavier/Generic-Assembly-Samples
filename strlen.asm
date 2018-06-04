@@ -7,12 +7,11 @@ segment text
 %define scasbValue al
 %define scasbAddress edi
 %define scasbLimit ecx
-
 @ASM_strlen@4:
     push scasbAddress   ; GCC expects us to preserve edi
     mov scasbAddress, string
     xor scasbLimit, scasbLimit
-    not scasbLimit  ; scasbLimit = -1
+    not scasbLimit  ; scasbLimit = -1 (no limit)
     xor scasbValue, scasbValue  ; Search for 0
     cld ; Clear direction flag so that repne scasb goes forward
     repne scasb ; scasbLimit = -stringLength - 2

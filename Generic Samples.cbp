@@ -47,18 +47,28 @@
 			<Option compilerVar="CC" />
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
-		<Unit filename="countCharsInLine.asm">
-			<Option compilerVar="CC" />
+		<Unit filename="countCharsInInput.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="countLinesWordsCharsInInput.asm">
 			<Option compilerVar="CC" />
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
+		<Unit filename="floorLog2.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="fpow.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="fsquare.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="getbits.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
-		<Unit filename="getbits64.asm" />
+		<Unit filename="ldsquare.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Unit filename="memchr.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
@@ -67,6 +77,9 @@
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="reverseString.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="square32-64.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="strlen.asm">

@@ -14,7 +14,7 @@ extern "C"
     extern void __cdecl ASM_countCharsInInput();
     extern void __cdecl ASM_countLinesWordsCharsInInput();
     extern int __fastcall ASM_pow(int base, unsigned int exponent);
-    extern float __fastcall ASM_fpow(float base, int exponent);
+    extern long double __fastcall ASM_fpow(long double base, int exponent);
     extern char * __fastcall ASM_strset(char *string, char val);
     extern char * __fastcall ASM_strnset(char *string, char val, int count);
     extern char * __fastcall ASM_strrchr(char *string, char val);
@@ -34,7 +34,7 @@ extern "C"
 int main(int argc, char *argv[])
 {
     cout << "Enter two numbers : \n";
-    float fTestNum;
+    long double fTestNum;
     int testExponent;
     cin >> fTestNum;
     cin >> testExponent;
