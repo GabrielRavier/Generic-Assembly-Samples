@@ -73,6 +73,9 @@
 		<Unit filename="memchr.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
+		<Unit filename="memset.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="pow.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>

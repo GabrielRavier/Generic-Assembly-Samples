@@ -1,16 +1,30 @@
 global @ASM_strset@8
+extern @ASM_strlen@4
+extern @ASM_memset@12
+%define ASM_strlen @ASM_strlen@4
+%define ASM_memset @ASM_memset@12
 
 %define string ecx  ; char *, string to modify
-%define val dl      ; char, value to fill string with
-%define start eax   ; char *, string, now filled with val
+%define character edx      ; char, value to fill string with
+%define strlenRet eax
+%define start eax   ; char *, string, now filled with character
+%define backCharacter esi
+%define backString ebx
 @ASM_strset@8:
-    mov start, string ; Immediately set return value since we're changing the pointer
-    cmp byte [string], 0    ; Check null terminator
-    jz .return
-.loop:
-    mov [string], val
-    inc string
-    cmp byte [string], 0
-    jnz .loop
-.return:
-    ret ; Returns start
+    push backCharacter
+    push backString
+    sub esp, 4
+    mov backCharacter, character
+    mov backString, string
+
+    call ASM_strlen ; string already in ecx
+    sub esp, 12
+    mov character, backCharacter
+    mov string, backString
+    push strlenRet
+    call ASM_memset
+
+    add esp, 16
+    pop backString
+    pop backCharacter
+    ret

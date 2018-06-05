@@ -47,7 +47,7 @@ segment text
 .return:
     add esp, 24
     pop startExponent
-    ret
+    ret 12
 ; ------------------------------------------------------------------------------------------------------------------------
 .returnTempByTemp:
     fmul result, result
