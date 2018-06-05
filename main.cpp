@@ -18,7 +18,7 @@ extern "C"
     extern char *__fastcall ASM_strset(char *string, char val);
     extern char *__fastcall ASM_strnset(char *string, char val, int count);
     extern char *__fastcall ASM_strrchr(char *string, char val);
-    extern int __fastcall ASM_strlen(char *string);
+    extern int __fastcall ASM_strlen(const char *string);
     extern char *__fastcall ASM_memchr(char *buffer, char character, unsigned count);
     extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
     extern int __fastcall ASM_bitcount(unsigned int num);
@@ -30,10 +30,17 @@ extern "C"
     extern long long int __fastcall ASM_square64(long long int num);
     extern int __fastcall ASM_square(int num);
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
+    extern double __cdecl ASM_sinxpnx(double x, int n);
 }
 
 int main(int argc, char *argv[])
 {
+    cout << "Enter two numbers : \n";
+    double sinxpnx_x;
+    int sinxpnx_n;
+    cin >> sinxpnx_x;
+    cin >> sinxpnx_n;
+    cout << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
     cout << "Enter two numbers : \n";
     long double fTestNum;
     int testExponent;
