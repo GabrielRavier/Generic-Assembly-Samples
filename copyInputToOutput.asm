@@ -18,6 +18,8 @@ _ASM_copyInputToOutput:
     call _getchar
     cmp effectiveChar, `\\`
     jne .putTheChar
+    mov dword [esp], currentChar
+    call _putchar   ; Put final backslash
 .return:
     add esp, 12
     ret

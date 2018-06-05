@@ -90,8 +90,8 @@ segment text
     movsx charFromString, byte [stringCopy + stringIndex]
     inc stringIndex
     jmp .makeNumLoop
-    align 16
 ; ------------------------------------------------------------------------------------------------------------------------
+    align 16
 .return0:
     xor loResult, loResult
     xor hiResult, hiResult

@@ -1,61 +1,63 @@
 global @ASM_fpow@16
 %define ASM_fpow @ASM_fpow@16
 
+segment data
+
+    decimalOne  dd 1.0
+
 segment text
 
 %define exponent ecx
-%define base 12
-%define startExponent ebx
-%define loStartExponent bl
+%define tempExponent edx
+%define absExponent eax
+%define loAbsExponent al
 %define result st0
-%define startBase st1
+%define base 4
 @ASM_fpow@16:
+    fld tword [esp + base]
+
+    mov tempExponent, exponent
+    sar tempExponent, 31
+    mov absExponent, tempExponent
+    xor absExponent, exponent
+    sub absExponent, tempExponent   ; Get absolute value of exponent
+
+    fld1    ; st0 = 1, st1 = base
+
     test exponent, exponent
-    jne .exponentNotZero
-
-    fld1
-    ret 12
-    align 16
+    je .returnOne   ; Jump if exponent == 0
+    jmp .startLoop
 ; ------------------------------------------------------------------------------------------------------------------------
-.exponentNotZero:
-    push startExponent  ; Function prolog cos we didn't need it before lol
-    mov startExponent, exponent
-    sub esp, 28
+    align 16
+.loop:
+    fxch st1
 
-    shr exponent, 31
-    add exponent, startExponent
-    sar exponent, 1
-    push dword [esp + 32 + base]    ; esp goes back each time so yeah
-    push dword [esp + 32 + base]
-    push dword [esp + 32 + base]
-    call ASM_fpow   ; Recursive call with base (and exponent / 2)
-    pop eax ; (We don't do anything with this)
+.startLoop:
+    test loAbsExponent, 1   ; Jump if absExponent & 1 != 0
+    je .onlySquare
 
-    fstp dword [esp + base]
-    fld dword [esp + base]
+    fmul result, st1    ; Multiply if first bit of absExponent == 1
+    fxch st1
+    jmp .doSquare
+; ------------------------------------------------------------------------------------------------------------------------
+    align 16
+.onlySquare:
+    fxch st1
+.doSquare:
+    fmul result, result ; Square base
 
-    test loStartExponent, 1
-    je .returnTempByTemp ; Jump if exponent % 2 != 0
+    shr absExponent, 1  ; Get next bit (also check for exp == 0)
+    jne .loop   ; Loop for each bit in exponent
+    fstp result
 
-    test startExponent, startExponent
-    jle .returnTempByTempDividedByBase
+    test exponent, exponent
+    jns .return
 
-    fld tword [esp + 24 + base]
-    fmul result, startBase
-    fmulp startBase, result
+    fdivr dword [decimalOne]    ; Reciprocal if n is negative
 
+    jmp .return
+; ------------------------------------------------------------------------------------------------------------------------
+.returnOne:
+    fstp st1
 .return:
-    add esp, 24
-    pop startExponent
     ret 12
-; ------------------------------------------------------------------------------------------------------------------------
-.returnTempByTemp:
-    fmul result, result
-    jmp .return
-    align 16
-; ------------------------------------------------------------------------------------------------------------------------
-.returnTempByTempDividedByBase:
-    fmul result, result
-    fld tword [esp + 24 + base]
-    fdivp startBase, result
-    jmp .return

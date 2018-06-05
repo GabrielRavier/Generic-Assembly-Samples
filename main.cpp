@@ -40,7 +40,8 @@ int main(int argc, char *argv[])
     int sinxpnx_n;
     cin >> sinxpnx_x;
     cin >> sinxpnx_n;
-    cout << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
+    cout << "sin(" << sinxpnx_x << ") + " << sinxpnx_n << " * " << sinxpnx_x << " = "
+         << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
     cout << "Enter two numbers : \n";
     long double fTestNum;
     int testExponent;
@@ -78,7 +79,7 @@ int main(int argc, char *argv[])
     cout << "Enter a number : \n";
     string number = "";
     cin >> number;
-    cout << "Converted to a string : " << ASM_atoi(number.c_str()) << '\n';
+    cout << "Converted to an integer : " << ASM_atoi(number.c_str()) << '\n';
     cout << "Testing pow function\n";
     for (int i = 0; i < 10; i++)
         cout << i << " ^ " << i << " = " << ASM_pow(i, i) << '\n';

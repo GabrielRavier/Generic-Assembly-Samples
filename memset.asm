@@ -22,14 +22,14 @@ segment text
     push bufferCopy2
     sub esp, 16
     mov bufferCopy, buffer
-    mov regSize, dword [esp + 28 + size]
-    test regSize, regSize
-    jle .return
-    mov sizeCopy, regSize
-    cmp regSize, 15
-    jle .doLessThan16   ; If there are less than 15 bytes remaining, xmm is useless
+    mov sizeCopy, dword [esp + 28 + size]
+    test sizeCopy, sizeCopy
+    je .return
+    lea regSize, [sizeCopy - 1]
+    cmp regSize, 14
+    jbe .doLessThan16   ; If there are less than 15 bytes remaining, xmm is useless
     mov dword [esp + 28 - characterCopy], character
-    mov sizeCopy2, regSize
+    mov sizeCopy2, sizeCopy
     mov bufferCopy2, bufferCopy
     and sizeCopy2, -16
     add sizeCopy2, bufferCopy
@@ -48,7 +48,7 @@ segment text
     lea bufferCopy2, [bufferCopy + sizeCopy2]
     cmp sizeCopy, sizeCopy2
     je .return
-.unrolledRemaining16Bytes:
+.doRemaining16Bytes:
     mov byte [bufferCopy2], loCharacter
     cmp regSize, 1
     je .return
@@ -97,8 +97,9 @@ segment text
     pop bufferCopy2
     pop regSize
     pop sizeCopy2
-    ret
+    ret 4
+; ------------------------------------------------------------------------------------------------------------------------
     align 16
 .doLessThan16:
     mov bufferCopy2, bufferCopy
-    jmp .unrolledRemaining16Bytes
+    jmp .doRemaining16Bytes
