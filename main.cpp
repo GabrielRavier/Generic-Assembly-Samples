@@ -29,6 +29,7 @@ extern "C"
     extern float __stdcall ASM_fsquare(float num);
     extern long long int __fastcall ASM_square64(long long int num);
     extern int __fastcall ASM_square(int num);
+    extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
 }
 
 int main(int argc, char *argv[])

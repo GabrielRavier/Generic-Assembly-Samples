@@ -1,5 +1,5 @@
-global @ASM_fpow@8
-%define ASM_fpow @ASM_fpow@8
+global @ASM_fpow@16
+%define ASM_fpow @ASM_fpow@16
 
 segment text
 
@@ -9,7 +9,7 @@ segment text
 %define loStartExponent bl
 %define result st0
 %define startBase st1
-@ASM_fpow@8:
+@ASM_fpow@16:
     test exponent, exponent
     jne .exponentNotZero
 
@@ -49,7 +49,7 @@ segment text
     pop startExponent
     ret
 ; ------------------------------------------------------------------------------------------------------------------------
-.returnTempByTemp
+.returnTempByTemp:
     fmul result, result
     jmp .return
     align 16
