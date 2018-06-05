@@ -1,8 +1,10 @@
 # depslib dependency file v1.0
-1528205813 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1528216296 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	<iostream>
 	<iomanip>
 	<string>
+	<cstring>
+	"Timer.h"
 
 1527773499 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm_copyinputtooutput.asm
 
@@ -18,7 +20,7 @@
 
 1527773435 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm_strrchr.asm
 
-1528117886 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\copyinputtooutput.asm
+1528205984 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\copyinputtooutput.asm
 
 1528114783 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countcharsinline.asm
 
@@ -58,5 +60,9 @@
 
 1528204396 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memset.asm
 
-1528204408 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\sinxpnx.asm
+1528214816 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\sinxpnx.asm
+
+1528215442 c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\timer.h
+	<iostream>
+	<chrono>
 

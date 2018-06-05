@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <cstring>
+#include "Timer.h"
 
 using std::cout;
 using std::oct;
@@ -33,8 +35,18 @@ extern "C"
     extern double __cdecl ASM_sinxpnx(double x, int n);
 }
 
+volatile int test[1000];
+
 int main(int argc, char *argv[])
 {
+    Timer memsetTimer;
+    for (int i = 0; i < 1000000; i++)
+        ASM_memset((void *)&test, 0, sizeof(test));
+    cout << "ASM_memset time : " << memsetTimer.elapsed() << "s\n";
+    memsetTimer.reset();
+    for (int i = 0; i < 1000000; i++)
+        memset((void *)&test, 10, sizeof(test));
+    cout << "memset time : " << memsetTimer.elapsed() << "s\n";
     cout << "Enter two numbers : \n";
     double sinxpnx_x;
     int sinxpnx_n;

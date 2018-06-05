@@ -14,7 +14,7 @@ _ASM_sinxpnx:
     call _sin
     add esp, 8
 
-    fild dword [esp + 12]
-    fmul qword [esp + 4]    ; result = n * x
+    fild dword [esp + n]
+    fmul qword [esp + x]    ; result = n * x
     fadd    ; result = sin(x) + n * x
     ret
