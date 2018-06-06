@@ -2,7 +2,7 @@
 global @ASM_pow@8
 %define ASM_pow @ASM_pow@8
 
-segment test
+segment .text align=16
 ; According to the __fastcall calling convention, first argument goes to ecx and the second to edx
 %define base ecx  ; int
 %define exponent edx   ; int

@@ -1,7 +1,7 @@
 global _ASM_sinxpnx
 extern _sin
 
-segment text
+segment .text align=16
 
 %define x 4
 %define n 12

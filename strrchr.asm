@@ -1,5 +1,7 @@
 global @ASM_strrchr@8
 
+segment .text align=16
+
 %define result eax
 %define string ecx
 %define character edx

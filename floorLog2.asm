@@ -1,6 +1,6 @@
 global @ASM_floorLog2@4
 
-segment text
+segment .text align=16
 
 %define numToFloor ecx
 %define result eax

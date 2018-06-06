@@ -4,6 +4,8 @@ extern @ASM_memset@12
 %define ASM_strlen @ASM_strlen@4
 %define ASM_memset @ASM_memset@12
 
+segment .text align=16
+
 %define string ecx  ; char *, string to modify
 %define character edx      ; char, value to fill string with
 %define strlenRet eax

@@ -1,7 +1,7 @@
 global @ASM_square@4
 global @ASM_square64@8
 
-segment text
+segment .text align=16
 
 %define result eax
 %define number ecx

@@ -2,11 +2,12 @@ global _ASM_countLinesWordsCharsInInput
 extern _getchar
 extern _printf
 
-segment data
+segment .data
 
+    align 16
     format db `%d lines, %d words, %d characters\n`, 0
 
-segment text
+segment .text align=16
 
 %define charCount edx   ; int
 %define lineCount esi   ; int

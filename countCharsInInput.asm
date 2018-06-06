@@ -2,11 +2,12 @@ global _ASM_countCharsInInput
 extern _getchar
 extern _printf
 
-segment data
+segment .data
 
+    align 16
     format db `%d characters\n`, 0
 
-segment text
+segment .text align=16
 
 %define currentChar eax
 %define charCount esi   ; int

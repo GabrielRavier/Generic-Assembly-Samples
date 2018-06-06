@@ -5,6 +5,8 @@ extern @ASM_memset@12
 %define ASM_strlen @ASM_strlen@4
 %define ASM_memset @ASM_memset@12
 
+segment .text align=16
+
 %define string ecx  ; char *, string to modify
 %define val edx      ; char, value to fill string with
 %define result eax   ; char *, string, now filled with val
@@ -17,11 +19,10 @@ extern @ASM_memset@12
     push backVal
     push backString
     push regCount
-    sub esp, 16
 
     mov backVal, val
     mov backString, string
-    mov regCount, [esp + 28 + count]
+    mov regCount, [esp + 12 + count]
 
     call ASM_strlen
 
@@ -29,11 +30,9 @@ extern @ASM_memset@12
     mov string, backString
     cmp strlenRet, regCount
     cmova strlenRet, regCount
-    mov dword [esp], strlenRet
+    mov dword [esp + 16], strlenRet
 
-    call ASM_memset ;
-    add esp, 12 ; -4 + 16 = 12
-    pop regCount    ; We just return the memset retval (memset returns the buffer sent to it)
+    pop regCount
     pop backString
     pop backVal
-    ret
+    jmp ASM_memset  ; (We're returning the string, and memset returns our buffer so this works too)

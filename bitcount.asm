@@ -1,6 +1,6 @@
 global @ASM_bitcount@4
 
-segment text
+segment .text align=16
 
 %define result eax
 %define number ecx

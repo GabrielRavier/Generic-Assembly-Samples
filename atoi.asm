@@ -1,7 +1,7 @@
 global @ASM_atoi@4
 extern _isspace
 
-segment text
+segment .text align=16
 
 %define stringIndex edi
 %define string ecx

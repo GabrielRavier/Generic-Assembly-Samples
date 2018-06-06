@@ -1,6 +1,6 @@
 global @ASM_getbits@12
 
-segment text
+segment .text align=16
 
 ; Algorithm :   /* getbits:  get numBits bits from position position */
 ;               unsigned getbits(unsigned num, int position, int numBits)

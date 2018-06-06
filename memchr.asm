@@ -1,7 +1,7 @@
 ; Weird name to avoid linking warning
 global @ASM_memchr@12
 
-segment test
+segment .text align=16
 ; According to the __fastcall calling convention, first argument goes to ecx and the second to edx
 
 %define buffer ecx

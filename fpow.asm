@@ -1,11 +1,12 @@
 global @ASM_fpow@16
 %define ASM_fpow @ASM_fpow@16
 
-segment data
+segment .data
 
+    align 16
     decimalOne  dd 1.0
 
-segment text
+segment .text align=16
 
 %define exponent ecx
 %define tempExponent edx

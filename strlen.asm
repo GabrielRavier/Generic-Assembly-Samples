@@ -1,6 +1,6 @@
 global @ASM_strlen@4
 
-segment text
+segment .text align=16
 
 %define string ecx  ; char *, string
 %define loString cl

@@ -2,7 +2,7 @@ global @ASM_reverseString@4
 extern @ASM_strlen@4
 %define ASM_strlen @ASM_strlen@4
 
-segment text
+segment .text align=16
 
 %define string ecx
 %define stringBackup esi

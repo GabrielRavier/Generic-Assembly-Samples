@@ -1,6 +1,6 @@
 global _ASM_readTSC
 
-segment text
+segment .text align=16
 
 %define loResult eax
 %define hiResult edx

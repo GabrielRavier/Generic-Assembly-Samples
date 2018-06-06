@@ -49,6 +49,7 @@ extern "C"
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
     extern double __cdecl ASM_sinxpnx(double x, int n);
     extern long long ASM_readTSC();
+    extern char *__fastcall ASM_getProcessorName();
 }
 
 random_device randomDevice;     // Get a random seed from the OS entropy device, or whatever
@@ -104,7 +105,7 @@ void testFloorLog2()
     cout << input << " is the " << ASM_floorLog2(input) << "th power of 2\n";
 }
 
-void testGetBits()
+void testGetbits()
 {
     unsigned int input = random(0, INT_MAX);
     char startBit = random(1, 32);
@@ -113,7 +114,7 @@ void testGetBits()
          << ASM_getbits(input, startBit, numBits) << '\n';
 }
 
-void testBitCount()
+void testBitcount()
 {
     unsigned int searchedNum = random(1, INT_MAX);
     cout << "There are " << ASM_bitcount(searchedNum) << " 1 bits in " << searchedNum << '\n';
@@ -216,22 +217,17 @@ void testCopyInputToOutput()
     ASM_copyInputToOutput();
 }
 
+void testGetProcessorName()
+{
+    cout << "Processor name : " << ASM_getProcessorName();
+}
+
 int main(int argc, char *argv[])
 {
-    volatile void *lol = malloc(1000000);
-    cout << "ASM_memset clock count : ";
-    long long before = ASM_readTSC();
-    ASM_memset((void *)lol, 2, 0x70);
-    long long after = ASM_readTSC();
-    cout << after - before << '\n';
-    cout << "memset clock count : ";
-    before = ASM_readTSC();
-    memset((void *)lol, 4, 0x70);
-    after = ASM_readTSC();
-    cout << after - before;
-    exit(EXIT_SUCCESS);
     engine.seed(time(0));
     srand(time(0));
+    cout << "Testing getProcessorName";
+    testGetProcessorName();
     cout << "Testing sinxpnx\n";
     testSinxpnx();
     cout << "Testing fpow\n";
@@ -241,9 +237,9 @@ int main(int argc, char *argv[])
     cout << "Testing floorLog2\n";
     testFloorLog2();
     cout << "Testing getbits\n";
-    testGetBits();
+    testGetbits();
     cout << "Testing bitcount\n";
-    testBitCount();
+    testBitcount();
     cout << "Testing memchr\n";
     testMemchr();
     cout << "Testing strlen\n";

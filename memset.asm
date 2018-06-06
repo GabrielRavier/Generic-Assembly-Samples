@@ -1,6 +1,6 @@
 global @ASM_memset@12
 
-segment text
+segment .text align=16
 
 %define buffer ecx
 %define character edx
