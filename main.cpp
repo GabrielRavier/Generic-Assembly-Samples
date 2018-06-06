@@ -218,6 +218,18 @@ void testCopyInputToOutput()
 
 int main(int argc, char *argv[])
 {
+    volatile void *lol = malloc(1000000);
+    cout << "ASM_memset clock count : ";
+    long long before = ASM_readTSC();
+    ASM_memset((void *)lol, 2, 0x70);
+    long long after = ASM_readTSC();
+    cout << after - before << '\n';
+    cout << "memset clock count : ";
+    before = ASM_readTSC();
+    memset((void *)lol, 4, 0x70);
+    after = ASM_readTSC();
+    cout << after - before;
+    exit(EXIT_SUCCESS);
     engine.seed(time(0));
     srand(time(0));
     cout << "Testing sinxpnx\n";
@@ -240,6 +252,14 @@ int main(int argc, char *argv[])
     testStrrchr();
     cout << "Testing reverseString\n";
     testReverseString();
+    cout << "Testing strnset\n";
+    testStrnset();
+    cout << "Testing strset\n";
+    testStrset();
+    cout << "Testing atoi\n";
+    testAtoi();
+    cout << "Testing pow\n";
+    testPow();
     cout << "Testing countLinesWordsCharsInInput\n";
     testCountLinesWordsCharsInInput();
     cout << "Testing countCharsInInput\n";

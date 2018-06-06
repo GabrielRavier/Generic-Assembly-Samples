@@ -13,7 +13,7 @@ _ASM_readTSC:
     push hiResult
     xor loResult, loResult
     cpuid   ; Serialize
-    pop hiREsult
+    pop hiResult
     pop loResult
     pop ebx
     ret
