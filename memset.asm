@@ -93,7 +93,7 @@ segment text
     je .return
     mov byte [bufferCopy2 + 14], loCharacter
 .return:
-    add esp, 16
+    add esp, 16 ; Btw bufferCopy (it is unchanged) is our return value (lol I did that by total accident)
     pop bufferCopy2
     pop regSize
     pop sizeCopy2

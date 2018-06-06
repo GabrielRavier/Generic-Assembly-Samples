@@ -2,13 +2,28 @@
 #include <iomanip>
 #include <string>
 #include <cstring>
+#include <random>
+#include <cstdlib>
+#include <ctime>
+#include <cfloat>
+#include <climits>
+#include <limits>
+#include <x86intrin.h>
 #include "Timer.h"
+
+// I somehow end up without those definitions after including climits
+#define LONG_LONG_MAX	9223372036854775807LL
+#define LONG_LONG_MIN	(-LONG_LONG_MAX-1)
 
 using std::cout;
 using std::oct;
 using std::dec;
 using std::cin;
 using std::string;
+using std::uniform_real_distribution;
+using std::random_device;
+using std::mt19937_64;
+using std::uniform_int_distribution;
 
 extern "C"
 {
@@ -19,9 +34,9 @@ extern "C"
     extern long double __fastcall ASM_fpow(long double base, int exponent);
     extern char *__fastcall ASM_strset(char *string, char val);
     extern char *__fastcall ASM_strnset(char *string, char val, int count);
-    extern char *__fastcall ASM_strrchr(char *string, char val);
+    extern char *__fastcall ASM_strrchr(const char *string, char val);
     extern int __fastcall ASM_strlen(const char *string);
-    extern char *__fastcall ASM_memchr(char *buffer, char character, unsigned count);
+    extern char *__fastcall ASM_memchr(const char *buffer, char character, unsigned count);
     extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
     extern int __fastcall ASM_bitcount(unsigned int num);
     extern char *__fastcall ASM_reverseString(char *string);
@@ -33,73 +48,203 @@ extern "C"
     extern int __fastcall ASM_square(int num);
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
     extern double __cdecl ASM_sinxpnx(double x, int n);
+    extern long long ASM_readTSC();
 }
 
-volatile int test[1000];
+random_device randomDevice;     // Get a random seed from the OS entropy device, or whatever
+mt19937_64 engine(randomDevice()); // Use the 64-bit Mersenne Twister 19937 generator
+                      // and seed it with entropy.
 
-int main(int argc, char *argv[])
+// Define the distribution, by default it goes from 0 to MAX(unsigned long long)
+// or what have you.
+uniform_int_distribution<unsigned long long> distrInt64;
+uniform_int_distribution<int> distrInt;
+
+
+int random(int low, int high)
 {
-    Timer memsetTimer;
-    for (int i = 0; i < 1000000; i++)
-        ASM_memset((void *)&test, 0, sizeof(test));
-    cout << "ASM_memset time : " << memsetTimer.elapsed() << "s\n";
-    memsetTimer.reset();
-    for (int i = 0; i < 1000000; i++)
-        memset((void *)&test, 10, sizeof(test));
-    cout << "memset time : " << memsetTimer.elapsed() << "s\n";
-    cout << "Enter two numbers : \n";
-    double sinxpnx_x;
-    int sinxpnx_n;
-    cin >> sinxpnx_x;
-    cin >> sinxpnx_n;
+    return (low + (distrInt(engine) % (int)(high - low + 1)));
+}
+
+long long int random(long long int low, long long int high)
+{
+    return (low + (distrInt64(engine) % (int)(high - low + 1)));
+}
+
+void testSinxpnx()
+{
+    double sinxpnx_x = random(-2000000, 2000000);
+    int sinxpnx_n = random(-2000000, 2000000);
     cout << "sin(" << sinxpnx_x << ") + " << sinxpnx_n << " * " << sinxpnx_x << " = "
          << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
-    cout << "Enter two numbers : \n";
-    long double fTestNum;
-    int testExponent;
-    cin >> fTestNum;
-    cin >> testExponent;
+}
+
+void testFpow()
+{
+    long double fTestNum = random(-2000000, 2000000);
+    int testExponent = random(-10, 10);
     cout << fTestNum << " ^ " << testExponent << " = " << ASM_fpow(fTestNum, testExponent) << '\n';
-    cout << "Square of " << 8934 << " : " << ASM_square(8934) << '\n';
-    const long long int sample64 = 6736847109;
-    cout << "Square of " << sample64 << " : " << ASM_square64(sample64) << '\n';
-    const float fSample = 4837.1838;
-    cout << "Square of " << fSample << " : " << ASM_fsquare(fSample) << '\n';
-    const long double ldSample = 28574638.29735498;
-    cout << "Square of " << ldSample << " : " << ASM_ldsquare(ldSample) << '\n';
-    cout << "Enter a power of 2 : \n";
-    int powerOf2 = 0;
-    cin >> powerOf2;
-    cout << "This is the " << ASM_floorLog2(powerOf2) << "th power of 2\n";
-    const unsigned int searchedNum = 888293849;
-    cout << "First 5 bits from 24th bit in " << searchedNum << " are equal to : "
-         << ASM_getbits(searchedNum, 24, 5) << '\n';
+}
+
+void testSquares()
+{
+    int testInt = random(-2000000, 2000000);
+    long long int testInt64 = random(-2000000, 2000000);
+    float testFloat = random(-2000000, 2000000);
+    long double testLDbl = random(-2000000, 2000000);
+    cout << "Square of " << testInt << " : " << ASM_square(testInt) << '\n';
+    cout << "Square of " << testInt64 << " : " << ASM_square64(testInt64) << '\n';
+    cout << "Square of " << testFloat << " : " << ASM_fsquare(testFloat) << '\n';
+    cout << "Square of " << testLDbl << " : " << ASM_ldsquare(testLDbl) << '\n';
+}
+
+void testFloorLog2()
+{
+    int input = ASM_pow(2, random(0, 30));
+    cout << input << " is the " << ASM_floorLog2(input) << "th power of 2\n";
+}
+
+void testGetBits()
+{
+    unsigned int input = random(0, INT_MAX);
+    char startBit = random(1, 32);
+    char numBits = random(1, 32 - startBit);
+    cout << "First " << (int)numBits << " bits from " << (int)startBit << "th bit in " << (int)input << " are equal to : "
+         << ASM_getbits(input, startBit, numBits) << '\n';
+}
+
+void testBitCount()
+{
+    unsigned int searchedNum = random(1, INT_MAX);
     cout << "There are " << ASM_bitcount(searchedNum) << " 1 bits in " << searchedNum << '\n';
-    char myString[] = "something something";
-    cout << "First occurence of g in \"" << myString << "\" at the "
-         << ASM_memchr(myString, 'g', sizeof(myString)) - myString + 1 /* + 1 because we got the number of bytes from the start
+}
+
+void testMemchr()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    const char *inputCStr = input.c_str();
+    cout << "First occurence of g in \"" << input << "\" at the "
+         << ASM_memchr(inputCStr, 'g', ASM_strlen(inputCStr)) - inputCStr + 1 /* + 1 because we got the number of bytes from the start
                                                                           of myString not including the first one */
          << "th position\n";
-    cout << "Length of myString : " << ASM_strlen(myString) << " bytes\n";
-    cout << "Last occurence of i in \"" << myString << "\" at the " << ASM_strrchr(myString, 'i') - myString << "th position\n";
-    cout << "myString before reverseString : " << myString << '\n';
-    cout << "after reverseString : " << ASM_reverseString(myString) << '\n';
-    cout << "myString before strnset : " << myString << '\n';
-    cout << "After strnset : " << ASM_strnset(myString, 'B', 10) << '\n';
-    cout << "myString before strset : " << myString << '\n';
-    cout << "After strset : " << ASM_strset(myString, 'a') << '\n';
+}
+
+void testStrlen()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    cout << "Length of myString : " << ASM_strlen(input.c_str()) << " bytes\n";
+}
+
+void testStrrchr()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    cout << "Last occurence of i in \"" << input.c_str() << "\" at the " << ASM_strrchr(input.c_str(), 'i') - input.c_str()
+         << "th position\n";
+}
+
+void testReverseString()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    char *inputCStr = (char *)malloc(input.size());
+    strcpy(inputCStr, input.c_str());
+    cout << "input before reverseString : " << inputCStr << '\n';
+    cout << "after reverseString : " << ASM_reverseString(inputCStr) << '\n';
+    free(inputCStr);
+}
+
+void testStrnset()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    char *inputCStr = (char *)malloc(input.size());
+    strcpy(inputCStr, input.c_str());
+    cout << "input before strnset : " << input << '\n';
+    cout << "After strnset : " << ASM_strnset(inputCStr, 'B', 10) << '\n';
+    free(inputCStr);
+}
+
+void testStrset()
+{
+    cout << "Enter a string : \n";
+    string input;
+    cin >> input;
+    char *inputCStr = (char *)malloc(input.size());
+    strcpy(inputCStr, input.c_str());
+    cout << "input before strset : " << input << '\n';
+    cout << "After strset : " << ASM_strset(inputCStr, 'a') << '\n';
+    free(inputCStr);
+}
+
+void testAtoi()
+{
     cout << "Enter a number : \n";
     string number = "";
     cin >> number;
     cout << "Converted to an integer : " << ASM_atoi(number.c_str()) << '\n';
-    cout << "Testing pow function\n";
+}
+
+void testPow()
+{
     for (int i = 0; i < 10; i++)
         cout << i << " ^ " << i << " = " << ASM_pow(i, i) << '\n';
-    cout << "Counting characters, lines and words until next backslash \n";
+}
+
+void testCountLinesWordsCharsInInput()
+{
+    cout << "Counting characters, lines and words until next backslash\n";
     ASM_countLinesWordsCharsInInput();
+}
+
+void testCountCharsInInput()
+{
     cout << "Counting characters until next backslash\n";
     ASM_countCharsInInput();
+}
+
+void testCopyInputToOutput()
+{
     cout << "Copying input to output until next backslash\n";
     ASM_copyInputToOutput();
+}
+
+int main(int argc, char *argv[])
+{
+    engine.seed(time(0));
+    srand(time(0));
+    cout << "Testing sinxpnx\n";
+    testSinxpnx();
+    cout << "Testing fpow\n";
+    testFpow();
+    cout << "Testing squares\n";
+    testSquares();
+    cout << "Testing floorLog2\n";
+    testFloorLog2();
+    cout << "Testing getbits\n";
+    testGetBits();
+    cout << "Testing bitcount\n";
+    testBitCount();
+    cout << "Testing memchr\n";
+    testMemchr();
+    cout << "Testing strlen\n";
+    testStrlen();
+    cout << "Testing strrchr\n";
+    testStrrchr();
+    cout << "Testing reverseString\n";
+    testReverseString();
+    cout << "Testing countLinesWordsCharsInInput\n";
+    testCountLinesWordsCharsInInput();
+    cout << "Testing countCharsInInput\n";
+    testCountCharsInInput();
+    cout << "Testing copyInputToOutput\n";
+    testCopyInputToOutput();
     return 0;
 }

@@ -37,6 +37,7 @@
 			<Add option="-std=c++1z" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Timer.h" />
 		<Unit filename="atoi.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
@@ -79,7 +80,11 @@
 		<Unit filename="pow.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
+		<Unit filename="readTSC.asm" />
 		<Unit filename="reverseString.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
+		<Unit filename="sinxpnx.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="square32-64.asm">
