@@ -64,6 +64,9 @@
 		<Unit filename="fsquare.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
+		<Unit filename="getProcessorName.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="getbits.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
@@ -80,7 +83,9 @@
 		<Unit filename="pow.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
-		<Unit filename="readTSC.asm" />
+		<Unit filename="readTSC.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+		</Unit>
 		<Unit filename="reverseString.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>

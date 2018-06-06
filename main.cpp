@@ -49,11 +49,10 @@ extern "C"
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
     extern double __cdecl ASM_sinxpnx(double x, int n);
     extern long long ASM_readTSC();
-    extern char *__fastcall ASM_getProcessorName();
+    extern char *ASM_getProcessorName();
 }
 
-random_device randomDevice;     // Get a random seed from the OS entropy device, or whatever
-mt19937_64 engine(randomDevice()); // Use the 64-bit Mersenne Twister 19937 generator
+mt19937_64 engine; // Use the 64-bit Mersenne Twister 19937 generator
                       // and seed it with entropy.
 
 // Define the distribution, by default it goes from 0 to MAX(unsigned long long)
@@ -219,14 +218,14 @@ void testCopyInputToOutput()
 
 void testGetProcessorName()
 {
-    cout << "Processor name : " << ASM_getProcessorName();
+    cout << "Processor name : " << ASM_getProcessorName() << '\n';
 }
 
 int main(int argc, char *argv[])
 {
     engine.seed(time(0));
-    srand(time(0));
-    cout << "Testing getProcessorName";
+
+    cout << "Testing getProcessorName\n";
     testGetProcessorName();
     cout << "Testing sinxpnx\n";
     testSinxpnx();
