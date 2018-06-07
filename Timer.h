@@ -1,3 +1,7 @@
+/*  Versions :
+    1.0 : Initial commit
+    1.1 : Added "Versions" section */
+
 #ifndef TIMER_H
 #define TIMER_H
 

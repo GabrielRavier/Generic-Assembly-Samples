@@ -1,8 +1,15 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.0.1 : Separated code sections
+; 1.1.0 : Made implementation print final backslash
+; 1.1.1 : Added "Versions" section
+; 1.1.2 : Changed segment to .text and aligned function
+
 global _ASM_copyInputToOutput
 extern _getchar
 extern _putchar
 
-segment text
+segment .text align=16
 
 %define currentChar eax
 %define effectiveChar al

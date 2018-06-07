@@ -1,3 +1,12 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.0.1 : Documented return values
+; 1.0.2 : Corrected syntax error
+; 1.0.3 : Added separators
+; 1.0.4 : Put seperator before align 16
+; 1.0.5 : Changed segment to .text and aligned function
+; 1.0.6 : Added "Versions" section
+
 global @ASM_atoi@4
 extern _isspace
 

@@ -1,3 +1,10 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.0.1 : Corrected typo
+; 1.0.2 : Changed segment to .text and aligned function
+; 1.0.3 : Added spacing for code sections
+; 1.0.4 : Added "Versions" section
+
 global _ASM_readTSC
 
 segment .text align=16

@@ -1,3 +1,23 @@
+/*  Versions :
+    1.0.0 : Initial commit
+    1.0.1 : Changed declaration of getbits
+    1.1.0 : Implemented tests for new function
+    1.2.0 : Implemented tests for new functions
+    1.3.0 : Implemented tests for fpow
+    1.3.1 : Changed name of ASM_countCharsInLine to ASM_countCharsInInput
+    1.3.2 : Changed fpow so that it uses long doubles instead of floats
+    1.3.3 : Added memset declaration
+    1.3.4 : Removed a buncha spaces
+    1.4.0 : Implemented tests for sinxpnx
+    1.4.1 : Made sinxpnx tests look better
+    1.4.2 : Made some tests with new header
+    2.0.0 : Made a big overhaul, made most tests use their own functions
+    2.0.1 : Made timing test for memset (My implementation faster than glibc's implementation muhahahahaha)
+    2.1.0 : Implemented tests for getProcessorName
+    2.1.1 : Cleaned up formatting in testing processor name, and removed some useless things
+    2.1.2 : Added "Versions" section */
+
+
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -8,7 +28,7 @@
 #include <cfloat>
 #include <climits>
 #include <limits>
-#include <x86intrin.h>
+#include <windows.h>
 #include "Timer.h"
 
 // I somehow end up without those definitions after including climits
@@ -59,7 +79,6 @@ mt19937_64 engine; // Use the 64-bit Mersenne Twister 19937 generator
 // or what have you.
 uniform_int_distribution<unsigned long long> distrInt64;
 uniform_int_distribution<int> distrInt;
-
 
 int random(int low, int high)
 {

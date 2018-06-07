@@ -1,3 +1,10 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 2.0.0 : Made new version using already-made functions
+; 2.0.1 : Changed segment to .text and aligned function
+; 2.1.0 : Just jumped directly into memset instead of calling it since we're returning it
+; 2.1.1 : Added "Versions" section
+
 ; Weird name to avoid linking warning
 global @ASM_strnset@12
 extern @ASM_strlen@4

@@ -1,3 +1,10 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.0.1 : Added spacing between code sections
+; 1.0.2 : Used defined macros instead of magic numbers
+; 1.0.3 : Changed segment to .text and aligned routine
+; 1.0.4 : Added "Versions" section
+
 global _ASM_sinxpnx
 extern _sin
 

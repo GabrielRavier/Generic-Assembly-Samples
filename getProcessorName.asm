@@ -1,3 +1,8 @@
+; Versions :
+; 0.0.1 : Initial commit (just returns empty nameBuffer)
+; 1.0.0 : Actually implemented the actual routine (also added a small sub-routine :p), and fixed up name for linking
+; 1.0.1 : Added "Versions" section
+
 global _ASM_getProcessorName
 
 segment .data
@@ -16,21 +21,25 @@ _ASM_getProcessorName:
     push cpuidCheck2
     push regNameBuffer
     mov regNameBuffer, nameBuffer
+
     ; Detect support of cpuid
     pushfd
     pop cpuidCheck
     xor cpuidCheck, 1 << 21    ; Check if can toggle CPUID bit
     push cpuidCheck
     popfd
+
     pushfd
     pop cpuidCheck2
     xor cpuidCheck, cpuidCheck2
     and cpuidCheck, 1 << 21
     jnz .noID    ; cpuid not supported
+
     xor cpuidFunc, cpuidFunc
     cpuid   ; Get number of cpuid functions
     test cpuidResult, cpuidResult
     jnz .canGetName ; Function 1 supported
+
 .noID:
     ; Can't get the processor name (not supported)
     mov dword [regNameBuffer], '8038' ; Write text "80386 or 80486" to name buffer
@@ -45,6 +54,7 @@ _ASM_getProcessorName:
     cpuid
     cmp cpuidResult, 80000004h  ; Check for extended vendor string availability
     jb .noExtendedVendorString
+
     ; Has extended string
     mov cpuidFunc, 80000002h
     cpuid
@@ -52,12 +62,14 @@ _ASM_getProcessorName:
     mov [regNameBuffer + 4], ebx
     mov [regNameBuffer + 8], ecx
     mov [regNameBuffer + 12], edx
+
     mov cpuidFunc, 80000003h
     cpuid
     mov [regNameBuffer + 16], eax    ; Next 16 bytes
     mov [regNameBuffer + 20], ebx
     mov [regNameBuffer + 24], ecx
     mov [regNameBuffer + 28], edx
+
     mov cpuidFunc, 80000004h
     cpuid
     mov [regNameBuffer + 32], eax    ; Next 16 bytes
@@ -75,15 +87,19 @@ _ASM_getProcessorName:
     mov [regNameBuffer + 4], edx
     mov [regNameBuffer + 8], ecx
     mov byte [regNameBuffer + 12], 0    ; Terminate string
+
 .getFamilyAndModel:
     push regNameBuffer
+
     xor eax, eax    ; Find 0 terminator
     mov ecx, 30h    ; Max 30 chars searched
     cld ; Go forward
     repne scasb ; Find end of text
     dec regNameBuffer
+
     mov dword [regNameBuffer], ' Fam'   ; Append " Family "
     mov dword [regNameBuffer + 4], 'ily '
+
     add regNameBuffer, 8
     mov cpuidFunc, 1
     cpuid   ; Get family and model
@@ -96,7 +112,9 @@ _ASM_getProcessorName:
     add eax, ecx    ; Family + extended family
     call writeHex
     mov dword [regNameBuffer], 'H'  ; Write text "H"
+
     pop regNameBuffer   ; Restore string address
+
 .return:
     mov result, regNameBuffer   ; Pointer to result
     pop regNameBuffer

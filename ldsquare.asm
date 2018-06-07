@@ -1,3 +1,8 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.0.1 : Changed segment to .text and aligned routine
+; 1.0.2 : Added "Versions" section
+
 global _ASM_ldsquare@12
 
 segment .text align=16

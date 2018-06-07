@@ -1,3 +1,10 @@
+; Versions :
+; 1.0.0 : Initial commit
+; 1.1.0 : Changed string to make it look nice
+; 1.1.1 : Renamed from countCharsInLine.asm to countCharsInInput.asm (also changed routine name obviously
+; 1.1.2 : Changed segment to .text and aligned function
+; 1.1.3 : Added "Versions" section
+
 global _ASM_countCharsInInput
 extern _getchar
 extern _printf
