@@ -15,7 +15,8 @@
     2.0.1 : Made timing test for memset (My implementation faster than glibc's implementation muhahahahaha)
     2.1.0 : Implemented tests for getProcessorName
     2.1.1 : Cleaned up formatting in testing processor name, and removed some useless things
-    2.1.2 : Added "Versions" section */
+    2.1.2 : Added "Versions" section
+	2.2.0 : Remade RNGs and added tests for qRSqrt */
 
 
 #include <iostream>
@@ -28,12 +29,10 @@
 #include <cfloat>
 #include <climits>
 #include <limits>
-#include <windows.h>
-#include "Timer.h"
-
-// I somehow end up without those definitions after including climits
-#define LONG_LONG_MAX	9223372036854775807LL
-#define LONG_LONG_MIN	(-LONG_LONG_MAX-1)
+#include <algorithm>
+#include <functional>
+#include <chrono>
+#include <thread>
 
 using std::cout;
 using std::oct;
@@ -42,8 +41,18 @@ using std::cin;
 using std::string;
 using std::uniform_real_distribution;
 using std::random_device;
-using std::mt19937_64;
+using std::mt19937;
 using std::uniform_int_distribution;
+using std::generate;
+using std::begin;
+using std::end;
+using std::ref;
+using std::seed_seq;
+using std::hash;
+using std::chrono;
+using std::thread;
+using std::this_thread;
+using std::make_unique;
 
 extern "C"
 {
@@ -63,36 +72,70 @@ extern "C"
     extern long long __fastcall ASM_atoi(const char *string);
     extern int __fastcall ASM_floorLog2(int num);
     extern long double __stdcall ASM_ldsquare(long double num);
-    extern float __stdcall ASM_fsquare(float num);
+    extern float __fastcall ASM_fsquare(float num);
     extern long long int __fastcall ASM_square64(long long int num);
     extern int __fastcall ASM_square(int num);
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
     extern double __cdecl ASM_sinxpnx(double x, int n);
     extern long long ASM_readTSC();
     extern char *ASM_getProcessorName();
+    extern float __fastcall ASM_qRSqrt(float number);
 }
 
-mt19937_64 engine; // Use the 64-bit Mersenne Twister 19937 generator
-                      // and seed it with entropy.
+template<class T = std::mt19937, size_t N = T::state_size>
+auto SeededRandomEngine() -> typename std::enable_if<!!N, T>::type
+{
+    void *randMalloced = malloc(1);
+    seed_seq seeds
+    {
+        static_cast<long long>(chrono::high_resolution_clock::now().time_since_epoch().count()),
+        static_cast<long long>(hash<thread::id>()(this_thread::get_id())),
+        static_cast<long long>(reinterpret_cast<intptr_t>(&seeds)),
+        static_cast<long long>(reinterpret_cast<intptr_t>(randMalloced)),
+        static_cast<long long>(time(0))
+    };
+    T seededEngine(seeds);
+    return seededEngine;
+}
 
-// Define the distribution, by default it goes from 0 to MAX(unsigned long long)
-// or what have you.
+thread_local mt19937 engine(SeededRandomEngine());
+
+// Distribution goes from 0 to TYPE_MAX by default
+
 uniform_int_distribution<unsigned long long> distrInt64;
 uniform_int_distribution<int> distrInt;
 
 int random(int low, int high)
 {
-    return (low + (distrInt(engine) % (int)(high - low + 1)));
+    return (low + (distrInt(engine) % (high - low + 1)));
 }
 
 long long int random(long long int low, long long int high)
 {
-    return (low + (distrInt64(engine) % (int)(high - low + 1)));
+    return (low + (distrInt64(engine) % (high - low + 1)));
+}
+
+double random(double low, double high)
+{
+    uniform_real_distribution<double> distDbl(low, high);
+    return distDbl(engine);
+}
+
+long double random(long double low, long double high)
+{
+    uniform_real_distribution<long double> distLDbl(low, high);
+    return distLDbl(engine);
+}
+
+float random(float low, float high)
+{
+    uniform_real_distribution<float> distFlt(low, high);
+    return distFlt(engine);
 }
 
 void testSinxpnx()
 {
-    double sinxpnx_x = random(-2000000, 2000000);
+    double sinxpnx_x = random(-2000000.0, 2000000.0);
     int sinxpnx_n = random(-2000000, 2000000);
     cout << "sin(" << sinxpnx_x << ") + " << sinxpnx_n << " * " << sinxpnx_x << " = "
          << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
@@ -100,7 +143,7 @@ void testSinxpnx()
 
 void testFpow()
 {
-    long double fTestNum = random(-2000000, 2000000);
+    long double fTestNum = random(-2000000.0l, 2000000.0l);
     int testExponent = random(-10, 10);
     cout << fTestNum << " ^ " << testExponent << " = " << ASM_fpow(fTestNum, testExponent) << '\n';
 }
@@ -108,9 +151,9 @@ void testFpow()
 void testSquares()
 {
     int testInt = random(-2000000, 2000000);
-    long long int testInt64 = random(-2000000, 2000000);
-    float testFloat = random(-2000000, 2000000);
-    long double testLDbl = random(-2000000, 2000000);
+    long long int testInt64 = random(-20000000000LL, 20000000000LL);
+    float testFloat = random(0.0f, 200000.0f);
+    long double testLDbl = random(0.0l, 3.40282347e+380l);
     cout << "Square of " << testInt << " : " << ASM_square(testInt) << '\n';
     cout << "Square of " << testInt64 << " : " << ASM_square64(testInt64) << '\n';
     cout << "Square of " << testFloat << " : " << ASM_fsquare(testFloat) << '\n';
@@ -126,7 +169,7 @@ void testFloorLog2()
 void testGetbits()
 {
     unsigned int input = random(0, INT_MAX);
-    char startBit = random(1, 32);
+    char startBit = random(1, 31);
     char numBits = random(1, 32 - startBit);
     cout << "First " << (int)numBits << " bits from " << (int)startBit << "th bit in " << (int)input << " are equal to : "
          << ASM_getbits(input, startBit, numBits) << '\n';
@@ -172,11 +215,10 @@ void testReverseString()
     cout << "Enter a string : \n";
     string input;
     cin >> input;
-    char *inputCStr = (char *)malloc(input.size());
-    strcpy(inputCStr, input.c_str());
-    cout << "input before reverseString : " << inputCStr << '\n';
-    cout << "after reverseString : " << ASM_reverseString(inputCStr) << '\n';
-    free(inputCStr);
+    auto inputCStr = make_unique<char[]>(input.size() + 1);
+    strcpy(inputCStr.get(), input.c_str());
+    cout << "input before reverseString : " << input << '\n';
+    cout << "after reverseString : " << ASM_reverseString(inputCStr.get()) << '\n';
 }
 
 void testStrnset()
@@ -184,11 +226,10 @@ void testStrnset()
     cout << "Enter a string : \n";
     string input;
     cin >> input;
-    char *inputCStr = (char *)malloc(input.size());
-    strcpy(inputCStr, input.c_str());
+    auto inputCStr = make_unique<char []>(input.size() + 1);
+    strcpy(inputCStr.get(), input.c_str());
     cout << "input before strnset : " << input << '\n';
-    cout << "After strnset : " << ASM_strnset(inputCStr, 'B', 10) << '\n';
-    free(inputCStr);
+    cout << "After strnset : " << ASM_strnset(inputCStr.get(), 'B', 10) << '\n';
 }
 
 void testStrset()
@@ -196,11 +237,10 @@ void testStrset()
     cout << "Enter a string : \n";
     string input;
     cin >> input;
-    char *inputCStr = (char *)malloc(input.size());
-    strcpy(inputCStr, input.c_str());
+    auto inputCStr = make_unique<char []>(input.size() + 1);
+    strcpy(inputCStr.get(), input.c_str());
     cout << "input before strset : " << input << '\n';
-    cout << "After strset : " << ASM_strset(inputCStr, 'a') << '\n';
-    free(inputCStr);
+    cout << "After strset : " << ASM_strset(inputCStr.get(), 'a') << '\n';
 }
 
 void testAtoi()
@@ -240,10 +280,20 @@ void testGetProcessorName()
     cout << "Processor name : " << ASM_getProcessorName() << '\n';
 }
 
+void testqRSqrt()
+{
+    float testFlt = random(1.1f, 100000.0f);
+    cout << "1/sqrt("
+         << testFlt
+         << ") = "
+         << ASM_qRSqrt(testFlt)
+         << '\n';
+}
+
 int main(int argc, char *argv[])
 {
-    engine.seed(time(0));
-
+    cout << "Testing Q_rsqrt\n";
+    testqRSqrt();
     cout << "Testing getProcessorName\n";
     testGetProcessorName();
     cout << "Testing sinxpnx\n";

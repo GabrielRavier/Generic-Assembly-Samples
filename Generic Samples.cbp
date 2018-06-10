@@ -12,6 +12,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Og" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -35,82 +36,47 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++1z" />
+			<Add option="-m32" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Timer.h" />
+		<Linker>
+			<Add option="-m32" />
+		</Linker>
 		<Unit filename="atoi.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="bitcount.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
 		<Unit filename="copyInputToOutput.asm">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
+			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
 		</Unit>
-		<Unit filename="countCharsInInput.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="countLinesWordsCharsInInput.asm">
-			<Option compilerVar="CC" />
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="floorLog2.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="fpow.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="fsquare.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="getProcessorName.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="getbits.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="ldsquare.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
+		<Unit filename="countCharsInInput.asm" />
+		<Unit filename="countLinesWordsCharsInInput.asm" />
+		<Unit filename="floorLog2.asm" />
+		<Unit filename="fpow.asm" />
+		<Unit filename="fsquare.asm" />
+		<Unit filename="getProcessorName.asm" />
+		<Unit filename="getbits.asm" />
+		<Unit filename="ldsquare.asm" />
 		<Unit filename="main.cpp" />
-		<Unit filename="memchr.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="memset.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="pow.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="readTSC.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="reverseString.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="sinxpnx.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="square32-64.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="strlen.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object -g" />
-		</Unit>
-		<Unit filename="strnset.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="strrchr.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object -g" />
-		</Unit>
-		<Unit filename="strset.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
+		<Unit filename="memchr.asm" />
+		<Unit filename="memset.asm" />
+		<Unit filename="pow.asm" />
+		<Unit filename="qRSqrt.asm" />
+		<Unit filename="readTSC.asm" />
+		<Unit filename="reverseString.asm" />
+		<Unit filename="sinxpnx.asm" />
+		<Unit filename="square32-64.asm" />
+		<Unit filename="strlen.asm" />
+		<Unit filename="strnset.asm" />
+		<Unit filename="strrchr.asm" />
+		<Unit filename="strset.asm" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<debugger />
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

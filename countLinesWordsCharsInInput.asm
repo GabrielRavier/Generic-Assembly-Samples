@@ -4,6 +4,7 @@
 ; 1.0.2 : Changed segment to .text and aligned function
 ; 1.0.3 : Added "Versions" section
 ; 1.0.4 : Separated code sections
+; 2.0.0 : Essentially remade whole implementation
 
 global _ASM_countLinesWordsCharsInInput
 extern _getchar
@@ -16,76 +17,56 @@ segment .data
 
 segment .text align=16
 
-%define charCount edx   ; int
-%define lineCount esi   ; int
-%define currentChar eax ; int
-%define isInWord bl     ; bool
-%define wordCount edi   ; int
-; edx = charCount
-; esi = lineCount
-; eax = currentChar
-; bl = isInWord
-; edi = wordCount
+%define charCount ebx
+%define lineCount edi
+%define currentChar eax
+%define isInWord si
+%define wordCount ebp
+
 _ASM_countLinesWordsCharsInInput:
-    push ebp
-    mov ebp, esp
     push wordCount
     push lineCount
-    push ebx    ; isInWord
+    push isInWord
+    push charCount
     sub esp, 28
-
-    xor charCount, charCount
     xor wordCount, wordCount
     xor lineCount, lineCount
     xor isInWord, isInWord
-
-.startLoop:
-    mov dword [ebp - 28], charCount
+    xor charCount, charCount
+.loop:
     call _getchar
-    mov charCount, dword [ebp - 28]
-
-    cmp currentChar, `\\`   ; Stop at backslash
-    je short .printAndReturn    ; Just to be sure return isn't too far
-
+    cmp eax, `\\`
+    je .stopCount
+.checkChars:
     inc charCount
-    cmp currentChar, `\n`   ; newline more likely
-    jne .checkOutWordChars
-
-    inc lineCount
-.isNotInWord:
-    xor isInWord, isInWord
-    jmp .startLoop
-; ------------------------------------------------------------------------------------------------------------------------
-    align 16
-
-.checkOutWordChars:
+    cmp currentChar, `\n`
+    je .newLine
     cmp currentChar, ` `
-    je .isNotInWord
-
+    je .newWord
     cmp currentChar, `\t`
-    je .isNotInWord
-
+    je .newWord
     test isInWord, isInWord
-    jne .startLoop
-
+    jne .loop
     inc wordCount
     inc isInWord
-    jmp .startLoop
-; ------------------------------------------------------------------------------------------------------------------------
-    align 16
-
-.printAndReturn:
-    push charCount
-    push wordCount
-    push lineCount
-    push format
+    call _getchar
+    cmp currentChar, `\\`
+    jne .checkChars
+.stopCount:
+    mov dword [esp + 12], charCount ; Push the arguments manually
+    mov dword [esp + 8], wordCount
+    mov dword [esp + 4], lineCount
+    mov dword [esp], format
     call _printf
-
-    call _getchar   ; Catch newline
-    sub esp, 12
-
-    pop ebx  ; isInWord
+    add esp, 28
+    pop charCount
+    pop isInWord
     pop lineCount
     pop wordCount
-    pop ebp
-    ret
+    jmp _getchar
+    align 16
+.newLine:
+    inc lineCount
+.newWord:
+    xor isInWord, isInWord
+    jmp .loop
