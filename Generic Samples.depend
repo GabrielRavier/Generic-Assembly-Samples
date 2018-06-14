@@ -61,7 +61,7 @@
 
 1528531471 source:c:\users\gabriel\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\qrsqrt.asm
 
-1528355147 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\atoi.asm
+1528982818 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\atoi.asm
 
 1528298674 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\bitcount.asm
 
@@ -83,22 +83,18 @@
 
 1528629908 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\ldsquare.asm
 
-1528919158 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1528983015 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	<iostream>
 	<iomanip>
 	<string>
 	<cstdio>
 	<cstring>
-	<random>
 	<cstdlib>
-	<ctime>
 	<cfloat>
 	<climits>
 	<limits>
-	<algorithm>
-	<functional>
-	<chrono>
-	<thread>
+	"assemblyFunctions.h"
+	"myRand.h"
 
 1528297955 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memchr.asm
 
@@ -122,7 +118,13 @@
 
 1528295969 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strrchr.asm
 
-1528452911 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strset.asm
+1528981978 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strset.asm
 
-1528965356 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memcpy.asm
+1528981934 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memcpy.asm
+
+1528982444 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\assemblyfunctions.h
+
+1528980398 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\myrand.h
+	<thread>
+	<random>
 

@@ -1,38 +1,14 @@
-/*  Versions :
-    1.0.0 : Initial commit
-    1.0.1 : Changed declaration of getbits
-    1.1.0 : Implemented tests for new function
-    1.2.0 : Implemented tests for new functions
-    1.3.0 : Implemented tests for fpow
-    1.3.1 : Changed name of ASM_countCharsInLine to ASM_countCharsInInput
-    1.3.2 : Changed fpow so that it uses long doubles instead of floats
-    1.3.3 : Added memset declaration
-    1.3.4 : Removed a buncha spaces
-    1.4.0 : Implemented tests for sinxpnx
-    1.4.1 : Made sinxpnx tests look better
-    1.4.2 : Made some tests with new header
-    2.0.0 : Made a big overhaul, made most tests use their own functions
-    2.0.1 : Made timing test for memset (My implementation faster than glibc's implementation muhahahahaha)
-    2.1.0 : Implemented tests for getProcessorName
-    2.1.1 : Cleaned up formatting in testing processor name, and removed some useless things
-    2.1.2 : Added "Versions" section
-	2.2.0 : Remade RNGs and added tests for qRSqrt */
-
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <cstdio>
 #include <cstring>
-#include <random>
 #include <cstdlib>
-#include <ctime>
 #include <cfloat>
 #include <climits>
 #include <limits>
-#include <algorithm>
-#include <functional>
-#include <chrono>
-#include <thread>
+#include "assemblyFunctions.h"
+#include "myRand.h"
 
 using std::cout;
 using std::oct;
@@ -43,7 +19,6 @@ using std::uniform_real_distribution;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
-using std::generate;
 using std::begin;
 using std::end;
 using std::ref;
@@ -51,86 +26,6 @@ using std::seed_seq;
 using std::hash;
 using std::thread;
 using std::make_unique;
-
-extern "C"
-{
-    extern void __cdecl ASM_copyInputToOutput();
-    extern void __cdecl ASM_countCharsInInput();
-    extern void __cdecl ASM_countLinesWordsCharsInInput();
-    extern int __fastcall ASM_pow(int base, unsigned int exponent);
-    extern long double __fastcall ASM_fpow(long double base, int exponent);
-    extern char *__fastcall ASM_strset(char *string, char val);
-    extern char *__fastcall ASM_strnset(char *string, char val, int count);
-    extern char *__fastcall ASM_strrchr(const char *string, char val);
-    extern int __fastcall ASM_strlen(const char *string);
-    extern char *__fastcall ASM_memchr(const char *buffer, char character, unsigned count);
-    extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
-    extern int __fastcall ASM_bitcount(unsigned int num);
-    extern char *__fastcall ASM_reverseString(char *string);
-    extern long long __fastcall ASM_atoi(const char *string);
-    extern int __fastcall ASM_floorLog2(int num);
-    extern long double __stdcall ASM_ldsquare(long double num);
-    extern float __fastcall ASM_fsquare(float num);
-    extern long long int __fastcall ASM_square64(long long int num);
-    extern int __fastcall ASM_square(int num);
-    extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
-    extern double __cdecl ASM_sinxpnx(double x, int n);
-    extern long long ASM_readTSC();
-    extern char *ASM_getProcessorName();
-    extern float __fastcall ASM_qRSqrt(float number);
-    extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
-}
-
-template<class T = std::mt19937, size_t N = T::state_size>
-auto SeededRandomEngine() -> typename std::enable_if<!!N, T>::type
-{
-    void *randMalloced = malloc(1);
-    seed_seq seeds
-    {
-        static_cast<long long>(std::chrono::high_resolution_clock::now().time_since_epoch().count()),
-        static_cast<long long>(hash<thread::id>()(std::this_thread::get_id())),
-        static_cast<long long>(reinterpret_cast<intptr_t>(&seeds)),
-        static_cast<long long>(reinterpret_cast<intptr_t>(randMalloced)),
-        static_cast<long long>(time(0))
-    };
-    T seededEngine(seeds);
-    return seededEngine;
-}
-
-thread_local mt19937 engine(SeededRandomEngine());
-
-// Distribution goes from 0 to TYPE_MAX by default
-
-uniform_int_distribution<unsigned long long> distrInt64;
-uniform_int_distribution<int> distrInt;
-
-int random(int low, int high)
-{
-    return (low + (distrInt(engine) % (high - low + 1)));
-}
-
-long long int random(long long int low, long long int high)
-{
-    return (low + (distrInt64(engine) % (high - low + 1)));
-}
-
-double random(double low, double high)
-{
-    uniform_real_distribution<double> distDbl(low, high);
-    return distDbl(engine);
-}
-
-long double random(long double low, long double high)
-{
-    uniform_real_distribution<long double> distLDbl(low, high);
-    return distLDbl(engine);
-}
-
-float random(float low, float high)
-{
-    uniform_real_distribution<float> distFlt(low, high);
-    return distFlt(engine);
-}
 
 void testSinxpnx()
 {
@@ -182,9 +77,7 @@ void testBitcount()
 
 void testMemchr()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "string input";
     const char *inputCStr = input.c_str();
     cout << "First occurence of g in \"" << input << "\" at the "
          << ASM_memchr(inputCStr, 'g', ASM_strlen(inputCStr)) - inputCStr + 1 /* + 1 because we got the number of bytes from the start
@@ -194,60 +87,49 @@ void testMemchr()
 
 void testStrlen()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "test string";
     cout << "Length of myString : " << ASM_strlen(input.c_str()) << " bytes\n";
 }
 
 void testStrrchr()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "lol random string";
     cout << "Last occurence of i in \"" << input.c_str() << "\" at the " << ASM_strrchr(input.c_str(), 'i') - input.c_str()
          << "th position\n";
 }
 
 void testReverseString()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "stressed";
     auto inputCStr = make_unique<char[]>(input.size() + 1);
     strcpy(inputCStr.get(), input.c_str());
-    cout << "input before reverseString : " << input << '\n';
+    cout << "Before reverseString : " << input << '\n';
     cout << "after reverseString : " << ASM_reverseString(inputCStr.get()) << '\n';
 }
 
 void testStrnset()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "IMPORTANT INFORMATION";
     auto inputCStr = make_unique<char []>(input.size() + 1);
     strcpy(inputCStr.get(), input.c_str());
-    cout << "input before strnset : " << input << '\n';
-    cout << "After strnset : " << ASM_strnset(inputCStr.get(), 'B', 10) << '\n';
+    cout << "Before strnset : " << input << '\n';
+    cout << "After strnset : " << ASM_strnset(inputCStr.get(), 'l', 10) << '\n';
 }
 
 void testStrset()
 {
-    cout << "Enter a string : \n";
-    string input;
-    cin >> input;
+    string input = "VERY IMPORTANT STUFF";
     auto inputCStr = make_unique<char []>(input.size() + 1);
     strcpy(inputCStr.get(), input.c_str());
-    cout << "input before strset : " << input << '\n';
+    cout << "Before strset : " << input << '\n';
     cout << "After strset : " << ASM_strset(inputCStr.get(), 'a') << '\n';
 }
 
 void testAtoi()
 {
-    cout << "Enter a number : \n";
-    string number = "";
-    cin >> number;
-    cout << "Converted to an integer : " << ASM_atoi(number.c_str()) << '\n';
+    string number = "2445";
+    cout << "Before conversion : " << number << '\n';
+    cout << "After conversion : " << ASM_atoi(number.c_str()) << '\n';
 }
 
 void testPow()
@@ -289,28 +171,61 @@ void testqRSqrt()
          << '\n';
 }
 
-struct
+struct Person
 {
     char name[40];
     int age;
-} person, person_copy;
+};
+
+Person person = {0}, personCopy = {0};
 
 void testMemcpy()
 {
     static const char myname[] = "Gabriel Ravier";
 
-    // Copy a string with memcpy
+    // Copy string with memcpy
     ASM_memcpy(person.name, myname, sizeof(myname));
     person.age = 46;
 
-    // using memcpy to copy structure:
-    ASM_memcpy(&person_copy, &person, sizeof(person) );
+    // Copy struct with memcpy
+    ASM_memcpy(&personCopy, &person, sizeof(person));
 
-    printf("person_copy: %s, %d \n", person_copy.name, person_copy.age);
+    cout << "personCopy : " << personCopy.name << ", " << personCopy.age << " \n";
+}
+
+void testStrtol()
+{
+    // parsing with error handling
+    const char *p = "10 200000000000000000000000000000 30 -40 junk";
+    printf("Parsing '%s':\n", p);
+    char *end;
+    for (long i = strtol(p, &end, 10);
+         p != end;
+         i = strtol(p, &end, 10))
+    {
+        printf("'%.*s' -> ", (int)(end-p), p);
+        p = end;
+        if (errno == ERANGE){
+            printf("range error, got ");
+            errno = 0;
+        }
+        printf("%ld\n", i);
+    }
+
+    // parsing without error handling
+    printf("\"1010\" in binary  --> %ld\n", strtol("1010",NULL,2));
+    printf("\"12\" in octal     --> %ld\n", strtol("12",NULL,8));
+    printf("\"A\"  in hex       --> %ld\n", strtol("A",NULL,16));
+    printf("\"junk\" in base-36 --> %ld\n", strtol("junk",NULL,36));
+    printf("\"012\" in auto-detected base  --> %ld\n", strtol("012",NULL,0));
+    printf("\"0xA\" in auto-detected base  --> %ld\n", strtol("0xA",NULL,0));
+    printf("\"junk\" in auto-detected base -->  %ld\n", strtol("junk",NULL,0));
 }
 
 int main(int argc, char *argv[])
 {
+    cout << "Testing strtol\n";
+    testStrtol();
     cout << "Testing memcpy\n";
     testMemcpy();
     cout << "Testing Q_rsqrt\n";

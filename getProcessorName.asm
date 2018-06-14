@@ -1,8 +1,3 @@
-; Versions :
-; 0.0.1 : Initial commit (just returns empty nameBuffer)
-; 1.0.0 : Actually implemented the actual routine (also added a small sub-routine :p), and fixed up name for linking
-; 1.0.1 : Added "Versions" section
-
 global _ASM_getProcessorName
 
 segment .data

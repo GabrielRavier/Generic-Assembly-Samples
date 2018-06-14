@@ -1,10 +1,3 @@
-; Versions
-; 1.0.0 : Initial commit
-; 1.0.1 : Added separator after align
-; 1.0.2 : Changed segment to .text and aligned function
-; 1.0.3 : Added "Versions" section
-; 1.0.4 : Separated code sections
-
 ; Weird name to avoid linking warning
 global @ASM_memchr@12
 

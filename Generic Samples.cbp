@@ -42,6 +42,7 @@
 		<Linker>
 			<Add option="-m32" />
 		</Linker>
+		<Unit filename="assemblyFunctions.h" />
 		<Unit filename="atoi.asm" />
 		<Unit filename="bitcount.asm" />
 		<Unit filename="copyInputToOutput.asm" />
@@ -57,6 +58,7 @@
 		<Unit filename="memchr.asm" />
 		<Unit filename="memcpy.asm" />
 		<Unit filename="memset.asm" />
+		<Unit filename="myRand.h" />
 		<Unit filename="pow.asm" />
 		<Unit filename="qRSqrt.asm" />
 		<Unit filename="readTSC.asm" />

@@ -1,12 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.0.1 : Changed names for arguments (kinda dumb names before)
-; 2.0.0 : Made new quicker implementation of pow
-; 2.0.1 : Added seperators and defines to make the code more readable
-; 2.0.2 : Changed segment to .text and aligned function
-; 2.0.3 : Added "Versions" section
-; 2.0.4 : Added separators between code sections
-
 ; Weird name to avoid linking warning
 global @ASM_pow@8
 %define ASM_pow @ASM_pow@8

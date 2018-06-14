@@ -1,11 +1,3 @@
-; Versions :
-; 0.0.1 : Initial commit (implementation not done)
-; 0.5.0 : Made initial implementation (that doesn't work)
-; 1.0.0 : Made some small changes and changed ret to ret 4 (now implementation works)
-; 1.0.1 : Commented return value
-; 1.0.2 : Changed segment to .text and aligned function
-; 1.0.3 : Added "Versions" section
-
 global @ASM_memset@12
 
 segment .text align=16

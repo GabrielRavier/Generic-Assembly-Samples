@@ -1,40 +1,37 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 2.0.0 : Made implementation using other faster functions
-; 2.0.1 : Changed segment to .text and aligned function
-; 2.0.2 : Added "Versions" section
-; 2.1.0 : Made implementation directly jump to memset since that's faster (we return its result so it works)
-; 2.1.1 : Made local implementation (doesn't crash on Cygwin)
-
 global @ASM_strset@8
+extern @ASM_strlen@4
+extern @ASM_memset@12
+%define ASM_strlen @ASM_strlen@4
+%define ASM_memset @ASM_memset@12
 
 segment .text align=16
 
 %define string ecx  ; char *, string to modify
 %define character edx      ; char, value to fill string with
-%define result eax   ; char *, string, now filled with character
-%define backCharacter esi
-%define loBackCharacter si
-%define backString ebx
-%define scasbAddr edi
-%define scasbChar eax
-%define scasbLimit ecx
-%define stosbChar ax
-%define stosbAddr edi
-
+%define backString esi
+%define backChar ebx
+%define loBackChar bl
+%define result eax
+%define strlenRet eax
+%define memsetPtr ecx
+%define memsetVal edx
 @ASM_strset@8:
-    mov backCharacter, character
+    push backString
+    push backChar
+    sub esp, 4
     mov backString, string
-    mov scasbAddr, string
-    xor scasbChar, scasbChar    ; Searching for null terminator
-    xor scasbLimit, scasbLimit
-    not scasbLimit
-    cld ; Scan right
-    repne scasb
-    not scasbLimit
-    dec scasbLimit  ; scasbLimit = strlen(string)
-    mov stosbChar, loBackCharacter
-;   mov stosbAddr, backString   ; edi already equal to string
-    rep stosb
-    mov result, backString  ; Return value = string address
+    mov backChar, character
+
+    call ASM_strlen
+    sub esp, 12
+    movsx memsetVal, loBackChar
+    mov memsetPtr, backString
+    inc strlenRet
+    push strlenRet
+    call ASM_memset ; return (char *)ASM_memset(string, val, ASM_strlen(string) + 1);
+
+    add esp, 16
+    pop backChar
+    pop backString
     ret
+

@@ -1,14 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.0.1 : Added some comments and aligns
-; 1.0.2 : Commented float stack pop
-; 2.0.0 : Made implementation use long doubles instead of floats
-; 2.0.1 : Made name that works with long double (they take 12 bytes on the stack, not 4
-; 2.0.2 : Corrected a stupid error (it still returns shite though)
-; 3.0.0 : Made shorter quicker algorithm (using recursion here is stupid)
-; 3.0.1 : Changed segment to .text and aligned function
-; 3.0.2 : Added "Versions" section
-
 global @ASM_fpow@16
 %define ASM_fpow @ASM_fpow@16
 

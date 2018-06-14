@@ -1,7 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.0.1 : Added "Versions" section
-
 global @ASM_qRSqrt@4
 
 segment .data

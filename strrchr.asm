@@ -1,9 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 2.0.0 : Made new faster implementation
-; 2.0.1 : Changed segment to .text and aligned function
-; 2.0.2 : Added "Versions" section
-
 global @ASM_strrchr@8
 
 segment .text align=16

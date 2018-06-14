@@ -1,12 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.1.0 : Made algorithm that actually works and doesn't just hang there
-; 2.0.0 : Made new (quicker) implementation
-; 2.1.0 : Made algorithm more efficient, removed useless operations
-; 2.1.1 : Changed segment to .text and aligned function
-; 2.1.2 : Added "Versions" section
-; 2.1.3 : Separated code sections
-
 global @ASM_bitcount@4
 
 segment .text align=16

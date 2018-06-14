@@ -1,11 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.0.1 : Added separators
-; 1.0.2 : Changed segment to .text and aligned function
-; 1.0.3 : Added "Versions" section
-; 1.0.4 : Separated code sections
-; 2.0.0 : Essentially remade whole implementation
-
 global _ASM_countLinesWordsCharsInInput
 extern _getchar
 extern _printf

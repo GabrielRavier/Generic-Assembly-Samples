@@ -1,8 +1,3 @@
-; Versions :
-; 1.0.0 : Initial commit
-; 1.0.1 : Changed section to .text and aligned function
-; 1.0.2 : Added "Versions" section
-
 global @ASM_square@4
 global @ASM_square64@8
 
