@@ -42,15 +42,9 @@
 		<Linker>
 			<Add option="-m32" />
 		</Linker>
-		<Unit filename="atoi.asm">
-			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="bitcount.asm">
-			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
-		<Unit filename="copyInputToOutput.asm">
-			<Option compiler="cygwin" use="0" buildCommand="nasm -f elf32 $file -o $object" />
-		</Unit>
+		<Unit filename="atoi.asm" />
+		<Unit filename="bitcount.asm" />
+		<Unit filename="copyInputToOutput.asm" />
 		<Unit filename="countCharsInInput.asm" />
 		<Unit filename="countLinesWordsCharsInInput.asm" />
 		<Unit filename="floorLog2.asm" />
@@ -61,6 +55,7 @@
 		<Unit filename="ldsquare.asm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="memchr.asm" />
+		<Unit filename="memcpy.asm" />
 		<Unit filename="memset.asm" />
 		<Unit filename="pow.asm" />
 		<Unit filename="qRSqrt.asm" />

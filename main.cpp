@@ -18,10 +18,10 @@
     2.1.2 : Added "Versions" section
 	2.2.0 : Remade RNGs and added tests for qRSqrt */
 
-
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <cstdio>
 #include <cstring>
 #include <random>
 #include <cstdlib>
@@ -49,9 +49,7 @@ using std::end;
 using std::ref;
 using std::seed_seq;
 using std::hash;
-using std::chrono;
 using std::thread;
-using std::this_thread;
 using std::make_unique;
 
 extern "C"
@@ -80,6 +78,7 @@ extern "C"
     extern long long ASM_readTSC();
     extern char *ASM_getProcessorName();
     extern float __fastcall ASM_qRSqrt(float number);
+    extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
 }
 
 template<class T = std::mt19937, size_t N = T::state_size>
@@ -88,8 +87,8 @@ auto SeededRandomEngine() -> typename std::enable_if<!!N, T>::type
     void *randMalloced = malloc(1);
     seed_seq seeds
     {
-        static_cast<long long>(chrono::high_resolution_clock::now().time_since_epoch().count()),
-        static_cast<long long>(hash<thread::id>()(this_thread::get_id())),
+        static_cast<long long>(std::chrono::high_resolution_clock::now().time_since_epoch().count()),
+        static_cast<long long>(hash<thread::id>()(std::this_thread::get_id())),
         static_cast<long long>(reinterpret_cast<intptr_t>(&seeds)),
         static_cast<long long>(reinterpret_cast<intptr_t>(randMalloced)),
         static_cast<long long>(time(0))
@@ -290,8 +289,30 @@ void testqRSqrt()
          << '\n';
 }
 
+struct
+{
+    char name[40];
+    int age;
+} person, person_copy;
+
+void testMemcpy()
+{
+    static const char myname[] = "Gabriel Ravier";
+
+    // Copy a string with memcpy
+    ASM_memcpy(person.name, myname, sizeof(myname));
+    person.age = 46;
+
+    // using memcpy to copy structure:
+    ASM_memcpy(&person_copy, &person, sizeof(person) );
+
+    printf("person_copy: %s, %d \n", person_copy.name, person_copy.age);
+}
+
 int main(int argc, char *argv[])
 {
+    cout << "Testing memcpy\n";
+    testMemcpy();
     cout << "Testing Q_rsqrt\n";
     testqRSqrt();
     cout << "Testing getProcessorName\n";
