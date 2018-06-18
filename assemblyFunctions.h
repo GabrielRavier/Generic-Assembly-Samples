@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -27,6 +29,8 @@ extern "C"
     extern char *ASM_getProcessorName();
     extern float __fastcall ASM_qRSqrt(float number);
     extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
+    extern int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t count);
+    extern char *__fastcall ASM_strcpy(char *dest, const char* src);
 #ifdef __cplusplus
 }
 #endif

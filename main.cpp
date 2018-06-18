@@ -27,6 +27,31 @@ using std::hash;
 using std::thread;
 using std::make_unique;
 
+void testStrcpy()
+{
+    char *src = "Take the test.";
+    char dst[strlen(src) + 1]; // +1 to accomodate for the null terminator
+    strcpy(dst, src);
+    dst[0] = 'M'; // OK
+    printf("src = %s\ndst = %s\n", src, dst);
+}
+
+void testMemcmp()
+{
+    char str[8];
+
+    ASM_strcpy(str, "3141");
+
+    cout << "memcmp(str, str+2, 0) = " << ASM_memcmp(str, str+2, 0) << " (should be 0)\n";
+    cout << "memcmp(str+1, str+3, 0) = " << ASM_memcmp(str+1, str+3, 0) << " (should be 0)\n";
+    cout << "memcmp(str+1, str+3, 1) = " << ASM_memcmp(str+1, str+3, 1) << " (should be 0)\n";
+    cout << "memcmp(str, str+2, 1) = " << ASM_memcmp(str, str+2, 1) << " (should be less than 0)\n";
+    cout << "memcmp(str+2, str, 1) = " << ASM_memcmp(str+2, str, 1) << " (should be more than 0)\n";
+    cout << "memcmp(\"abcd\", \"efgh\", 4) = " << ASM_memcmp ("abcd", "efgh", 4) << " (should be less than 0)\n";
+    cout << "memcmp(\"abcd\", \"abcd\", 4) = " << ASM_memcmp ("abcd", "abcd", 4) << " (should be 0)\n";
+    cout << "memcmp(\"efgh\", \"abcd\", 4) = " << ASM_memcmp ("efgh", "abcd", 4) << " (should be more than 0)\n";
+}
+
 void testSinxpnx()
 {
     double sinxpnx_x = random(-2000000.0, 2000000.0);
@@ -102,7 +127,7 @@ void testReverseString()
 {
     string input = "stressed";
     auto inputCStr = make_unique<char[]>(input.size() + 1);
-    strcpy(inputCStr.get(), input.c_str());
+    ASM_strcpy(inputCStr.get(), input.c_str());
     cout << "Before reverseString : " << input << '\n';
     cout << "after reverseString : " << ASM_reverseString(inputCStr.get()) << '\n';
 }
@@ -111,7 +136,7 @@ void testStrnset()
 {
     string input = "IMPORTANT INFORMATION";
     auto inputCStr = make_unique<char []>(input.size() + 1);
-    strcpy(inputCStr.get(), input.c_str());
+    ASM_strcpy(inputCStr.get(), input.c_str());
     cout << "Before strnset : " << input << '\n';
     cout << "After strnset : " << ASM_strnset(inputCStr.get(), 'l', 10) << '\n';
 }
@@ -120,7 +145,7 @@ void testStrset()
 {
     string input = "VERY IMPORTANT STUFF";
     auto inputCStr = make_unique<char []>(input.size() + 1);
-    strcpy(inputCStr.get(), input.c_str());
+    ASM_strcpy(inputCStr.get(), input.c_str());
     cout << "Before strset : " << input << '\n';
     cout << "After strset : " << ASM_strset(inputCStr.get(), 'a') << '\n';
 }
@@ -193,78 +218,51 @@ void testMemcpy()
     cout << "personCopy : " << personCopy.name << ", " << personCopy.age << " \n";
 }
 
-void testStrtol()
-{
-    // parsing with error handling
-    const char *p = "10 200000000000000000000000000000 30 -40 junk";
-    printf("Parsing '%s':\n", p);
-    char *end;
-    for (long i = strtol(p, &end, 10);
-         p != end;
-         i = strtol(p, &end, 10))
-    {
-        printf("'%.*s' -> ", (int)(end-p), p);
-        p = end;
-        if (errno == ERANGE){
-            printf("range error, got ");
-            errno = 0;
-        }
-        printf("%ld\n", i);
-    }
-
-    // parsing without error handling
-    printf("\"1010\" in binary  --> %ld\n", strtol("1010",NULL,2));
-    printf("\"12\" in octal     --> %ld\n", strtol("12",NULL,8));
-    printf("\"A\"  in hex       --> %ld\n", strtol("A",NULL,16));
-    printf("\"junk\" in base-36 --> %ld\n", strtol("junk",NULL,36));
-    printf("\"012\" in auto-detected base  --> %ld\n", strtol("012",NULL,0));
-    printf("\"0xA\" in auto-detected base  --> %ld\n", strtol("0xA",NULL,0));
-    printf("\"junk\" in auto-detected base -->  %ld\n", strtol("junk",NULL,0));
-}
-
 int main(int argc, char *argv[])
 {
-    cout << "Testing strtol\n";
-    testStrtol();
-    cout << "Testing memcpy\n";
+    cout << "\nTesting strcpy\n";
+    testStrcpy();
+    cout << "\nTesting memcmp\n";
+    testMemcmp();
+    cout << "\nTesting memcpy\n";
     testMemcpy();
-    cout << "Testing Q_rsqrt\n";
+    cout << "\nTesting Q_rsqrt\n";
     testqRSqrt();
-    cout << "Testing getProcessorName\n";
+    cout << "\nTesting getProcessorName\n";
     testGetProcessorName();
-    cout << "Testing sinxpnx\n";
+    cout << "\nTesting sinxpnx\n";
     testSinxpnx();
-    cout << "Testing fpow\n";
+    cout << "\nTesting fpow\n";
     testFpow();
-    cout << "Testing squares\n";
+    cout << "\nTesting squares\n";
     testSquares();
-    cout << "Testing floorLog2\n";
+    cout << "\nTesting floorLog2\n";
     testFloorLog2();
-    cout << "Testing getbits\n";
+    cout << "\nTesting getbits\n";
     testGetbits();
-    cout << "Testing bitcount\n";
+    cout << "\nTesting bitcount\n";
     testBitcount();
-    cout << "Testing memchr\n";
+    cout << "\nTesting memchr\n";
     testMemchr();
-    cout << "Testing strlen\n";
+    cout << "\nTesting strlen\n";
     testStrlen();
-    cout << "Testing strrchr\n";
+    cout << "\nTesting strrchr\n";
     testStrrchr();
-    cout << "Testing reverseString\n";
+    cout << "\nTesting reverseString\n";
     testReverseString();
-    cout << "Testing strnset\n";
+    cout << "\nTesting strnset\n";
     testStrnset();
-    cout << "Testing strset\n";
+    cout << "\nTesting strset\n";
     testStrset();
-    cout << "Testing atoi\n";
+    cout << "\nTesting atoi\n";
     testAtoi();
-    cout << "Testing pow\n";
+    cout << "\nTesting pow\n";
     testPow();
-    cout << "Testing countLinesWordsCharsInInput\n";
+    cout << "\nTesting countLinesWordsCharsInInput\n";
     testCountLinesWordsCharsInInput();
-    cout << "Testing countCharsInInput\n";
+    cout << "\nTesting countCharsInInput\n";
     testCountCharsInInput();
-    cout << "Testing copyInputToOutput\n";
+    cout << "\nTesting copyInputToOutput\n";
     testCopyInputToOutput();
     return 0;
 }

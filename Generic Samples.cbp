@@ -37,7 +37,7 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++1z" />
 			<Add option="-m32" />
-			<Add option="-fexceptions" />
+			<Add option="-fexceptions -Wno-write-strings" />
 		</Compiler>
 		<Linker>
 			<Add option="-m32" />
@@ -56,6 +56,7 @@
 		<Unit filename="ldsquare.asm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="memchr.asm" />
+		<Unit filename="memcmp.asm" />
 		<Unit filename="memcpy.asm" />
 		<Unit filename="memset.asm" />
 		<Unit filename="myRand.h" />
@@ -65,6 +66,7 @@
 		<Unit filename="reverseString.asm" />
 		<Unit filename="sinxpnx.asm" />
 		<Unit filename="square32-64.asm" />
+		<Unit filename="strcpy.asm" />
 		<Unit filename="strlen.asm" />
 		<Unit filename="strnset.asm" />
 		<Unit filename="strrchr.asm" />
