@@ -83,7 +83,7 @@
 
 1528989108 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\ldsquare.asm
 
-1529330908 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1529586886 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	<iostream>
 	<iomanip>
 	<string>
@@ -122,7 +122,7 @@
 
 1528993569 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memcpy.asm
 
-1529330182 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\assemblyfunctions.h
+1529569579 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\assemblyfunctions.h
 	<cstdlib>
 
 1528980398 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\myrand.h
@@ -131,5 +131,13 @@
 
 1529325293 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memcmp.asm
 
-1529330841 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strcpy.asm
+1529584265 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strcpy.asm
+
+1529414846 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strncmp.asm
+
+1529663714 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strncat.asm
+
+1529586837 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strncpy.asm
+
+1529501814 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strnlen.asm
 

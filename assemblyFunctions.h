@@ -29,8 +29,12 @@ extern "C"
     extern char *ASM_getProcessorName();
     extern float __fastcall ASM_qRSqrt(float number);
     extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
-    extern int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t count);
-    extern char *__fastcall ASM_strcpy(char *dest, const char* src);
+    extern int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
+    extern char *__fastcall ASM_strcpy(char *destination, const char* source);
+    extern int __fastcall ASM_strncmp(const char *s1, const char *s2, size_t maxLen);
+    extern char *__fastcall ASM_strncpy(char *destination, const char *source, size_t maxLen);
+    extern char *__fastcall ASM_strncat(char *destination, const char *source, size_t maxLen);
+    extern size_t __fastcall ASM_strnlen(const char* string, size_t maxLength);
 #ifdef __cplusplus
-}
+}   // extern "C"
 #endif

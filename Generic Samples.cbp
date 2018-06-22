@@ -68,6 +68,10 @@
 		<Unit filename="square32-64.asm" />
 		<Unit filename="strcpy.asm" />
 		<Unit filename="strlen.asm" />
+		<Unit filename="strncat.asm" />
+		<Unit filename="strncmp.asm" />
+		<Unit filename="strncpy.asm" />
+		<Unit filename="strnlen.asm" />
 		<Unit filename="strnset.asm" />
 		<Unit filename="strrchr.asm" />
 		<Unit filename="strset.asm" />

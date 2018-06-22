@@ -218,8 +218,62 @@ void testMemcpy()
     cout << "personCopy : " << personCopy.name << ", " << personCopy.age << " \n";
 }
 
+void subtestStrncmp(const char *str1, const char *str2, int size)
+{
+    int retstrncmp = ASM_strncmp(str1, str2, size);
+    if (!retstrncmp)
+        cout << "First " << size << " chars of [" << str1 << "] equal [" << str2 << "]\n";
+    else if (retstrncmp < 0)
+        cout << "First " << size << " chars of [" << str1 << "] are smaller than [" << str2 << "]\n";
+    else if (retstrncmp > 0)
+        cout << "First " << size << " chars of [" << str1 << "] are bigger than [" << str2 << "]\n";
+}
+
+void testStrncmp()
+{
+    const char *testStr = "Hello World!";
+    subtestStrncmp(testStr, "Hello!", 5);
+    subtestStrncmp(testStr, "Hello", 10);
+    subtestStrncmp(testStr, "Hello there", 10);
+    subtestStrncmp("Hello, everybody!" + 12, "Hello, somebody!" + 11, 5);
+}
+
+void testStrncpy()
+{
+    char str1[]= "To be or not to be";
+    char str2[40];
+    char str3[40];
+
+    // Copy to sized buffer (overflow safe)
+    ASM_strncpy(str2, str1, sizeof(str2));
+
+    // Copy only 5 characters
+    ASM_strncpy(str3, str2, 5);
+    str3[5] = '\0';   // Manually add NULL terminator
+
+    puts(str1);
+    puts(str2);
+    puts(str3);
+}
+
+void testStrncat()
+{
+    char str1[20];
+    char str2[20];
+    ASM_strcpy(str1, "To be ");
+    ASM_strcpy(str2, "or not to be");
+    ASM_strncat(str1, str2, 6);
+    puts(str1);
+}
+
 int main(int argc, char *argv[])
 {
+    cout << "\nTesting strncat\n";
+    testStrncat();
+    cout << "\nTesting strncpy\n";
+    testStrncpy();
+    cout << "\nTesting strncmp\n";
+    testStrncmp();
     cout << "\nTesting strcpy\n";
     testStrcpy();
     cout << "\nTesting memcmp\n";

@@ -1,24 +1,39 @@
 global @ASM_strcpy@8
+extern @ASM_strlen@4
+extern @ASM_memcpy@12
+%define ASM_strlen @ASM_strlen@4
+%define ASM_memcpy @ASM_memcpy@12
 
 segment .text align=16
 
-%define dest ecx
-%define src edx
+%define destination ecx
+%define source edx
+%define startDest esi
+%define startSrc ebx
+%define strlenStr ecx
+%define strlenRet eax
+%define memcpyDest ecx
+%define memcpySrc edx
 %define result eax
-%define index ebx
-%define loDest cl
 @ASM_strcpy@8:
-    push index
-    xor index, index
-    mov result, dest
-    align 16    ; Align the loop
+    push startDest
+    push startSrc
+    mov startDest, destination
 
-.loop:
-    mov loDest, byte [src + index]
-    mov byte [result + index], loDest
-    inc index
-    test loDest, loDest
-    jne .loop
+    mov startSrc, source
+    sub esp, 4
 
-    pop index
+    mov strlenStr, source
+    call ASM_strlen
+    sub esp, 12
+
+    mov memcpyDest, startDest
+    mov memcpySrc, startSrc
+    inc strlenRet
+    push strlenRet
+    call ASM_memcpy
+
+    add esp, 16
+    pop startSrc
+    pop startDest
     ret
