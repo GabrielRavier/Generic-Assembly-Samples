@@ -18,7 +18,7 @@ extern "C"
     extern int __fastcall ASM_bitcount(unsigned int num);
     extern char *__fastcall ASM_reverseString(char *string);
     extern int __fastcall ASM_atoi(const char *string);
-    extern int __fastcall ASM_floorLog2(int num);
+    extern unsigned int __fastcall ASM_floorLog2(unsigned int numToFloor);
     extern long double __stdcall ASM_ldsquare(long double num);
     extern float __fastcall ASM_fsquare(float num);
     extern long long int __fastcall ASM_square64(long long int num);
@@ -26,7 +26,6 @@ extern "C"
     extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
     extern double __cdecl ASM_sinxpnx(double x, int n);
     extern long long ASM_readTSC();
-    extern char *ASM_getProcessorName();
     extern float __fastcall ASM_qRSqrt(float number);
     extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
     extern int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
@@ -35,6 +34,30 @@ extern "C"
     extern char *__fastcall ASM_strncpy(char *destination, const char *source, size_t maxLen);
     extern char *__fastcall ASM_strncat(char *destination, const char *source, size_t maxLen);
     extern size_t __fastcall ASM_strnlen(const char* string, size_t maxLength);
+    extern void __fastcall ASM_bcopy(const void *source, void *destination, size_t length);
+    extern void *__fastcall ASM_memmove(void *destination, const void *source, size_t length);
+    extern int getInstructionSet();
+    extern int instructionSet;
 #ifdef __cplusplus
 }   // extern "C"
 #endif
+
+enum instructionSets
+{
+    only386 = 0,
+    MMXSupported = 1,
+    conditionalMovAndFCOMISupported = 2,
+    SSESupported = 3,
+    SSE2Supported = 4,
+    SSE3Supported = 5,
+    SSSE3Supported = 6,
+    SSE41Supported = 8,
+    popcntSupported = 9,
+    SSE42Supported = 10,
+    AVXSupported = 11,
+    PCLMULAndAESSupported = 12,
+    AVX2Supported = 13,
+    FMA3_F16C_BMI1_BMI2_LZCNTSupported = 14,
+    AVX512FSupported = 15,
+    AVX512BW_DQ_VLSupported = 16,
+};

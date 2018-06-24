@@ -3,7 +3,7 @@ global @ASM_getbits@12
 segment .text align=16
 
 ; Algorithm :   /* getbits:  get numBits bits from position position */
-;               unsigned getbits(unsigned num, int position, int numBits)
+;               unsigned int getbits(unsigned int num, unsigned char position, unsigned int numBits)
 ;               {
 ;                   return (num >> (position+1-numBits)) & ~(~0 << numBits);
 ;               }

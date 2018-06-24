@@ -181,11 +181,6 @@ void testCopyInputToOutput()
     ASM_copyInputToOutput();
 }
 
-void testGetProcessorName()
-{
-    cout << "Processor name : " << ASM_getProcessorName() << '\n';
-}
-
 void testqRSqrt()
 {
     float testFlt = random(1.1f, 100000.0f);
@@ -198,7 +193,7 @@ void testqRSqrt()
 
 struct Person
 {
-    char name[40];
+    char name[512];
     int age;
 };
 
@@ -266,8 +261,28 @@ void testStrncat()
     puts(str1);
 }
 
+void testMemmove()
+{
+    char str[] = "memmove can be very useful......";
+    ASM_memmove(str+20,str+15,11);
+    puts(str);
+}
+
+void testBcopy()
+{
+    char buffer[80];
+    ASM_bcopy("Hello ", buffer, 6);
+    ASM_bcopy("world",  &buffer[6], 6);
+    printf("%s\n", buffer);
+}
+
 int main(int argc, char *argv[])
 {
+    cout << getInstructionSet();
+    cout << "\nTesting bcopy\n";
+    testBcopy();
+    cout << "\nTesting memmove\n";
+    testMemmove();
     cout << "\nTesting strncat\n";
     testStrncat();
     cout << "\nTesting strncpy\n";
@@ -282,8 +297,6 @@ int main(int argc, char *argv[])
     testMemcpy();
     cout << "\nTesting Q_rsqrt\n";
     testqRSqrt();
-    cout << "\nTesting getProcessorName\n";
-    testGetProcessorName();
     cout << "\nTesting sinxpnx\n";
     testSinxpnx();
     cout << "\nTesting fpow\n";

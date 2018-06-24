@@ -5,44 +5,49 @@ extern @ASM_strlen@4
 segment .text align=16
 
 %define string ecx
-%define stringBackup esi
 %define strlenRet eax
-%define pEnd eax
 %define result eax
-%define pStart edx
-%define currentStartChar cl
-%define currentEndChar bl
-%define currentEndChar16 bx
 @ASM_reverseString@4:
-    push stringBackup
-    push currentEndChar16
+    push esi
+    push ebx
     sub esp, 4
+    mov esi, string
 
-    mov stringBackup, string
+    test string, string
+    je .returnString
 
+    cmp byte [string], 0
+    jne .doReverse
+
+.returnString:
+    mov result, esi
+    add esp, 4
+    pop ebx
+    pop esi
+    ret
+
+.doReverse:
     call ASM_strlen
-    lea pEnd, [stringBackup - 1 + strlenRet]    ; pEnd = string + strlen(string) - 1;
+    lea eax, [strlenRet + esi - 1]
 
-    cmp stringBackup, pEnd
-    jnb .return
-    mov pStart, stringBackup
+    cmp esi, eax
+    jnb .returnString
+
+    mov edx, esi
 
 .loop:
-    mov currentStartChar, byte [pStart]
-    mov currentEndChar, byte [pEnd]
+    mov cl, byte [edx]
+    mov bl, byte [eax]
+    mov byte [edx], bl
+    mov byte [eax], cl
 
-    mov [pStart], currentEndChar
-    mov [pEnd], currentStartChar
-
-    inc pStart
-    dec pEnd
-
-    cmp pStart, pEnd
+    inc edx
+    dec eax
+    cmp edx, eax
     jb .loop
 
-.return:
-    mov result, stringBackup
+    mov result, esi
     add esp, 4
-    pop currentEndChar16
-    pop stringBackup
+    pop ebx
+    pop esi
     ret

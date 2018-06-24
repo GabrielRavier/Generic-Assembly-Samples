@@ -44,6 +44,7 @@
 		</Linker>
 		<Unit filename="assemblyFunctions.h" />
 		<Unit filename="atoi.asm" />
+		<Unit filename="bcopy.asm" />
 		<Unit filename="bitcount.asm" />
 		<Unit filename="copyInputToOutput.asm" />
 		<Unit filename="countCharsInInput.asm" />
@@ -51,13 +52,14 @@
 		<Unit filename="floorLog2.asm" />
 		<Unit filename="fpow.asm" />
 		<Unit filename="fsquare.asm" />
-		<Unit filename="getProcessorName.asm" />
+		<Unit filename="getInstructionSet.asm" />
 		<Unit filename="getbits.asm" />
 		<Unit filename="ldsquare.asm" />
 		<Unit filename="main.cpp" />
 		<Unit filename="memchr.asm" />
 		<Unit filename="memcmp.asm" />
 		<Unit filename="memcpy.asm" />
+		<Unit filename="memmove.asm" />
 		<Unit filename="memset.asm" />
 		<Unit filename="myRand.h" />
 		<Unit filename="pow.asm" />

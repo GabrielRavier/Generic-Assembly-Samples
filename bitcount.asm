@@ -1,11 +1,12 @@
 global @ASM_bitcount@4
+extern _instructionSet
 
 segment .text align=16
 
 %define result eax
 %define number ecx
 %define temp edx
-@ASM_bitcount@4:
+actualASM_bitcountNoPopcnt:
     mov result, number
 
     mov temp, result
@@ -35,3 +36,16 @@ segment .text align=16
 
     and result, 0x03F   ; We apply the second-to-last bitmask here (it's quicker)
     ret
+
+
+
+
+
+%define popcntSupported 9
+@ASM_bitcount@4:
+    cmp dword [_instructionSet], popcntSupported - 1
+    jle .doNoPopcnt
+    popcnt result, number
+    ret
+.doNoPopcnt:
+    jmp actualASM_bitcountNoPopcnt
