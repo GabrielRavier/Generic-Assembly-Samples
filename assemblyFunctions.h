@@ -37,7 +37,6 @@ extern "C"
     extern void __fastcall ASM_bcopy(const void *source, void *destination, size_t length);
     extern void *__fastcall ASM_memmove(void *destination, const void *source, size_t length);
     extern int getInstructionSet();
-    extern int instructionSet;
 #ifdef __cplusplus
 }   // extern "C"
 #endif

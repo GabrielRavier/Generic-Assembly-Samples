@@ -59,6 +59,6 @@ segment .text align=16
     jmp .return
 ; ------------------------------------------------------------------------------------------------------------------------
 .returnOne:
-    fstp st1
+    fstp st1    ; We loaded 1 at start so we can do this
 .return:
     ret 12

@@ -1,5 +1,9 @@
 global @ASM_bcopy@12
-extern _instructionSet
+extern _getInstructionSet
+
+segment .data align=16
+
+    actualASM_bcopyPtr dd actualASM_bcopyGetPtr
 
 segment .text align=16
 
@@ -38,7 +42,7 @@ actualASM_bcopy386:
 
     or ebx, edx
     cmp eax, 12
-    seta dl
+    seta dl ;
 
     test bl, dl
     je .startMovsb
@@ -138,7 +142,7 @@ actualASM_bcopy386:
 
 
     align 16
-actualASM_bcopySSE1:
+actualASM_bcopySSE:
     push ebp
     push edi
     push esi
@@ -1366,32 +1370,62 @@ actualASM_bcopyAVX2:
 
 
     align 16
-%define SSE1Supported 3
+%define SSESupported 3
 %define SSE2Supported 4
 %define SSSE3Supported 6
-%define PCLMULAndAESSupported 12
+%define AVXSupported 12
 %define AVX2Supported 13
 @ASM_bcopy@12:
-    mov eax, dword [_instructionSet]
-    cmp eax, SSE1Supported - 1
-    jle .do386
-    cmp eax, SSE1Supported
-    je .doSSE1
+    jmp dword [actualASM_bcopyPtr]
+
+    align 16
+actualASM_bcopyGetPtr:
+    push ebx
+    sub esp, 24
+    mov dword [esp + 12], destination
+    mov dword [esp + 8], source
+    mov ebx, [esp + 28 + length]
+
+    call _getInstructionSet
+
+    cmp eax, SSESupported - 1
+    mov source, dword [esp + 8]
+    mov destination, dword [esp + 12]
+    jg .not386
+
+    mov dword [actualASM_bcopyPtr], actualASM_bcopy386
+    jmp .doJmp
+
+.not386:
+    cmp eax, SSE2Supported - 1
+    jne .notSSE
+    mov dword [actualASM_bcopyPtr], actualASM_bcopySSE
+    jmp .doJmp
+
+.notSSE:
     cmp eax, SSSE3Supported - 1
-    jle .doSSE2
-    cmp eax, PCLMULAndAESSupported - 1
-    jle .doSSSE3
+    jg .notSSE2
+    mov dword [actualASM_bcopyPtr], actualASM_bcopySSE2
+    jmp .doJmp
+
+.notSSE2:
+    cmp eax, AVXSupported - 1
+    jg .notSSSE3
+    mov dword [actualASM_bcopyPtr], actualASM_bcopySSSE3
+    jmp .doJmp
+
+.notSSSE3:
     cmp eax, AVX2Supported - 1
-    je .doAVX
-.doAVX2:
-    jmp actualASM_bcopyAVX2
-.do386:
-    jmp actualASM_bcopy386
-.doSSE2:
-    jmp actualASM_bcopySSE2
-.doAVX:
-    jmp actualASM_bcopyAVX
-.doSSE1:
-    jmp actualASM_bcopySSE1
-.doSSSE3:
-    jmp actualASM_bcopySSSE3
+    jg .notAVX
+    mov dword [actualASM_bcopyPtr], actualASM_bcopyAVX
+    jmp .doJmp
+
+.notAVX:
+    mov dword [actualASM_bcopyPtr], actualASM_bcopyAVX2
+
+.doJmp:
+    mov dword [esp + 28 + length], ebx
+    add esp, 24
+    pop ebx
+    jmp dword [actualASM_bcopyPtr]
+

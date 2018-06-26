@@ -9,6 +9,6 @@ segment .text align=16
     push 10
     push 0
     push string
-    call _strtol
+    call _strtol    ; Just redirects the call to strtol (lol that's kinda lazy)
     add esp, 28
     ret

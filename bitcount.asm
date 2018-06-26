@@ -1,5 +1,9 @@
 global @ASM_bitcount@4
-extern _instructionSet
+extern _getInstructionSet
+
+segment .data align=16
+
+    actualASM_bitcountPtr dd actualASM_bitcountGetPtr
 
 segment .text align=16
 
@@ -41,11 +45,34 @@ actualASM_bitcountNoPopcnt:
 
 
 
-%define popcntSupported 9
-@ASM_bitcount@4:
-    cmp dword [_instructionSet], popcntSupported - 1
-    jle .doNoPopcnt
+    align 16
+actualASM_bitcountPopcnt:
     popcnt result, number
     ret
-.doNoPopcnt:
-    jmp actualASM_bitcountNoPopcnt
+
+
+
+
+
+    align 16
+%define popcntSupported 9
+@ASM_bitcount@4:
+    jmp dword [actualASM_bitcountPtr]
+
+    align 16
+actualASM_bitcountGetPtr:
+    sub esp, 28
+    mov dword [esp + 12], number
+
+    call _getInstructionSet
+
+    cmp eax, popcntSupported
+    mov eax, actualASM_bitcountNoPopcnt
+    mov edx, actualASM_bitcountPopcnt
+    cmovge eax, edx
+    mov dword [actualASM_bitcountPtr], eax
+
+    mov number, dword [esp + 12]
+    add esp, 28
+    jmp eax
+
