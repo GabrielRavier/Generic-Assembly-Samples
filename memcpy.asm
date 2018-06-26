@@ -1,5 +1,9 @@
 global @ASM_memcpy@12
-extern _instructionSet
+extern _getInstructionSet
+
+segment .data align=16
+
+    actualASM_memcpyPtr dd actualASM_memcpyGetPtr
 
 segment .text align=16
 
@@ -107,6 +111,7 @@ actualASM_memcpy386:
 
 
 
+    align 16
 actualASM_memcpySSE:
     push ebp
     push edi
@@ -215,6 +220,7 @@ actualASM_memcpySSE:
 
 
 
+    align 16
 actualASM_memcpySSE2:
     push ebp
     push edi
@@ -373,6 +379,7 @@ actualASM_memcpySSE2:
 
 
 
+    align 16
 actualASM_memcpySSSE3:
     push ebp
     push edi
@@ -486,6 +493,7 @@ actualASM_memcpySSSE3:
 
 
 
+    align 16
 actualASM_memcpyAVX:
     push ebp
     mov ebp, esp
@@ -572,6 +580,7 @@ actualASM_memcpyAVX:
 
 
 
+    align 16
 actualASM_memcpyAVX2:
     push ebp
     mov ebp, esp
@@ -657,31 +666,68 @@ actualASM_memcpyAVX2:
 
 
 
+    align 16
 %define SSESupported 3
 %define SSE2Supported 4
 %define SSSE3Supported 6
 %define AVXSupported 11
 %define AVX2Supported 13
 @ASM_memcpy@12:
-    mov eax, dword [_instructionSet]
+    jmp dword [actualASM_memcpyPtr]
+
+    align 16
+actualASM_memcpyGetPtr:
+    push ebx
+    sub esp, 24
+    mov dword [esp + 12], destination
+    mov dword [esp + 8], source
+    mov ebx, dword [esp + 28 + length]
+
+    call _getInstructionSet
+
     cmp eax, SSESupported - 1
-    jle .do386
+    mov source, dword [esp + 8]
+    mov destination, dword [esp + 12]
+    jg .not386
+
+    mov dword [actualASM_memcpyPtr], actualASM_memcpy386
+    jmp .doJmp
+
+.not386:
     cmp eax, SSE2Supported - 1
-    je .doSSE
+    jne .notSSE
+
+    mov dword [actualASM_memcpyPtr], actualASM_memcpySSE
+    jmp .doJmp
+
+.notSSE:
     cmp eax, SSSE3Supported - 1
-    jle .doSSE2
+    jg .notSSE2
+
+    mov dword [actualASM_memcpyPtr], actualASM_memcpySSE2
+    jmp .doJmp
+
+.notSSE2:
     cmp eax, AVXSupported - 1
-    jle .doSSSE3
+    jg .notSSSE3
+
+    mov dword [actualASM_memcpyPtr], actualASM_memcpySSSE3
+    jmp .doJmp
+
+.notSSSE3:
     cmp eax, AVX2Supported - 1
-    jg .doAVX2
-    jmp actualASM_memcpyAVX
-.do386:
-    jmp actualASM_memcpy386
-.doSSE2:
-    jmp actualASM_memcpySSE2
-.doAVX2:
-    jmp actualASM_memcpyAVX2
-.doSSE:
-    jmp actualASM_memcpySSE
-.doSSSE3:
-    jmp actualASM_memcpySSSE3
+    jg .notAVX
+
+    mov dword [actualASM_memcpyPtr], actualASM_memcpyAVX
+    jmp .doJmp
+
+.notAVX:
+    mov dword [actualASM_memcpyPtr], actualASM_memcpyAVX2
+
+.doJmp:
+    mov dword [esp + 28 + length], ebx
+
+    add esp, 24
+    pop ebx
+    jmp dword [actualASM_memcpyPtr]
+

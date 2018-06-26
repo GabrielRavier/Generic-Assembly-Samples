@@ -1,12 +1,16 @@
 global @ASM_floorLog2@4
-extern _instructionSet
+extern _getInstructionSet
+
+segment .data align=16
+
+    actualASM_floorLog2Ptr dd actualASM_floorLog2GetPtr
 
 segment .text align=16
 
 %define number ecx
 %define result eax
 %define loRetVal al
-actualASM_floorLog2386:
+actualASM_floorLog2NoBMI2:
     push ebx
     mov edx, number
 
@@ -56,6 +60,7 @@ actualASM_floorLog2386:
 
 
 
+    align 16
 actualASM_floorLog2BMI2:
     push ebx
 
@@ -103,11 +108,27 @@ actualASM_floorLog2BMI2:
     ret
 
 
+
+
+
+    align 16
 %define FMA3_F16C_BMI1_BMI2_LZCNTSupported 14
 @ASM_floorLog2@4:
-    cmp dword [_instructionSet], FMA3_F16C_BMI1_BMI2_LZCNTSupported - 1
-    jg .do386
-    jmp actualASM_floorLog2BMI2
+    jmp dword [actualASM_floorLog2Ptr]
+
     align 16
-.do386:
-    jmp actualASM_floorLog2386
+actualASM_floorLog2GetPtr:
+    sub esp, 28
+    mov dword [esp + 12], number
+
+    call _getInstructionSet
+
+    cmp eax, FMA3_F16C_BMI1_BMI2_LZCNTSupported
+    mov eax, actualASM_floorLog2NoBMI2
+    mov edx, actualASM_floorLog2BMI2
+    cmovge eax, edx
+    mov dword [actualASM_floorLog2Ptr], eax
+
+    mov number, dword [esp + 12]
+    add esp, 28
+    jmp eax

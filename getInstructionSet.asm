@@ -57,7 +57,9 @@ global _instructionSet
 
 SECTION .data
 align 16
-_instructionSet:
+
+;_instructionSet: We don't wanna have to call this at start just because of some idiot using this directly
+
 _IInstrSet@: dd    -1                  ; local name
 
 SECTION .text  align=16

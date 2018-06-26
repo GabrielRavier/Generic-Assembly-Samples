@@ -276,9 +276,18 @@ void testBcopy()
     printf("%s\n", buffer);
 }
 
+void testMemset()
+{
+    char str[] = "totally not almost (haha lol dat's not funny at all WAHAHAHAHAHAHAHAHAHA) every programmer should know memset!";
+    ASM_memset(str, '-', 74); // Add '-'s until the start of "programmer"
+    ASM_memset(str + 73, ' ', 1); // Append a space before "programmer"
+    puts(str);
+}
+
 int main(int argc, char *argv[])
 {
-    cout << getInstructionSet();
+    cout << "\nTesting memset\n";
+    testMemset();
     cout << "\nTesting bcopy\n";
     testBcopy();
     cout << "\nTesting memmove\n";

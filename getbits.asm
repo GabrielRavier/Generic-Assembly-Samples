@@ -20,6 +20,7 @@ segment .text align=16
 @ASM_getbits@12:
     mov result, number
     sub regNumBits, byte [esp + numBits]
+
     lea temp, [position + 1]  ; Discard number
     shr result, loTemp
     mov temp2, -1   ; Discard position
@@ -27,5 +28,6 @@ segment .text align=16
     sal temp2, loTemp
     not temp2
     and result, temp2
+
     ret 4
 
