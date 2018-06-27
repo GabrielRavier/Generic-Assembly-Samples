@@ -42,7 +42,7 @@ actualASM_bcopy386:
 
     or ebx, edx
     cmp eax, 12
-    seta dl ;
+    seta dl
 
     test bl, dl
     je .startMovsb
@@ -1373,7 +1373,7 @@ actualASM_bcopyAVX2:
 %define SSESupported 3
 %define SSE2Supported 4
 %define SSSE3Supported 6
-%define AVXSupported 12
+%define AVXSupported 11
 %define AVX2Supported 13
 @ASM_bcopy@12:
     jmp dword [actualASM_bcopyPtr]

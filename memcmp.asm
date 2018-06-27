@@ -2,8 +2,8 @@ global @ASM_memcmp@12
 
 segment .text align=16
 
-%define str1 ecx
-%define str2 edx
+%define buf1 ecx
+%define buf2 edx
 %define count 4
 %define regCount eax
 %define cmpTemp bx
@@ -13,19 +13,19 @@ segment .text align=16
     push cmpTemp
 
     mov regCount, [esp + 2 + count]
-    add regCount, str2
+    add regCount, buf2
     jmp .enterLoop
     align 16
 
 .loop:
-    inc str1
-    inc str2
-    mov loCmpTemp, byte [str2 - 1]
-    cmp byte [str1 - 1], loCmpTemp
+    inc buf1
+    inc buf2
+    mov loCmpTemp, byte [buf2 - 1]
+    cmp byte [buf1 - 1], loCmpTemp
     jne .foundDiff
 
 .enterLoop:
-    cmp str2, regCount
+    cmp buf2, regCount
     jne .loop
 
     xor result, result

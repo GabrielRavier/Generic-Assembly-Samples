@@ -284,8 +284,97 @@ void testMemset()
     puts(str);
 }
 
+void testStrchr()
+{
+    char str[] = "\n\nThis is a very long sample string that I made for fun.\n"
+                 "NOTE : This note has been added for the exclusive purpose of making this string longer\n\n";
+    char *pch;
+    printf("Looking for the 's' character in \"%s\"...\n",str);
+    pch = ASM_strchr(str,'s');
+    while (pch != NULL)
+    {
+        printf("found at %d\n",pch-str+1);
+        pch = ASM_strchr(pch+1,'s');
+    }
+}
+
+void testStrcmp()
+{
+    char str1[20];
+    char str2[20];
+    int result;
+
+    //Assigning the value to the string str1
+    ASM_strcpy(str1, "hello");
+
+    //Assigning the value to the string str2
+    ASM_strcpy(str2, "hEllo");
+
+    result = ASM_strcmp(str1, str2);
+
+    if(result > 0)
+        printf("ASCII value of first unmatched character of str1 is greater than str2");
+    else if(result < 0)
+        printf("ASCII value of first unmatched character of str1 is less than str2");
+    else
+        printf("Both the strings str1 and str2 are equal");
+    cout << "\nShould have outputted : \"ASCII value of first unmatched character of str1 is greater than str2\"\n";
+}
+
+void testStrcat()
+{
+    char str[80];
+    ASM_strcpy(str,"These ");
+    ASM_strcat(str,"strings ");
+    ASM_strcat(str,"are ");
+    ASM_strcat(str,"concatenated.");
+    puts(str);
+}
+
+void testIsSuffix()
+{
+    const char *findIn = "something blargo";
+    const char *shouldntBeFound = "WAIT THIS IS BIGGER THAN something blargo";
+    const char *shouldntBeFound2 = "balrog";
+    const char *shouldBeFound = "blargo";
+    const char *shouldBeFound2 = "something blargo";
+    if (ASM_isSuffix(findIn, shouldntBeFound))
+        cout << "FAIL : \"" << shouldntBeFound << "\" is NOT a suffix of \"" << findIn << "\".\n";
+    else
+        cout << "Test 1 succeeded\n";
+    if (ASM_isSuffix(findIn, shouldntBeFound2))
+        cout << "FAIL : \"" << shouldntBeFound2 << "\" is NOT a suffix of \"" << findIn << "\".\n";
+    else
+        cout << "Test 2 succeeded\n";
+    if (!ASM_isSuffix(findIn, shouldBeFound))
+        cout << "FAIL : \"" << shouldBeFound << "\" IS a suffix of \"" << findIn << "\".\n";
+    else
+        cout << "Test 3 succeeded\n";
+    if (!ASM_isSuffix(findIn, shouldBeFound2))
+        cout << "FAIL : \"" << shouldBeFound2 << "\" IS a suffix of \"" << findIn << "\".\n";
+    else
+        cout << "Test 4 succeeded\n";
+}
+
+void testGetFibonnaci()
+{
+    int num = random(1, 93); // 94th number of Fibonacci too big for unsigned long long
+    cout << num << "th number of Fibonacci = " << ASM_getFibonacci(num) << '\n';
+}
+
 int main(int argc, char *argv[])
 {
+    system("pause");
+    cout << "\nTesting getFibonnaci\n";
+    testGetFibonnaci();
+    cout << "\nTesting isSuffix\n";
+    testIsSuffix();
+    cout << "\nTesting strcat\n";
+    testStrcat();
+    cout << "\nTesting strcmp\n";
+    testStrcmp();
+    cout << "\nTesting strchr\n";
+    testStrchr();
     cout << "\nTesting memset\n";
     testMemset();
     cout << "\nTesting bcopy\n";

@@ -38,13 +38,13 @@
 			<Add option="-fexceptions -Wno-write-strings" />
 		</Compiler>
 		<Linker>
-			<Add option="-static-libgcc" />
 			<Add option="-m32" />
 		</Linker>
 		<Unit filename="assemblyFunctions.h" />
 		<Unit filename="atoi.asm" />
 		<Unit filename="bcopy.asm" />
 		<Unit filename="bitcount.asm" />
+		<Unit filename="bzero.asm" />
 		<Unit filename="copyInputToOutput.asm" />
 		<Unit filename="countCharsInInput.asm" />
 		<Unit filename="countLinesWordsCharsInInput.asm" />
@@ -67,6 +67,8 @@
 		<Unit filename="reverseString.asm" />
 		<Unit filename="sinxpnx.asm" />
 		<Unit filename="square32-64.asm" />
+		<Unit filename="strchr.asm" />
+		<Unit filename="strcmp.asm" />
 		<Unit filename="strcpy.asm" />
 		<Unit filename="strlen.asm" />
 		<Unit filename="strncat.asm" />

@@ -4,39 +4,45 @@
 extern "C"
 {
 #endif
-    extern void __cdecl ASM_copyInputToOutput();
-    extern void __cdecl ASM_countCharsInInput();
-    extern void __cdecl ASM_countLinesWordsCharsInInput();
-    extern int __fastcall ASM_pow(int base, unsigned int exponent);
-    extern long double __fastcall ASM_fpow(long double base, int exponent);
-    extern char *__fastcall ASM_strnset(char *string, char character, int count);
+    void __cdecl ASM_copyInputToOutput();
+    void __cdecl ASM_countCharsInInput();
+    void __cdecl ASM_countLinesWordsCharsInInput();
+    int __fastcall ASM_pow(int base, unsigned int exponent);
+    long double __fastcall ASM_fpow(long double base, int exponent);
+    char *__fastcall ASM_strnset(char *string, char character, int count);
     char *__fastcall ASM_strset(char *string, char character);
-    extern char *__fastcall ASM_strrchr(const char *string, char character);
-    extern int __fastcall ASM_strlen(const char *string);
-    extern char *__fastcall ASM_memchr(const char *buffer, char character, unsigned count);
-    extern unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
-    extern int __fastcall ASM_bitcount(unsigned int num);
-    extern char *__fastcall ASM_reverseString(char *string);
-    extern int __fastcall ASM_atoi(const char *string);
-    extern unsigned int __fastcall ASM_floorLog2(unsigned int numToFloor);
-    extern long double __stdcall ASM_ldsquare(long double num);
-    extern float __fastcall ASM_fsquare(float num);
-    extern long long int __fastcall ASM_square64(long long int num);
-    extern int __fastcall ASM_square(int num);
-    extern void *__fastcall ASM_memset(void* buffer, int character, size_t size);
-    extern double __cdecl ASM_sinxpnx(double x, int n);
-    extern long long ASM_readTSC();
-    extern float __fastcall ASM_qRSqrt(float number);
-    extern void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
-    extern int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
-    extern char *__fastcall ASM_strcpy(char *destination, const char* source);
-    extern int __fastcall ASM_strncmp(const char *s1, const char *s2, size_t maxLen);
-    extern char *__fastcall ASM_strncpy(char *destination, const char *source, size_t maxLen);
-    extern char *__fastcall ASM_strncat(char *destination, const char *source, size_t maxLen);
-    extern size_t __fastcall ASM_strnlen(const char* string, size_t maxLength);
-    extern void __fastcall ASM_bcopy(const void *source, void *destination, size_t length);
-    extern void *__fastcall ASM_memmove(void *destination, const void *source, size_t length);
-    extern int getInstructionSet();
+    char *__fastcall ASM_strrchr(const char *string, char character);
+    int __fastcall ASM_strlen(const char *string);
+    char *__fastcall ASM_memchr(const char *buffer, char character, unsigned count);
+    unsigned int __fastcall ASM_getbits(unsigned int num, unsigned char position, unsigned int numBits);
+    int __fastcall ASM_bitcount(unsigned int num);
+    char *__fastcall ASM_reverseString(char *string);
+    int __fastcall ASM_atoi(const char *string);
+    unsigned int __fastcall ASM_floorLog2(unsigned int numToFloor);
+    long double __stdcall ASM_ldsquare(long double num);
+    float __fastcall ASM_fsquare(float num);
+    long long int __fastcall ASM_square64(long long int num);
+    int __fastcall ASM_square(int num);
+    void *__fastcall ASM_memset(void* buffer, int character, size_t size);
+    double __cdecl ASM_sinxpnx(double x, int n);
+    long long ASM_readTSC();
+    float __fastcall ASM_qRSqrt(float number);
+    void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
+    int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
+    char *__fastcall ASM_strcpy(char *destination, const char* source);
+    int __fastcall ASM_strncmp(const char *s1, const char *s2, size_t maxLen);
+    char *__fastcall ASM_strncpy(char *destination, const char *source, size_t maxLen);
+    char *__fastcall ASM_strncat(char *destination, const char *source, size_t maxLen);
+    size_t __fastcall ASM_strnlen(const char* string, size_t maxLength);
+    void __fastcall ASM_bcopy(const void *source, void *destination, size_t length);
+    void *__fastcall ASM_memmove(void *destination, const void *source, size_t length);
+    char *__fastcall ASM_strchr(const char *s, int c);
+    void __fastcall ASM_bzero(void* string, size_t size);
+    int __fastcall ASM_strcmp(const char* a, const char* b);
+    char *__fastcall ASM_strcat(char* dest, const char* src);
+    int __fastcall ASM_isSuffix(const char *string, const char *suffix);
+    unsigned long long __fastcall ASM_getFibonacci(unsigned int num);
+    int getInstructionSet();
 #ifdef __cplusplus
 }   // extern "C"
 #endif
