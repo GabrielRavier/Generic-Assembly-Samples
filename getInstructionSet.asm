@@ -1,7 +1,7 @@
 ;*************************  instrset32.asm  **********************************
 ; Author:           Agner Fog
 ; Date created:     2003-12-12
-; Last modified:    2018-04-24
+; Last modified:    2018-07-16, by Gabriel Ravier
 ; Source URL:       www.agner.org/optimize
 ; Project:          asmlib.zip
 ; Language:         assembly, NASM/YASM syntax, 32 bit

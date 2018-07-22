@@ -71,7 +71,7 @@
 
 1528989155 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\countlineswordscharsininput.asm
 
-1530023097 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\floorlog2.asm
+1530183441 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\floorlog2.asm
 
 1529944738 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\fpow.asm
 
@@ -83,7 +83,7 @@
 
 1528989108 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\ldsquare.asm
 
-1530127834 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1532278656 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	<iostream>
 	<iomanip>
 	<string>
@@ -104,7 +104,7 @@
 
 1528989142 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\qrsqrt.asm
 
-1528989139 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\readtsc.asm
+1530178364 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\readtsc.asm
 
 1529869756 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\reversestring.asm
 
@@ -122,10 +122,10 @@
 
 1530021706 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\memcpy.asm
 
-1530127360 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\assemblyfunctions.h
+1532032565 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\assemblyfunctions.h
 	<cstdlib>
 
-1528980398 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\myrand.h
+1530278622 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\myrand.h
 	<thread>
 	<random>
 
@@ -147,7 +147,7 @@
 
 1530028319 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\bcopy.asm
 
-1530023152 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getinstructionset.asm
+1531761837 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getinstructionset.asm
 
 1530090550 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\strchr.asm
 
@@ -159,7 +159,19 @@
 
 1530103390 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\issuffix.asm
 
-1530123717 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getfibonnaci.asm
+1530433316 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getfibonnaci.asm
 
 1530127768 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\rotateright.asm
+
+1530314776 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\getgreatestcommondivider.asm
+
+1530348885 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\outputasbinary.asm
+
+1531761551 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\isalphabetic.asm
+
+1531762127 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\ispossibleidentifier.asm
+
+1531861692 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\bubblesort.asm
+
+1532210072 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\combsort.asm
 

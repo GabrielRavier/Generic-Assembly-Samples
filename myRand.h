@@ -30,7 +30,7 @@ inline int random(int low, int high)
     return (low + (distrInt(engine) % (high - low + 1)));
 }
 
-inline long long int random(long long int low, long long int high)
+inline long long int random(long long low, long long high)
 {
     return (low + (distrInt64(engine) % (high - low + 1)));
 }

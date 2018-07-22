@@ -52,31 +52,11 @@ void testMemcmp()
     cout << "memcmp(\"efgh\", \"abcd\", 4) = " << ASM_memcmp ("efgh", "abcd", 4) << " (should be more than 0)\n";
 }
 
-void testSinxpnx()
-{
-    double sinxpnx_x = random(-2000000.0, 2000000.0);
-    int sinxpnx_n = random(-2000000, 2000000);
-    cout << "sin(" << sinxpnx_x << ") + " << sinxpnx_n << " * " << sinxpnx_x << " = "
-         << ASM_sinxpnx(sinxpnx_x, sinxpnx_n) << '\n';
-}
-
 void testFpow()
 {
     long double fTestNum = random(-2000000.0l, 2000000.0l);
     int testExponent = random(-10, 10);
     cout << fTestNum << " ^ " << testExponent << " = " << ASM_fpow(fTestNum, testExponent) << '\n';
-}
-
-void testSquares()
-{
-    int testInt = random(-2000000, 2000000);
-    long long int testInt64 = random(-20000000000LL, 20000000000LL);
-    float testFloat = random(0.0f, 200000.0f);
-    long double testLDbl = random(0.0l, 3.40282347e+380l);
-    cout << "Square of " << testInt << " : " << ASM_square(testInt) << '\n';
-    cout << "Square of " << testInt64 << " : " << ASM_square64(testInt64) << '\n';
-    cout << "Square of " << testFloat << " : " << ASM_fsquare(testFloat) << '\n';
-    cout << "Square of " << testLDbl << " : " << ASM_ldsquare(testLDbl) << '\n';
 }
 
 void testFloorLog2()
@@ -161,34 +141,6 @@ void testPow()
 {
     for (int i = 0; i < 10; i++)
         cout << i << " ^ " << i << " = " << ASM_pow(i, i) << '\n';
-}
-
-void testCountLinesWordsCharsInInput()
-{
-    cout << "Counting characters, lines and words until next backslash\n";
-    ASM_countLinesWordsCharsInInput();
-}
-
-void testCountCharsInInput()
-{
-    cout << "Counting characters until next backslash\n";
-    ASM_countCharsInInput();
-}
-
-void testCopyInputToOutput()
-{
-    cout << "Copying input to output until next backslash\n";
-    ASM_copyInputToOutput();
-}
-
-void testqRSqrt()
-{
-    float testFlt = random(1.1f, 100000.0f);
-    cout << "1/sqrt("
-         << testFlt
-         << ") = "
-         << ASM_qRSqrt(testFlt)
-         << '\n';
 }
 
 struct Person
@@ -362,9 +314,98 @@ void testGetFibonnaci()
     cout << num << "th number of Fibonacci = " << ASM_getFibonacci(num) << '\n';
 }
 
+void testGetGreatestCommonDivider()
+{
+    unsigned long long randNum1 = random(1LL, LLONG_MAX);
+    unsigned long long randNum2 = random(1LL, LLONG_MAX);
+
+    cout << "Greatest common divider of " << randNum1 << " and " << randNum2 << " is : " << ASM_getGreatestCommonDivider(randNum1, randNum2) << '\n';
+}
+
+void testIsAlphabetic()
+{
+    cout << "Printing the alphabet : ";
+    for (char i = CHAR_MIN; i < CHAR_MAX; i++)
+        if (ASM_isAlphabetic(i))
+            putchar(i);
+    cout << '\n';
+}
+
+void testIsPossibleIdentifier()
+{
+    cout << "Printing all valid characters in an identifier : ";
+    for (char i = CHAR_MIN; i < CHAR_MAX; i++)
+        if (ASM_isPossibleIdentifier(i))
+            putchar(i);
+    cout << '\n';
+}
+
+void testBubbleSort()
+{
+    static const int arraySize = 10;
+    int testArray[arraySize];
+    for (int i = 0; i < arraySize; i++)
+        testArray[i] = random(1, 10);
+    cout << "Array before sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    ASM_bubbleSort(testArray, arraySize);
+    cout << "\nArray after sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    cout << '\n';
+}
+
+void testCombSort()
+{
+    static const int arraySize = 10;
+    int testArray[arraySize];
+    for (int i = 0; i < arraySize; i++)
+        testArray[i] = random(1, 10);
+    cout << "Array before sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    ASM_combSort(testArray, arraySize);
+    cout << "\nArray after sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    cout << '\n';
+}
+
+volatile int array1[1000000] = {0};
+volatile int array2[1000000] = {0};
+
+void cmpMemcpy()
+{
+    int lol, lol2;
+    ASM_memcpy(&lol, &lol2, sizeof(int)); // Initialise dispatcher
+    memcpy(&lol, &lol2, sizeof(int)); // Maybe GCC's has one too idk
+    auto tempTime = ASM_readTSC();
+    for (int i = 0; i < 1000000; i++)
+        ASM_memcpy((void *)array2, (void *)array1, 1000000);
+    auto timeForASM = (ASM_readTSC() - tempTime) / 1000000;
+    tempTime = ASM_readTSC();
+    for (int i = 0; i < 1000000; i++)
+        memcpy((void *)array2, (void *)array1, 1000000);
+    auto timeForStd = (ASM_readTSC() - tempTime) / 1000000;
+    cout << "Clocks for ASM (per iteration) : " << timeForASM << '\n';
+    cout << "Clocks for std (per iteration) : " << timeForStd << '\n';
+}
+
 int main(int argc, char *argv[])
 {
+    cmpMemcpy();
     system("pause");
+    cout << "\nTesting combSort\n";
+    testCombSort();
+    cout << "\nTesting bubbleSort\n";
+    testBubbleSort();
+    cout << "\nTesting isPossibleIdentifier\n";
+    testIsPossibleIdentifier();
+    cout << "\nTesting isAlphabetic\n";
+    testIsAlphabetic();
+    cout << "\nTesting getGreatestCommonDivider\n";
+    testGetGreatestCommonDivider();
     cout << "\nTesting getFibonnaci\n";
     testGetFibonnaci();
     cout << "\nTesting isSuffix\n";
@@ -393,14 +434,8 @@ int main(int argc, char *argv[])
     testMemcmp();
     cout << "\nTesting memcpy\n";
     testMemcpy();
-    cout << "\nTesting Q_rsqrt\n";
-    testqRSqrt();
-    cout << "\nTesting sinxpnx\n";
-    testSinxpnx();
     cout << "\nTesting fpow\n";
     testFpow();
-    cout << "\nTesting squares\n";
-    testSquares();
     cout << "\nTesting floorLog2\n";
     testFloorLog2();
     cout << "\nTesting getbits\n";
@@ -423,11 +458,5 @@ int main(int argc, char *argv[])
     testAtoi();
     cout << "\nTesting pow\n";
     testPow();
-    cout << "\nTesting countLinesWordsCharsInInput\n";
-    testCountLinesWordsCharsInInput();
-    cout << "\nTesting countCharsInInput\n";
-    testCountCharsInInput();
-    cout << "\nTesting copyInputToOutput\n";
-    testCopyInputToOutput();
     return 0;
 }

@@ -4,9 +4,6 @@
 extern "C"
 {
 #endif
-    void __cdecl ASM_copyInputToOutput();
-    void __cdecl ASM_countCharsInInput();
-    void __cdecl ASM_countLinesWordsCharsInInput();
     int __fastcall ASM_pow(int base, unsigned int exponent);
     long double __fastcall ASM_fpow(long double base, int exponent);
     char *__fastcall ASM_strnset(char *string, char character, int count);
@@ -19,14 +16,8 @@ extern "C"
     char *__fastcall ASM_reverseString(char *string);
     int __fastcall ASM_atoi(const char *string);
     unsigned int __fastcall ASM_floorLog2(unsigned int numToFloor);
-    long double __stdcall ASM_ldsquare(long double num);
-    float __fastcall ASM_fsquare(float num);
-    long long int __fastcall ASM_square64(long long int num);
-    int __fastcall ASM_square(int num);
     void *__fastcall ASM_memset(void* buffer, int character, size_t size);
-    double __cdecl ASM_sinxpnx(double x, int n);
     long long ASM_readTSC();
-    float __fastcall ASM_qRSqrt(float number);
     void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
     int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
     char *__fastcall ASM_strcpy(char *destination, const char* source);
@@ -42,6 +33,11 @@ extern "C"
     char *__fastcall ASM_strcat(char* dest, const char* src);
     int __fastcall ASM_isSuffix(const char *string, const char *suffix);
     unsigned long long __fastcall ASM_getFibonacci(unsigned int num);
+    unsigned long long __fastcall ASM_getGreatestCommonDivider(unsigned long long num1, unsigned long long num2);
+    bool __fastcall ASM_isAlphabetic(const char c);
+    bool __fastcall ASM_isPossibleIdentifier(const char c);
+    void __fastcall ASM_bubbleSort(int *array, const size_t arraySize);
+    void __fastcall ASM_combSort(int *values, const size_t arraySize);
     int getInstructionSet();
 #ifdef __cplusplus
 }   // extern "C"
