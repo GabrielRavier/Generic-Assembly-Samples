@@ -1,3 +1,4 @@
 *.o
 *.exe
 *.stackdump
+/Original C algorithms/.gitignore

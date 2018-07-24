@@ -17,7 +17,6 @@ extern "C"
     int __fastcall ASM_atoi(const char *string);
     unsigned int __fastcall ASM_floorLog2(unsigned int numToFloor);
     void *__fastcall ASM_memset(void* buffer, int character, size_t size);
-    long long ASM_readTSC();
     void *__fastcall ASM_memcpy(void *destination, const void *source, size_t length);
     int __fastcall ASM_memcmp(const void *str1, const void *str2, size_t maxLen);
     char *__fastcall ASM_strcpy(char *destination, const char* source);
@@ -37,7 +36,9 @@ extern "C"
     bool __fastcall ASM_isAlphabetic(const char c);
     bool __fastcall ASM_isPossibleIdentifier(const char c);
     void __fastcall ASM_bubbleSort(int *array, const size_t arraySize);
-    void __fastcall ASM_combSort(int *values, const size_t arraySize);
+    void __fastcall ASM_combSort(int *array, const size_t arraySize);
+    void __fastcall ASM_cocktailSort(int *array, const size_t arraySize);
+    long long ASM_readTSC();
     int getInstructionSet();
 #ifdef __cplusplus
 }   // extern "C"

@@ -372,8 +372,8 @@ void testCombSort()
     cout << '\n';
 }
 
-volatile int array1[1000000] = {0};
-volatile int array2[1000000] = {0};
+volatile int array1[100000] = {0};
+volatile int array2[100000] = {0};
 
 void cmpMemcpy()
 {
@@ -381,14 +381,14 @@ void cmpMemcpy()
     ASM_memcpy(&lol, &lol2, sizeof(int)); // Initialise dispatcher
     memcpy(&lol, &lol2, sizeof(int)); // Maybe GCC's has one too idk
     auto tempTime = ASM_readTSC();
-    for (int i = 0; i < 1000000; i++)
-        ASM_memcpy((void *)array2, (void *)array1, 1000000);
-    auto timeForASM = (ASM_readTSC() - tempTime) / 1000000;
-    tempTime = ASM_readTSC();
-    for (int i = 0; i < 1000000; i++)
-        memcpy((void *)array2, (void *)array1, 1000000);
-    auto timeForStd = (ASM_readTSC() - tempTime) / 1000000;
+    for (int i = 0; i < 100000; i++)
+        ASM_memcpy((void *)array2, (void *)array1, 100000);
+    auto timeForASM = (ASM_readTSC() - tempTime) / 100000;
     cout << "Clocks for ASM (per iteration) : " << timeForASM << '\n';
+    tempTime = ASM_readTSC();
+    for (int i = 0; i < 100000; i++)
+        memcpy((void *)array2, (void *)array1, 100000);
+    auto timeForStd = (ASM_readTSC() - tempTime) / 100000;
     cout << "Clocks for std (per iteration) : " << timeForStd << '\n';
 }
 
