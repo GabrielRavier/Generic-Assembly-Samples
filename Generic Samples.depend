@@ -83,9 +83,10 @@
 
 1528989108 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\ldsquare.asm
 
-1532430156 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
+1532524802 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\main.cpp
 	"assemblyFunctions.h"
 	"tests.h"
+	"comparisons.h"
 	<iostream>
 	<cstring>
 
@@ -168,7 +169,7 @@
 
 1532210072 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\combsort.asm
 
-1532427908 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\assemblyfunctions.h
+1532547892 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\assemblyfunctions.h
 	<cstdlib>
 
 1530278622 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\myrand.h
@@ -245,7 +246,7 @@
 
 1528989094 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm\strset.asm
 
-1532433098 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\src\tests.cpp
+1532530233 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\src\tests.cpp
 	"tests.h"
 	"assemblyFunctions.h"
 	"myRand.h"
@@ -255,7 +256,7 @@
 	<string>
 	<memory>
 
-1532429971 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\tests.h
+1532530238 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\tests.h
 
 1532433934 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\src\comparisons.cpp
 	"comparisons.h"
@@ -264,4 +265,8 @@
 	<cstring>
 
 1532433877 c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\include\comparisons.h
+
+1532466028 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm\cocktailsort.asm
+
+1532530216 source:c:\users\administrator\onedrive\documents\ecole\franc_sais\3e\chapitre_1\snes_roms\programming\projects\assembly\generic samples\asm\gnomesort.asm
 

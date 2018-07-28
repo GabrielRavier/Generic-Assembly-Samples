@@ -9,12 +9,15 @@ using std::cout;
 
 int main(int argc, char *argv[])
 {
-    compareMemcpy();
-    system("pause");
+    cout << "\nTesting gnomeSort\n";
+    testGnomeSort();
+    cout << "\nTesting cocktailSort\n";
+    testCocktailSort();
     cout << "\nTesting combSort\n";
     testCombSort();
     cout << "\nTesting bubbleSort\n";
     testBubbleSort();
+    system("pause");
     cout << "\nTesting isPossibleIdentifier\n";
     testIsPossibleIdentifier();
     cout << "\nTesting isAlphabetic\n";
@@ -73,5 +76,7 @@ int main(int argc, char *argv[])
     testAtoi();
     cout << "\nTesting pow\n";
     testPow();
+    cout << "\nComparing memcpy\n";
+    compareMemcpy();
     return 0;
 }

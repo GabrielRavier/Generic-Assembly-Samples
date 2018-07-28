@@ -1,6 +1,8 @@
 #ifndef TESTS_H
 #define TESTS_H
 
+void testGnomeSort();
+void testCocktailSort();
 void testStrcpy();
 void testMemcmp();
 void testFpow();

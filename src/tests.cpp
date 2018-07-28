@@ -12,6 +12,38 @@ using std::cout;
 using std::string;
 using std::make_unique;
 
+void testGnomeSort()
+{
+    static const int arraySize = 10;
+    int testArray[arraySize];
+    for (int i = 0; i < arraySize; i++)
+        testArray[i] = random(1, 10);
+    cout << "Array before sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    ASM_gnomeSort(testArray, arraySize);
+    cout << "\nArray after sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    cout << '\n';
+}
+
+void testCocktailSort()
+{
+    static const int arraySize = 10;
+    int testArray[arraySize];
+    for (int i = 0; i < arraySize; i++)
+        testArray[i] = random(1, 10);
+    cout << "Array before sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    ASM_cocktailSort(testArray, arraySize);
+    cout << "\nArray after sort : ";
+    for (int i = 0; i < arraySize; i++)
+        cout << testArray[i] << ' ';
+    cout << '\n';
+}
+
 void testStrcpy()
 {
     char *source = "Take the test.";
