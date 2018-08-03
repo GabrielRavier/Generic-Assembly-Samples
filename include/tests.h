@@ -13,8 +13,6 @@ void testMemchr();
 void testStrlen();
 void testStrrchr();
 void testReverseString();
-void testStrnset();
-void testStrset();
 void testAtoi();
 void testPow();
 void testMemcpy();

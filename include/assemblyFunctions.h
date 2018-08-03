@@ -8,8 +8,6 @@ extern "C"
 #endif
 int __fastcall ASM_pow(int base, unsigned int exponent);
 long double __fastcall ASM_fpow(long double base, int exponent);
-char *__fastcall ASM_strnset(char *string, char character, int count);
-char *__fastcall ASM_strset(char *string, char character);
 char *__fastcall ASM_strrchr(const char *string, char character);
 size_t __fastcall ASM_strlen(const char *string);
 char *__fastcall ASM_memchr(const char *buffer, char character, unsigned count);

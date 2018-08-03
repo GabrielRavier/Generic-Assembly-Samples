@@ -6,8 +6,11 @@
 
 using std::cout;
 
-volatile int array1[100000] = {0};
-volatile int array2[100000] = {0};
+constexpr int sizeForArrays = 100000;
+constexpr int compareIterations = 100000;
+
+volatile char array1[sizeForArrays] = {0};
+volatile char array2[sizeForArrays] = {0};
 
 void compareMemcpy()
 {
@@ -15,13 +18,31 @@ void compareMemcpy()
     ASM_memcpy(&lol, &lol2, sizeof(int)); // Initialise dispatcher
     memcpy(&lol, &lol2, sizeof(int)); // Maybe GCC's has one too idk
     auto tempTime = ASM_readTSC();
-    for (int i = 0; i < 100000; i++)
-        ASM_memcpy((void *)array2, (void *)array1, 100000);
-    auto timeForASM = (ASM_readTSC() - tempTime) / 100000;
+    for (int i = 0; i < compareIterations; i++)
+        ASM_memcpy((void *)array2, (void *)array1, sizeForArrays);
+    auto timeForASM = (ASM_readTSC() - tempTime) / compareIterations;
     cout << "Clocks for ASM (per iteration) : " << timeForASM << '\n';
     tempTime = ASM_readTSC();
-    for (int i = 0; i < 100000; i++)
-        memcpy((void *)array2, (void *)array1, 100000);
-    auto timeForStd = (ASM_readTSC() - tempTime) / 100000;
+    for (int i = 0; i < compareIterations; i++)
+        memcpy((void *)array2, (void *)array1, sizeForArrays);
+    auto timeForStd = (ASM_readTSC() - tempTime) / compareIterations;
     cout << "Clocks for std (per iteration) : " << timeForStd << '\n';
 }
+
+void compareMemmove()
+{
+    int lol, lol2;
+    ASM_memmove(&lol, &lol2, sizeof(int)); // Initialise dispatcher
+    memmove(&lol, &lol2, sizeof(int)); // Maybe GCC's has one too idk
+    auto tempTime = ASM_readTSC();
+    for (int i = 0; i < compareIterations; i++)
+        ASM_memmove((void *)array2, (void *)array1, sizeForArrays);
+    auto timeForASM = (ASM_readTSC() - tempTime) / compareIterations;
+    cout << "Clocks for ASM (per iteration) : " << timeForASM << '\n';
+    tempTime = ASM_readTSC();
+    for (int i = 0; i < compareIterations; i++)
+        ASM_memmove((void *)array2, (void *)array1, sizeForArrays);
+    auto timeForStd = (ASM_readTSC() - tempTime) / compareIterations;
+    cout << "Clocks for std (per iteration) : " << timeForStd << '\n';
+}
+

@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-Og" />
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -24,6 +25,7 @@
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-flto" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-flto" />
@@ -36,6 +38,7 @@
 			<Add option="-std=c++1z" />
 			<Add option="-m32" />
 			<Add option="-fexceptions -Wno-write-strings" />
+			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add option="-m32" />
@@ -45,6 +48,7 @@
 		<Unit filename="asm/bitcount.asm" />
 		<Unit filename="asm/bubbleSort.asm" />
 		<Unit filename="asm/bzero.asm" />
+		<Unit filename="asm/cocktailSort.asm" />
 		<Unit filename="asm/combSort.asm" />
 		<Unit filename="asm/floorLog2.asm" />
 		<Unit filename="asm/fpow.asm" />
@@ -52,6 +56,7 @@
 		<Unit filename="asm/getGreatestCommonDivider.asm" />
 		<Unit filename="asm/getInstructionSet.asm" />
 		<Unit filename="asm/getbits.asm" />
+		<Unit filename="asm/gnomeSort.asm" />
 		<Unit filename="asm/isAlphabetic.asm" />
 		<Unit filename="asm/isPossibleIdentifier.asm" />
 		<Unit filename="asm/isSuffix.asm" />
@@ -72,13 +77,13 @@
 		<Unit filename="asm/strncmp.asm" />
 		<Unit filename="asm/strncpy.asm" />
 		<Unit filename="asm/strnlen.asm" />
-		<Unit filename="asm/strnset.asm" />
 		<Unit filename="asm/strrchr.asm" />
-		<Unit filename="asm/strset.asm" />
 		<Unit filename="include/assemblyFunctions.h" />
+		<Unit filename="include/comparisons.h" />
 		<Unit filename="include/myRand.h" />
 		<Unit filename="include/tests.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/comparisons.cpp" />
 		<Unit filename="src/tests.cpp" />
 		<Extensions>
 			<code_completion />

@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <string>
 #include <memory>
+#include <strings.h>
 
 using std::cout;
 using std::string;
@@ -127,24 +128,6 @@ void testReverseString()
     ASM_strcpy(inputCStr.get(), input.c_str());
     cout << "Before reverseString : " << input << '\n';
     cout << "after reverseString : " << ASM_reverseString(inputCStr.get()) << '\n';
-}
-
-void testStrnset()
-{
-    string input = "IMPORTANT INFORMATION";
-    auto inputCStr = make_unique<char []>(input.size() + 1);
-    ASM_strcpy(inputCStr.get(), input.c_str());
-    cout << "Before strnset : " << input << '\n';
-    cout << "After strnset : " << ASM_strnset(inputCStr.get(), 'l', 10) << '\n';
-}
-
-void testStrset()
-{
-    string input = "VERY IMPORTANT STUFF";
-    auto inputCStr = make_unique<char []>(input.size() + 1);
-    ASM_strcpy(inputCStr.get(), input.c_str());
-    cout << "Before strset : " << input << '\n';
-    cout << "After strset : " << ASM_strset(inputCStr.get(), 'a') << '\n';
 }
 
 void testAtoi()

@@ -2,45 +2,44 @@ global @ASM_strlen@4
 
 segment .text align=16
 
-%define string ecx  ; char *, string
-%define loString cl
-%define result eax  ; length of string
-%define xmmZero xmm1
-%define xmmRead xmm0
-%define foundBits edx
-%define backupString ebx
+%define string ecx
+%define result eax
 @ASM_strlen@4:
-    push backupString
-    mov backupString, string
-    mov result, string  ; Copy pointer
-    pxor xmmZero, xmmZero
+    cmp byte [string], 0
+    je .return0
 
-    and string, 0x0F    ; Check for misalignment
-    and result, -0x10   ; Align pointer
+    mov result, string
 
-    movdqa xmmRead, [result]    ; Read from preceding boundary
-    pcmpeqb xmmRead, xmmZero    ; Compare 16 bits with 0
-    pmovmskb foundBits, xmmRead ; Get one bit for each byte result
+.loop:
+    lea edx, [result + 1]
+    mov result, edx
+    cmp byte [edx], 0
+    je .return
 
-    shr foundBits, loString ; Shift out false bits
-    shl foundBits, loString ; Shift back again
-    bsf foundBits, foundBits    ; Find first set bit
-    jnz .found
+    inc result
+    cmp byte [result], 0
+    je .return
 
-.mainLoop:
-    add result, 16
+%macro checkByte 1
+    lea result, [edx + %1]
+    cmp byte [edx + %1], 0
+    je .return
+%endmacro
 
-    movdqa xmmRead, [result]    ; Read 16 aligned bytes
-    pcmpeqb xmmRead, xmmZero    ; Compare the 16 bytes with 0
-    pmovmskb foundBits, xmmRead ; Get one bit for each byte results
+    checkByte 2
+    checkByte 3
+    checkByte 4
+    checkByte 5
+    checkByte 6
 
-    ; No need to shift out false bits
-    bsf foundBits, foundBits
-    jz .mainLoop
+    lea result, [edx + 7]
+    cmp byte [edx + 7], 0
+    jne .loop
 
-.found:
-    ; Terminator found, compute string length
-    sub eax, backupString  ; Substract start address
-    add result, foundBits   ; Add byte index
-    pop backupString
+.return:
+    sub result, string
+    ret
+
+.return0:
+    xor result, result
     ret

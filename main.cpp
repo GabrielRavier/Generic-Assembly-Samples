@@ -68,15 +68,13 @@ int main(int argc, char *argv[])
     testStrrchr();
     cout << "\nTesting reverseString\n";
     testReverseString();
-    cout << "\nTesting strnset\n";
-    testStrnset();
-    cout << "\nTesting strset\n";
-    testStrset();
     cout << "\nTesting atoi\n";
     testAtoi();
     cout << "\nTesting pow\n";
     testPow();
     cout << "\nComparing memcpy\n";
     compareMemcpy();
+    cout << "\nComparing memmove\n";
+    compareMemmove();
     return 0;
 }
