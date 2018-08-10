@@ -6,8 +6,15 @@
 #include <cstring>
 
 using std::cout;
+using std::cin;
 
-int main(int argc, char *argv[])
+void pause()
+{
+    cout << "Press any key to continue . . .";
+    cin.get();
+}
+
+int main(/*int argc, char *argv[]*/)
 {
     cout << "\nTesting gnomeSort\n";
     testGnomeSort();
@@ -17,7 +24,14 @@ int main(int argc, char *argv[])
     testCombSort();
     cout << "\nTesting bubbleSort\n";
     testBubbleSort();
-    system("pause");
+    pause();
+    cout << "\nComparing memset\n";
+    compareMemset();
+    cout << "\nComparing memmove\n";
+    compareMemmove();
+    cout << "\nComparing memcpy\n";
+    compareMemcpy();
+    pause();
     cout << "\nTesting isPossibleIdentifier\n";
     testIsPossibleIdentifier();
     cout << "\nTesting isAlphabetic\n";
@@ -72,9 +86,5 @@ int main(int argc, char *argv[])
     testAtoi();
     cout << "\nTesting pow\n";
     testPow();
-    cout << "\nComparing memcpy\n";
-    compareMemcpy();
-    cout << "\nComparing memmove\n";
-    compareMemmove();
     return 0;
 }

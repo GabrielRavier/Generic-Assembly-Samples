@@ -1,10 +1,10 @@
 ; Performance for copying a 100000 bytes buffer for all the versions (lower is better) :
 ; 386 : 32210/10185 = 3.16
 ; SSE : 11108/10042 = 1.11
-; msvcrt version : 10086/10036 = 1.00
+; std version : 10086/10036 = 1.00
 ; SSE2 : 10380/10607 = 0.98
 ; AVX : 7632/9294 = 0.82
-; Calculated by using the clocks taken by the algorithm divided by the clocks taken by the msvcrt version
+; Calculated by using the clocks taken by the algorithm divided by the clocks taken by the std version
 
 global @ASM_memcpy@12
 extern _getInstructionSet

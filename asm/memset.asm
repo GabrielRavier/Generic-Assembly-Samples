@@ -1,3 +1,10 @@
+; Performance for copying 0 into a 100000 bytes buffer for all the versions (lower is better) :
+; 386 : 252241/73458 = 3.43
+; SSE : 254930/74463 = 3.43
+; SSE2 : 80673/75956 = 1.06
+; SSSE3 : 79104/78349 = 1.01
+; AVX : 76435/75405 = 1.01
+; AVX2 : 53782/75036 = 0.72
 global @ASM_memset@12
 extern _getInstructionSet
 
@@ -134,8 +141,6 @@ actualASM_memset386:
 
     align 16
 %define regSize esi
-; Contrary to the name, this doesn't use SSE ; it just does 16-bytes at once since that's faster on SSE CPUs.
-; It does use conditional move instructions though.
 actualASM_memsetSSE:
     push ebp
     push edi
@@ -697,11 +702,11 @@ actualASM_memsetGetPtr:
 
 .notSSSE3:
     cmp eax, AVX2Supported - 1
-    jg .notAVX2
+    jg .notAVX
     mov dword [actualASM_memsetPtr], actualASM_memsetAVX
     jmp .doJmp
 
-.notAVX2:
+.notAVX:
     mov dword [actualASM_memsetPtr], actualASM_memsetAVX2
 
 .doJmp:

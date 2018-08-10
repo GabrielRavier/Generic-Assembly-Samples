@@ -151,7 +151,7 @@ void testMemcpy()
     {
         char name[512];
         int age;
-    } person = {0}, personCopy = {0};
+    } person = {{0}, 0}, personCopy = {{0}, 0};
 
     // Copy string with memcpy
     ASM_memcpy(person.name, myname, sizeof(myname));
@@ -222,7 +222,7 @@ void testBcopy()
 {
     char buffer[80];
     ASM_bcopy("Hello ", buffer, 6);
-    ASM_bcopy("world",  &buffer[6], 6);
+    ASM_bcopy("world", &buffer[6], 6);
     printf("%s\n", buffer);
 }
 

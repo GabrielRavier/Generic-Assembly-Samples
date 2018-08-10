@@ -39,6 +39,7 @@ void __fastcall ASM_bubbleSort(int *array, const size_t arraySize);
 void __fastcall ASM_combSort(int *array, const size_t arraySize);
 void __fastcall ASM_cocktailSort(int *array, const size_t arraySize);
 void __fastcall ASM_gnomeSort(int *array, const size_t arraySize);
+void __fastcall ASM_oddEvenSort(int *array, const size_t arraySize);
 long long ASM_readTSC();
 int getInstructionSet();
 #ifdef __cplusplus

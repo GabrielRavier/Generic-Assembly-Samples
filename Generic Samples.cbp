@@ -25,6 +25,7 @@
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-flto" />
+					<Add option="-Wall" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -34,6 +35,8 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Weffc++" />
+			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-std=c++1z" />
 			<Add option="-m32" />
@@ -65,6 +68,7 @@
 		<Unit filename="asm/memcpy.asm" />
 		<Unit filename="asm/memmove.asm" />
 		<Unit filename="asm/memset.asm" />
+		<Unit filename="asm/oddEvenSort.asm" />
 		<Unit filename="asm/pow.asm" />
 		<Unit filename="asm/readTSC.asm" />
 		<Unit filename="asm/reverseString.asm" />

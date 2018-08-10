@@ -1,8 +1,12 @@
 ; Performance for copying a 100000 bytes buffer for all the versions (lower is better) :
-; 386 : 28699/28872 = 0.99
-; SSE : 10754/11799 = 0.91
-; SSE2
-; Calculated by using the clocks taken by the algorithm divided by the clocks taken by the msvcrt version
+; std : 11745/11792 = 1.00
+; 386 : 26053/8336 = 2.94
+; SSE : 9112/8944 = 1.02
+; SSE2 : 9018/8960 = 1.01
+; std : 8487/8510 = 1.00
+; SSSE3 : 7928/8631 = 0.92
+; AVX2 : 6691/8487 = 0.79
+; Calculated by using the clocks taken by the algorithm divided by the clocks taken by the std version
 
 global @ASM_bcopy@12
 extern _getInstructionSet
@@ -18,120 +22,156 @@ segment .text align=16
 %define length 4
 %define result eax
 
-; Version for 386 processors
-%define regLength ebx
-%define backDest edi
-%define backSrc esi
 actualASM_bcopy386:
     push ebp
-    push backDest
-    mov backDest, destination
-    push backSrc
-    sub destination, source
+    push edi
+    mov edi, destination
+    push esi
+    mov esi, source
     push ebx
-    mov backSrc, source
-    push ebx
-    mov regLength, dword [esp + 20 + length]
 
-    cmp destination, regLength
-    lea eax, [regLength - 1]
-    jb .srcAboveDest
+    mov ecx, [esp + 16 + length]
+    cmp ecx, 16
+    jb .lessThan16
 
-    test regLength, regLength
-    je .return
+    cmp esi, edi
+    jb .doBackwards
 
-    lea edx, [source + 4]
-    lea ebp, [backDest + 4]
-    cmp backDest, edx
-    setnb cl
-    cmp backSrc, ebp
-    setnb dl
-    or source, edx
-    cmp eax, 12
-    seta dl
-    test cl, dl
-    je .doMovsb
+    cmp ecx, 680
+    jb .doManualLoopForwards
 
-    mov ecx, backDest
-    or ecx, backSrc
-    and ecx, 3
-    jne .doMovsb
+    mov eax, esi
+    xor eax, edi
+    and eax, 0ffh
+    jz .forwardsMovs
 
-    mov ebp, ebx
-    mov edx, backSrc
-    and ebp, -4
-    mov ecx, backDest
-    add ebp, backSrc
-    mov dword [esp], eax
+.doManualLoopForwards:
+    sub ecx, 16
+
+.forwardsManualLoop:
+    sub ecx, 16
+    mov eax, [esi]
+    mov ebx, [esi + 4]
+    mov [edi], eax
+    mov [edi + 4], ebx
+    mov eax, [esi + 8]
+    mov ebx, [esi + 12]
+    mov [edi + 8], eax
+    mov [edi + 12], ebx
+    lea esi, [esi + 16]
+    lea edi, [edi + 16]
+    jnb .forwardsManualLoop
+
+    add ecx, 16
+    jmp .lessThan16
 
     align 16
-.dwordLoop:
-    mov eax, dword [edx]
-    add edx, 4
-    mov dword [ecx], eax
+.forwardsMovs:
+    mov eax, [esi + ecx - 4]
+    lea ebx, [edi + ecx - 4]
+    shr ecx, 2
+    rep movsd
+    mov [ebx], eax
+    jmp .return
 
-    add ecx, 4
-    cmp edx, ebp
-    jne .dwordLoop
+    align 16
+.backwardsMovs:
+    mov eax, [esi]
+    mov ebx, edi
+    lea esi, [esi + ecx - 4]
+    lea edi, [edi + ecx - 4]
+    shr ecx, 2
+    std
+    rep movsd
+    mov [ebx], eax
+    cld
+    jmp .return
 
-    mov ecx, ebx
-    mov edx, dword [esp]
-    and ecx, -4
-    add backDest, ecx
-    add backSrc, ecx
-    sub edx, ecx
-    cmp ebx, ecx
-    je .return
+    align 16
+.doBackwards:
+    cmp ecx, 680
+    jb .backwardsNoMovs
 
-    mov bl, byte [backSrc]
-    test edx, edx
-    mov byte [backDest], bl
-    je .return
+    mov eax, esi
+    xor eax, edi
+    and eax, 0FFh
+    jz .backwardsMovs
 
-    mov al, byte [backSrc + 1]
-    dec edx
-    mov byte [backDest + 1], al
-    je .return
+.backwardsNoMovs:
+    add esi, ecx
+    add edi, ecx
+    sub ecx, 16
 
-    mov dl, byte [backSrc + 2]
-    mov byte [backSrc + 2], dl
+.backwardsManualLoop:
+    sub ecx, 16
+    mov eax, [esi - 4]
+    mov ebx, [esi - 8]
+    mov [edi - 4], eax
+    mov [edi - 8], ebx
+    mov eax, [esi - 12]
+    mov ebx, [esi - 16]
+    mov [edi - 12], eax
+    mov [edi - 16], ebx
+    lea esi, [esi - 16]
+    lea edi, [edi - 16]
+    jnb .backwardsManualLoop
 
+    add ecx, 16 ; Calculate position to head
+    sub esi, ecx
+    sub edi, ecx
+
+    align 16
+.lessThan16:
+    cmp ecx, 8
+    jb .lessThan8
+
+    mov eax, [esi]
+    mov ebx, [esi + 4]
+    mov ebp, [esi + ecx - 8]
+    mov esi, [esi + ecx - 4]
+    mov [edi], eax
+    mov [edi + 4], ebx
+    mov [edi + ecx - 8], ebp
+    mov [edi + ecx - 4], esi
+    jmp .return
+
+    align 16
+.lessThan8:
+    cmp ecx, 4
+    jb .lessThan4
+
+    mov eax, [esi]
+    mov ebx, [esi + ecx - 4]
+    mov [edi], eax
+    mov [esi + ecx - 4], ebx
+    jmp .return
+
+    align 16
+.lessThan4:
+    cmp ecx, 2
+    jb .lessThan2
+
+    mov dx, [esi]
+    mov bx, [esi + ecx - 2]
+    mov [edi], dx
+    mov [edi + ecx - 2], bx
+    jmp .return
+
+    align 16
+.lessThan2:
+    cmp ecx, 1
+    jb .return
+
+    mov cl, [esi]
+    mov [edi], cl
+
+    align 16
 .return:
-    pop eax
     pop ebx
-    pop backSrc
-    pop backDest
+    pop esi
+    pop edi
     pop ebp
     ret 4
-
-.srcAboveDest:
-    mov cl, byte [backSrc + eax]
-    mov byte [backDest + eax], cl
-
-    dec eax
-    cmp eax, -1
-    je .return
-
-    mov cl, byte [backSrc + eax]
-    mov byte [backDest + eax], cl
-
-    dec eax
-    cmp eax, -1
-    jne .srcAboveDest
-    jmp .return
-
-    align 16
-.doMovsb:
-    add ebx, backDest
-
-.movsbLoop:
-    movsb
-
-    cmp backDest, ebx
-    jne .movsbLoop
-    jmp .return
-
-
 ; end of actualASM_bcopy386
 
 
@@ -139,167 +179,133 @@ actualASM_bcopy386:
 
 
     align 16
+%define backDest edi
+%define backSrc esi
+%define regLength ecx
 actualASM_bcopySSE:
     push ebp
-    push edi
-    push esi
+    push backDest
+    mov backDest, destination
+    push backSrc
+    mov backSrc, source
     push ebx
-    mov edi, destination
-    mov esi, source
-    mov regLength, dword [esp + 16 + length]
-    lea eax, [ecx - 1]
 
-    cmp destination, esi
-    jnb .destBiggerThanSrc
+    sub destination, backSrc
+
+    mov regLength, dword [esp + 16 + length]
+    lea eax, [regLength - 1]
+
+    cmp destination, regLength
+    jb .doReverse
 
     test regLength, regLength
     je .return
 
-    lea edx, [esi + 16]
-    lea ebx, [edi + 16]
-    cmp edi, edx
+    lea ebx, [backSrc + 16]
+    lea ebp, [backDest + 16]
+    cmp backDest, ebx
     setnb dl
-    cmp esi, ebx
+    cmp esi, ebp
     setnb bl
     or dl, bl
     cmp eax, 14
     seta bl
-    test dl, dl
-    je .startMovsb
+    test dl, bl
+    je .doMovsb
 
-    mov edx, edi
-    or edx, esi
+    mov edx, backDest
+    or edx, backSrc
     test dl, 15
-    jne .startMovsb
+    jne .doMovsb
 
     mov ebp, regLength
+    mov edx, backSrc
     and ebp, -16
-    add ebp, esi
-    mov edx, esi
-    mov ebx, edi
+    mov ebx, backDest
+    add ebp, backSrc
 
+    align 16
 .xmmLoop:
     movaps xmm0, oword [edx]
     add edx, 16
-    movaps oword [ebx], xmm0
     add ebx, 16
+    movaps oword [ebx - 16], xmm0
 
-    cmp ebx, ebp
+    cmp edx, ebp
     jne .xmmLoop
 
     mov edx, regLength
     and edx, -16
-    add esi, edx
-    add edi, edx
+    add backDest, edx
+    add backSrc, edx
     sub eax, edx
-    cmp ecx, edx
+    cmp regLength, edx
     je .return
 
-    movzx ecx, byte [esi]
-    mov byte [edi], cl
+    movzx ecx, byte [backSrc]
     test eax, eax
+    mov byte [backDest], cl
     je .return
 
-    movzx ecx, byte [esi + 1]
-    mov byte [edi + 1], cl
-    cmp eax, 1
+%macro doTrailingByteSSE1 3
+    movzx %3, byte [backSrc + %1]
+    cmp eax, %1
+    mov byte [backDest + %1], %2
     je .return
+%endmacro
 
-    movzx ecx, byte [esi + 2]
-    mov byte [edi + 2], cl
-    cmp eax, 2
-    je .return
+    doTrailingByteSSE1 1, bl, ebx
+    doTrailingByteSSE1 2, dl, edx
+    doTrailingByteSSE1 3, cl, ecx
+    doTrailingByteSSE1 4, bl, ebx
+    doTrailingByteSSE1 5, dl, edx
+    doTrailingByteSSE1 6, cl, ecx
+    doTrailingByteSSE1 7, bl, ebx
+    doTrailingByteSSE1 8, dl, edx
+    doTrailingByteSSE1 9, cl, ecx
+    doTrailingByteSSE1 10, bl, ebx
+    doTrailingByteSSE1 11, dl, edx
+    doTrailingByteSSE1 12, cl, ecx
+    doTrailingByteSSE1 13, bl, ebx
 
-    movzx ecx, byte [esi + 3]
-    mov byte [edi + 3], cl
-    cmp eax, 3
-    je .return
-
-    movzx ecx, byte [esi + 4]
-    mov byte [edi + 4], cl
-    cmp eax, 4
-    je .return
-
-    movzx ecx, byte [esi + 5]
-    mov byte [edi + 5], cl
-    cmp eax, 5
-    je .return
-
-    movzx ecx, byte [esi + 6]
-    mov byte [edi + 6], cl
-    cmp eax, 6
-    je .return
-
-    movzx ecx, byte [esi + 7]
-    mov byte [edi + 7], cl
-    cmp eax, 7
-    je .return
-
-    movzx ecx, byte [esi + 8]
-    mov byte [edi + 8], cl
-    cmp eax, 8
-    je .return
-
-    movzx ecx, byte [esi + 9]
-    mov byte [edi + 9], cl
-    cmp eax, 9
-    je .return
-
-    movzx ecx, byte [esi + 10]
-    mov byte [edi + 10], cl
-    cmp eax, 10
-    je .return
-
-    movzx ecx, byte [esi + 12]
-    mov byte [edi + 12], cl
-    cmp eax, 12
-    je .return
-
-    movzx ecx, byte [esi + 13]
-    mov byte [edi + 13], cl
-    cmp eax, 13
-    je .return
-
-    movzx eax, byte [esi + 14]
-    mov byte [edi + 14], al
+    movzx eax, byte [backSrc + 14]
+    mov byte [backDest + 14], al
 
 .return:
     pop ebx
-    pop esi
-    pop edi
+    pop backSrc
+    pop backDest
     pop ebp
     ret 4
+
     align 16
-
-.destBiggerThanSrc:
-    test regLength, regLength
-    je .return
-    lea ecx, [esi - 1]
-    lea edx, [edi - 1]
-
-.destBiggerThanSrcLoop:
-    movzx ebx, byte [ecx + eax + 1]
-    mov byte [edx + eax + 1], bl
+.doReverse:
+    movzx edx, byte [backSrc + eax]
+    mov byte [backDest + eax], dl
 
     dec eax
     cmp eax, -1
-    jne .destBiggerThanSrcLoop
+    je .return
 
-    pop ebx
-    pop esi
-    pop edi
-    pop ebp
-    ret 4
+    movzx edx, byte [backSrc + eax]
+    mov byte [backDest + eax], dl
+
+    dec eax
+    cmp eax, -1
+    jne .doReverse
+    jmp .return
+
     align 16
-
-.startMovsb:
-    add regLength, edi
+.doMovsb:
+    add regLength, backDest
 
 .movsbLoop:
     movsb
-    cmp edi, regLength
+
+    cmp backDest, regLength
     jne .movsbLoop
     jmp .return
+
 ; end of actualASM_bcopySSE1
 
 
@@ -307,328 +313,178 @@ actualASM_bcopySSE:
 
 
     align 16
+%define backSrc esi
+%define backDest edi
+%define regLength ecx
 actualASM_bcopySSE2:
     push ebp
-    push edi
-    push esi
+    push backDest
+    push backSrc
     push ebx
-    mov esi, source
-    mov edi, destination
-    mov edx, dword [esp + 16 + length]
+    mov backSrc, source
+    mov backDest, destination
+    mov regLength, dword [esp + 16 + length]
 
-    lea eax, [edx - 1]
-    cmp edi, ecx
-    jnb .destBiggerThanSrc
+    lea eax, [regLength - 1]
+    sub destination, backSrc
+    cmp destination, regLength
+    jb .doReverse
 
-    test edx, edx
+    test regLength, regLength
     je .return
 
-    lea ecx, [ecx + 16]
-    cmp edi, ecx
+    lea ebx, [backDest + 16]
+    cmp backSrc, ebx
     setnb bl
-    lea ecx, [edi + 16]
-    cmp esi, ecx
-    setnb cl
-    or bl, cl
+    lea ebp, [backSrc + 16]
+    cmp backDest, ebp
+    setnb dl
+    or bl, dl
     je .doMovsb
 
     cmp eax, 29
     jbe .doMovsb
 
-    mov ecx, esi
-    neg ecx
-    and ecx, 15
-    je .earlyXmm
+    mov edx, backSrc
+    neg edx
+    and edx, 15
+    je .alreadyAligned
 
-    lea ebp, [esi + 1]
-    lea ebx, [edi + 1]
-    movzx eax, byte [esi]
-    mov byte [edi], al
+%macro doAlignSSE2 1
+    lea ebp, [backSrc + %1]
+    movzx eax, byte [backSrc + %1 - 1]
+    lea ebx, [backDest + %1]
+    mov byte [backDest + %1 - 1], al
 
-    lea eax, [edx - 2]
-    cmp ecx, 1
-    je .doXmm
+    lea eax, [regLength - %1 - 1]
+    cmp edx, %1
+    je .endAlign
+%endmacro
 
-    lea ebp, [esi + 2]
-    lea ebx, [edi + 2]
-    movzx eax, byte [esi + 1]
-    mov byte [edi + 1], al
+    doAlignSSE2 1
+    doAlignSSE2 2
+    doAlignSSE2 3
+    doAlignSSE2 4
+    doAlignSSE2 5
+    doAlignSSE2 6
+    doAlignSSE2 7
+    doAlignSSE2 8
+    doAlignSSE2 9
+    doAlignSSE2 10
+    doAlignSSE2 11
+    doAlignSSE2 12
+    doAlignSSE2 13
+    doAlignSSE2 14
 
-    lea eax, [edx - 3]
-    cmp ecx, 2
-    je .doXmm
+    lea ebp, [backSrc + 15]
+    movzx eax, byte [backSrc + 14]
+    lea ebx, [backDest + 15]
+    mov byte [backDest + 14], al
+    lea eax, [regLength - 16]
 
-    lea ebp, [esi + 3]
-    lea ebx, [edi + 3]
-    movzx eax, byte [esi + 2]
-    mov byte [edi + 2], al
-
-    lea eax, [edx - 4]
-    cmp ecx, 3
-    je .doXmm
-
-    lea ebp, [esi + 4]
-    lea ebx, [edi + 4]
-    movzx eax, byte [esi + 3]
-    mov byte [edi + 3], al
-
-    lea eax, [edx - 5]
-    cmp ecx, 4
-    je .doXmm
-
-    lea ebp, [esi + 5]
-    lea ebx, [edi + 5]
-    movzx eax, byte [esi + 4]
-    mov byte [edi + 4], al
-
-    lea eax, [edx - 6]
-    cmp ecx, 5
-    je .doXmm
-
-    lea ebp, [esi + 6]
-    lea ebx, [edi + 6]
-    movzx eax, byte [esi + 5]
-    mov byte [edi + 5], al
-
-    lea eax, [edx - 7]
-    cmp ecx, 6
-    je .doXmm
-
-    lea ebp, [esi + 7]
-    lea ebx, [edi + 7]
-    movzx eax, byte [esi + 6]
-    mov byte [edi + 6], al
-
-    lea eax, [edx - 8]
-    cmp ecx, 7
-    je .doXmm
-
-    lea ebp, [esi + 8]
-    lea ebx, [edi + 8]
-    movzx eax, byte [esi + 7]
-    mov byte [edi + 7], al
-
-    lea eax, [edx - 9]
-    cmp ecx, 8
-    je .doXmm
-
-    lea ebp, [esi + 9]
-    lea ebx, [edi + 9]
-    movzx eax, byte [esi + 8]
-    mov byte [edi + 8], al
-
-    lea eax, [edx - 10]
-    cmp ecx, 9
-    je .doXmm
-
-    lea ebp, [esi + 10]
-    lea ebx, [edi + 10]
-    movzx eax, byte [esi + 9]
-    mov byte [edi + 9], al
-
-    lea eax, [edx - 11]
-    cmp ecx, 10
-    je .doXmm
-
-    lea ebp, [esi + 11]
-    lea ebx, [edi + 11]
-    movzx eax, byte [esi + 10]
-    mov byte [edi + 10], al
-
-    lea eax, [edx - 12]
-    cmp ecx, 11
-    je .doXmm
-
-    lea ebp, [esi + 12]
-    lea ebx, [edi + 12]
-    movzx eax, byte [esi + 11]
-    mov byte [edi + 11], al
-
-    lea eax, [edx - 13]
-    cmp ecx, 12
-    je .doXmm
-
-    lea ebp, [esi + 13]
-    lea ebx, [edi + 13]
-    movzx eax, byte [esi + 12]
-    mov byte [edi + 12], al
-
-    lea eax, [edx - 14]
-    cmp ecx, 13
-    je .doXmm
-
-    lea ebp, [esi + 14]
-    lea ebx, [edi + 14]
-    movzx eax, byte [esi + 13]
-    mov byte [edi + 13], al
-
-    lea eax, [edx - 15]
-    cmp ecx, 15
-    jne .doXmm
-
-    lea ebp, [esi + 15]
-    lea ebx, [edi + 15]
-    movzx eax, byte [esi + 14]
-    mov byte [edi + 14], al
-
-    lea eax, [edx - 16]
-
-.doXmm:
-    sub edx, ecx
-    add esi, ecx
-    add ecx, edi
-    mov edi, edx
+.endAlign:
+;   mov ecx, regLength
+    sub ecx, edx
+;   mov esi, backSrc
+    add esi, edx
+    add edx, backDest
+    mov edi, ecx
     and edi, -16
     add edi, esi
 
+
 .xmmLoop:
     movdqa xmm0, oword [esi]
-    movdqu oword [ecx], xmm0
+    movdqu oword [edx], xmm0
 
     add esi, 16
-    add ecx, 16
+    add edx, 16
     cmp esi, edi
     jne .xmmLoop
 
-    mov ecx, edx
-    and ecx, -16
-    add ebp, ecx
-    add ebx, ecx
-    sub eax, ecx
-    cmp edx, ecx
+    mov esi, ecx
+    and esi, -16
+    add ebx, esi
+    add ebp, esi
+    sub eax, esi
+    cmp ecx, esi
     je .return
 
-    movzx edx, byte [ebp]
-    mov byte [ebx], dl
-
+    movzx ecx, byte [ebp]
+    mov byte [ebx], cl
     test eax, eax
     je .return
 
-    movzx edx, byte [ebp + 1]
-    mov byte [ebx + 1], dl
-
-    cmp eax, 1
+%macro doTrailingByteSSE2edx 1
+    movzx edx, byte [ebp + %1]
+    mov byte [ebx + %1], dl
+    cmp eax, %1
     je .return
+%endmacro
 
-    movzx edx, byte [ebp + 2]
-    mov byte [ebx + 2], dl
-
-    cmp eax, 2
+%macro doTrailingByteSSE2ecx 1
+    movzx ecx, byte [ebp + %1]
+    mov byte [ebx + %1], cl
+    cmp eax, %1
     je .return
+%endmacro
 
-    movzx edx, byte [ebp + 3]
-    mov byte [ebx + 3], dl
+    doTrailingByteSSE2edx 1
+    doTrailingByteSSE2ecx 2
+    doTrailingByteSSE2edx 3
+    doTrailingByteSSE2ecx 4
+    doTrailingByteSSE2edx 5
+    doTrailingByteSSE2ecx 6
+    doTrailingByteSSE2edx 7
+    doTrailingByteSSE2ecx 8
+    doTrailingByteSSE2edx 9
+    doTrailingByteSSE2ecx 10
+    doTrailingByteSSE2edx 11
+    doTrailingByteSSE2ecx 12
+    doTrailingByteSSE2edx 13
 
-    cmp eax, 3
-    je .return
-
-    movzx edx, byte [ebp + 4]
-    mov byte [ebx + 4], dl
-
-    cmp eax, 4
-    je .return
-
-    movzx edx, byte [ebp + 5]
-    mov byte [ebx + 5], dl
-
-    cmp eax, 5
-    je .return
-
-    movzx edx, byte [ebp + 6]
-    mov byte [ebx + 6], dl
-
-    cmp eax, 6
-    je .return
-
-    movzx edx, byte [ebp + 7]
-    mov byte [ebx + 7], dl
-
-    cmp eax, 7
-    je .return
-
-    movzx edx, byte [ebp + 8]
-    mov byte [ebx + 8], dl
-
-    cmp eax, 8
-    je .return
-
-    movzx edx, byte [ebp + 9]
-    mov byte [ebx + 9], dl
-
-    cmp eax, 9
-    je .return
-
-    movzx edx, byte [ebp + 10]
-    mov byte [ebx + 10], dl
-
-    cmp eax, 10
-    je .return
-
-    movzx edx, byte [ebp + 11]
-    mov byte [ebx + 11], dl
-
-    cmp eax, 11
-    je .return
-
-    movzx edx, byte [ebp + 12]
-    mov byte [ebx + 12], dl
-
-    cmp eax, 12
-    je .return
-
-    movzx edx, byte [ebp + 13]
-    mov byte [ebx + 13], dl
-
-    cmp eax, 13
-    je .return
-
-    movzx edx, byte [ebp + 14]
-    mov byte [ebx + 14], dl
+    movzx eax, byte [ebp + 14]
+    mov byte [ebx + 14], al
 
 .return:
     pop ebx
-    pop esi
-    pop edi
+    pop backSrc
+    pop backDest
     pop ebp
     ret 4
+
     align 16
+.doReverse:
+    movzx ebx, byte [backSrc + eax]
+    mov byte [backDest + eax], cl
 
-.destBiggerThanSrc:
-    test edx, edx
-    je .return
-    dec ecx
-    lea edx, [edi - 1]
-
-.destBiggerThanSrcLoop:
-    movzx ebx, byte [ecx + eax + 1]
-    mov byte [edx + eax + 1], bl
-
-    dec eax
+    sub eax, 1
     cmp eax, -1
-    jne .destBiggerThanSrcLoop
+    je .return
 
-    pop ebx
-    pop esi
-    pop edi
-    pop ebp
-    ret 4
-    align 16
+    movzx ebx, byte [backSrc + eax]
+    mov byte [backDest + eax], bl
+
+    sub eax, 1
+    cmp eax, -1
+    jne .doReverse
+    jmp .return
 
 .doMovsb:
-    add edx, esi
+    add regLength, backSrc
 
 .movsbLoop:
     movsb
 
-    cmp esi, edx
+    cmp backSrc, regLength
     jne .movsbLoop
     jmp .return
-    align 16
 
-.earlyXmm:
-    mov ebx, edi
-    mov ebp, esi
-    jmp .doXmm
+.alreadyAligned:
+    mov ebp, backSrc
+    mov ebx, backDest
+    jmp .endAlign
+
 ; End of actualASM_bcopySSE2
 
 
@@ -1207,26 +1063,28 @@ actualASM_bcopyAVX:
 
 
     align 16
+%define backSrc esi
+%define regLength eax
 actualASM_bcopyAVX2:
     push ebp
     mov ebp, esp
     push edi
-    push esi
+    push backSrc
     push ebx
     and esp, -32
     sub esp, 32
-    mov esi, source
+    mov backSrc, source
 
-    mov eax, dword [ebp + 4 + length]
-    dec eax
+    mov regLength, dword [ebp + 4 + length]
+    dec regLength
     mov ecx, destination
-    sub ecx, esi
+    sub ecx, backSrc
     cmp ecx, dword [ebp + 4 + length]
-    jnb .destLessThanSrc
+    jnb .doForwards
 
     mov ebx, dword [ebp + 4 + length]
     lea ecx, [ebx - 32]
-    lea edi, [esi + ecx]
+    lea edi, [backSrc + ecx]
     mov dword [esp + 28], edi
     lea edi, [destination + ecx]
     mov ebx, dword [ebp + 4 + length]
@@ -1234,14 +1092,14 @@ actualASM_bcopyAVX2:
     cmp edi, ebx
     setnb cl
     mov ebx, dword [ebp + 4 + length]
-    add ebx, destination
+    add ebx, edx
     cmp dword [esp + 28], ebx
     setnb bl
     or cl, bl
-    je .doBackwardsByteMov
+    je .doByteByByte
 
     cmp eax, 30
-    jbe .doBackwardsByteMov
+    jbe .doByteByByte
 
     mov ecx, dword [esp + 28]
     mov dword [esp + 28], edi
@@ -1251,16 +1109,15 @@ actualASM_bcopyAVX2:
     sub ebx, edi
     mov edi, ebx
     mov ebx, dword [esp + 28]
-    align 16
 
-.avxBackwardsLoop:
+.reverseAvxLoop:
     vmovdqu ymm0, yword [ecx]
-    vmovdqu yword [esi], ymm0
+    vmovdqu yword [ebx], ymm0
 
     sub ecx, 32
-    sub esi, 32
+    sub ebx, 32
     cmp edi, ecx
-    jne .avxBackwardsLoop
+    jne .reverseAvxLoop
 
     mov ecx, dword [ebp + 4 + length]
     and ecx, -32
@@ -1268,12 +1125,13 @@ actualASM_bcopyAVX2:
     cmp dword [ebp + 4 + length], ecx
     je .avxReturn
 
-.trailingBytesBackwardsLoop:
-    mov cl, byte [esi + eax]
-    mov byte [destination + eax], cl
+.trailingBytesLoopReverseLoop:
+    mov bl, byte [backSrc + eax]
+    mov byte [edx + eax], cl
+
     dec eax
     cmp eax, -1
-    jne .trailingBytesBackwardsLoop
+    jne .trailingBytesLoopReverseLoop
 
 .avxReturn:
     vzeroupper
@@ -1281,89 +1139,90 @@ actualASM_bcopyAVX2:
 .return:
     lea esp, [ebp - 12]
     pop ebx
-    pop esi
+    pop backSrc
     pop edi
     pop ebp
     ret 4
 
-.doBackwardsByteMov:
+    align 16
+.doByteByByte:
     mov cl, byte [esi + eax]
-    mov byte [destination + eax], cl
+    mov byte [edx + eax], cl
+
     dec eax
     cmp eax, -1
     je .return
 
     mov cl, byte [esi + eax]
-    mov byte [destination + eax], cl
+    mov byte [edx + eax], cl
 
     dec eax
     cmp eax, -1
-
-    jne .doBackwardsByteMov
+    jne .doByteByByte
     jmp .return
 
-.destLessThanSrc:
+.doForwards:
     mov ebx, dword [ebp + 4 + length]
     test ebx, ebx
     je .return
 
-    lea esi, [destination + 32]
-    cmp result, esi
+    lea edi, [edx + 32]
+    cmp esi, edi
     setnb bl
-    lea ecx, [esi + 32]
-    cmp destination, ecx
+    lea ecx, [backSrc + 32]
+    cmp edx, ecx
     setnb cl
     or bl, cl
-    je .doForwardsMovsb
+    je .doMovsb
 
     cmp eax, 30
-    jbe .doForwardsMovsb
+    jbe .doMovsb
 
     mov eax, esi
-    mov edi, destination
+    mov edi, edx
     mov ebx, dword [ebp + 4 + length]
     and ebx, -32
-    add ebx, esi
-    align 16
+    add ebx, backSrc
 
-.avxForwardsLoop:
+.avxLoop:
     vmovdqu ymm1, yword [eax]
     vmovdqu yword [edi], ymm1
 
     add eax, 32
     add edi, 32
     cmp eax, ebx
-    jne .avxForwardsLoop
+    jne .avxLoop
 
     mov ecx, dword [ebp + 4 + length]
     and ecx, -32
-    lea edi, [destination + ecx]
+    lea edi, [edx + ecx]
     add esi, ecx
     cmp dword [ebp + 4 + length], ecx
     je .avxReturn
+    add edx, dword [ebp + 4 + length]
 
-    add destination, dword [ebp + 4 + length]
-
-.doTrailingBytesForwardsLoop:
+.trailingBytesMovsbLoop:
     movsb
 
-    cmp destination, edi
-    jne .doTrailingBytesForwardsLoop
-
+    cmp edx, edi
+    jne .trailingBytesMovsbLoop
     jmp .avxReturn
 
-.doForwardsMovsb:
+.doMovsb:
     mov eax, dword [ebp + 4 + length]
-    add eax, destination
-    mov edi, destination
+    add eax, edx
+    mov edi, edx
 
-
-.forwardsMovsbLoop:
+.movsbLoop:
     movsb
 
     cmp eax, edi
-    jne .forwardsMovsbLoop
+    jne .movsbLoop
     jmp .return
+
+; End of actualASM_bcopyAVX2
+
+
 
 
 
@@ -1396,7 +1255,7 @@ actualASM_bcopyGetPtr:
 
 .not386:
     cmp eax, SSE2Supported - 1
-    ;jne .notSSE
+    jne .notSSE
     mov dword [actualASM_bcopyPtr], actualASM_bcopySSE
     jmp .doJmp
 
@@ -1407,18 +1266,12 @@ actualASM_bcopyGetPtr:
     jmp .doJmp
 
 .notSSE2:
-    cmp eax, AVXSupported - 1
+    cmp eax, AVX2Supported - 1
     jg .notSSSE3
     mov dword [actualASM_bcopyPtr], actualASM_bcopySSSE3
     jmp .doJmp
 
 .notSSSE3:
-    cmp eax, AVX2Supported - 1
-    jg .notAVX
-    mov dword [actualASM_bcopyPtr], actualASM_bcopyAVX
-    jmp .doJmp
-
-.notAVX:
     mov dword [actualASM_bcopyPtr], actualASM_bcopyAVX2
 
 .doJmp:
@@ -1426,4 +1279,3 @@ actualASM_bcopyGetPtr:
     add esp, 24
     pop ebx
     jmp dword [actualASM_bcopyPtr]
-
