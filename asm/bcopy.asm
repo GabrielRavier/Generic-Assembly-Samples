@@ -1,5 +1,4 @@
 ; Performance for copying a 100000 bytes buffer for all the versions (lower is better) :
-; std : 11745/11792 = 1.00
 ; 386 : 26053/8336 = 2.94
 ; SSE : 9112/8944 = 1.02
 ; SSE2 : 9018/8960 = 1.01
