@@ -17,7 +17,7 @@ volatile char array2[sizeForArrays] = {0};
 
 void compareMemcpy()
 {
-    int lol, lol2;
+    int lol, lol2 = 0;
     ASM_memcpy(&lol, &lol2, sizeof(int)); // Initialise dispatcher
     memcpy(&lol, &lol2, sizeof(int)); // Maybe std's has one too idk
     auto tempTime = ASM_readTSC();
@@ -34,7 +34,7 @@ void compareMemcpy()
 
 void compareMemmove()
 {
-    int lol, lol2;
+    int lol, lol2 = 0;
     ASM_memmove(&lol, &lol2, sizeof(int)); // Initialise dispatcher
     memmove(&lol, &lol2, sizeof(int)); // Maybe std's has one too idk
     auto tempTime = ASM_readTSC();
