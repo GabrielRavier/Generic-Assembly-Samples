@@ -13,6 +13,17 @@ using std::cout;
 using std::string;
 using std::make_unique;
 
+void testIsLeapYear()
+{
+    uint32_t year = random(0, 3000);
+
+    if (ASM_isLeapYear(year))
+        cout << year << " is";
+    else
+        cout << year << " is not";
+    cout << " a leap year\n";
+}
+
 void testGnomeSort()
 {
     static const int arraySize = 10;

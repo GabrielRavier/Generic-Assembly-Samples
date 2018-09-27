@@ -1,6 +1,7 @@
 #ifndef TESTS_H
 #define TESTS_H
 
+void testIsLeapYear();
 void testGnomeSort();
 void testCocktailSort();
 void testStrcpy();

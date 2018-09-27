@@ -1,4 +1,6 @@
 #include <cstdlib>
+#include <cstddef>
+#include <cstdint>
 
 #define restrict __restrict
 
@@ -6,7 +8,7 @@
 extern "C"
 {
 #endif
-int __fastcall ASM_pow(int base, unsigned int exponent);
+int __fastcall ASM_pow(int32_t base, uint32_t exponent);
 long double __fastcall ASM_fpow(long double base, int exponent);
 char *__fastcall ASM_strrchr(const char *string, char character);
 size_t __fastcall ASM_strlen(const char *string);
@@ -31,8 +33,8 @@ void __fastcall ASM_bzero(void* string, size_t size);
 int __fastcall ASM_strcmp(const char* a, const char* b);
 char *__fastcall ASM_strcat(char* dest, const char* src);
 int __fastcall ASM_isSuffix(const char *string, const char *suffix);
-unsigned long long __fastcall ASM_getFibonacci(unsigned int num);
-unsigned long long __fastcall ASM_getGreatestCommonDivider(unsigned long long num1, unsigned long long num2);
+uint64_t __fastcall ASM_getFibonacci(uint32_t num);
+uint64_t __fastcall ASM_getGreatestCommonDivider(uint64_t num1, uint64_t num2);
 bool __fastcall ASM_isAlphabetic(const char c);
 bool __fastcall ASM_isPossibleIdentifier(const char c);
 void __fastcall ASM_bubbleSort(int *array, const size_t arraySize);
@@ -40,6 +42,7 @@ void __fastcall ASM_combSort(int *array, const size_t arraySize);
 void __fastcall ASM_cocktailSort(int *array, const size_t arraySize);
 void __fastcall ASM_gnomeSort(int *array, const size_t arraySize);
 void __fastcall ASM_oddEvenSort(int *array, const size_t arraySize);
+bool __fastcall ASM_isLeapYear(uint32_t year);
 long long ASM_readTSC();
 int getInstructionSet();
 #ifdef __cplusplus

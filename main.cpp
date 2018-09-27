@@ -16,6 +16,11 @@ void pause()
 
 int main(/*int argc, char *argv[]*/)
 {
+    cout << "\nTesting htoi\n";
+    testHtoi();
+    cout << "\nTesting isLeapYear\n";
+    testIsLeapYear();
+    pause();
     cout << "\nTesting gnomeSort\n";
     testGnomeSort();
     cout << "\nTesting cocktailSort\n";
@@ -24,14 +29,12 @@ int main(/*int argc, char *argv[]*/)
     testCombSort();
     cout << "\nTesting bubbleSort\n";
     testBubbleSort();
-    pause();
     cout << "\nComparing memset\n";
     compareMemset();
     cout << "\nComparing memmove\n";
     compareMemmove();
     cout << "\nComparing memcpy\n";
     compareMemcpy();
-    pause();
     cout << "\nTesting isPossibleIdentifier\n";
     testIsPossibleIdentifier();
     cout << "\nTesting isAlphabetic\n";

@@ -6,8 +6,8 @@
 
 using std::cout;
 
-constexpr int sizeForArrays = 100000;
-constexpr int compareIterationsDefault = 100000;
+constexpr int sizeForArrays = 10000;
+constexpr int compareIterationsDefault = 10000;
 constexpr int compareIterationsMemcpy = compareIterationsDefault;
 constexpr int compareIterationsMemmove = compareIterationsDefault;
 constexpr int compareIterationsMemset = compareIterationsDefault;

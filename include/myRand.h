@@ -1,37 +1,37 @@
-#include <thread>
+#include <ctime>
 #include <random>
+#include <cstdlib>
 
 template<class T = std::mt19937, size_t N = T::state_size>
-auto SeededRandomEngine() -> typename std::enable_if<!!N, T>::type
+auto seededRandomEngine() -> typename std::enable_if<!!N, T>::type
 {
-    void *randMalloced = malloc(1);
+    srand(time(0));
     std::seed_seq seeds
     {
-        static_cast<long long>(std::chrono::high_resolution_clock::now().time_since_epoch().count()),
-        static_cast<long long>(std::hash<std::thread::id>()(std::this_thread::get_id())),
-        static_cast<long long>(reinterpret_cast<intptr_t>(&seeds)),
-        static_cast<long long>(reinterpret_cast<intptr_t>(randMalloced)),
-        static_cast<long long>(time(0))
+        rand(),
+        rand(),
+        rand(),
+        rand(),
+        rand(),
+        rand(),
+        rand(),
+        rand(),
     };
     T seededEngine(seeds);
-    free(randMalloced);
     return seededEngine;
 }
 
-thread_local std::mt19937 engine(SeededRandomEngine());
-
-// Distribution goes from 0 to TYPE_MAX by default
-
-std::uniform_int_distribution<unsigned long long> distrInt64;
-std::uniform_int_distribution<int> distrInt;
+thread_local std::mt19937 engine(seededRandomEngine());
 
 inline int random(int low, int high)
 {
+    static std::uniform_int_distribution<int> distrInt;
     return (low + (distrInt(engine) % (high - low + 1)));
 }
 
 inline long long int random(long long low, long long high)
 {
+    static std::uniform_int_distribution<unsigned long long> distrInt64;
     return (low + (distrInt64(engine) % (high - low + 1)));
 }
 

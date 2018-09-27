@@ -378,9 +378,7 @@ actualASM_memcpyAVX:
     align 16
 %define SSESupported 3
 %define SSE2Supported 4
-%define SSSE3Supported 6
 %define AVXSupported 11
-%define AVX2Supported 13
 @ASM_memcpy@12:
     jmp dword [actualASM_memcpyPtr]
 
@@ -410,7 +408,7 @@ actualASM_memcpyGetPtr:
     jmp .doJmp
 
 .notSSE:
-    cmp eax, SSSE3Supported - 1
+    cmp eax, AVXSupported - 1
     jg .notSSE2
 
     mov dword [actualASM_memcpyPtr], actualASM_memcpySSE2
