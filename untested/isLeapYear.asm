@@ -36,30 +36,19 @@ _isLeapYeari386:
 	
 	
 _isLeapYearBMI2:
-	mov edx, 0x51EB851F
-	
-	mov eax, [esp + 4]
-	
-	mulx edx, ecx, eax
-	shr edx, 7
-	imul ecx, edx, -400
-	add ecx, eax
-	je .return1
-	
-	mov edx, 0x51EB851F
-	mulx edx, ecx, eax
-	shr edx, 5
-	imul ecx, edx, -100
-	add ecx, eax
-	je .return0
-	
-	test al, 3
-	jne .return0
-	
-.return1:
+	imul edx, [esp + 4], 0xC28F5C29
 	mov eax, 1
-	ret
+	rorx ecx, edx, 4
+	cmp ecx, 0xA3D70A
+	jbe .return
 	
-.return0:
 	xor eax, eax
+	rorx edx, edx, 2
+	cmp edx, 0x28F5C28
+	jbe .return
+	
+	test byte [esp + 4], 3
+	sete al 
+	
+.return:
 	ret

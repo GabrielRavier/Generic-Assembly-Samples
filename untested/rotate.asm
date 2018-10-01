@@ -1,7 +1,7 @@
-global _leftRotate	; int32_t leftRotate(int32_t n, uint32_t d)
-global _rightRotate	; int32_t rightRotate(int32_t n, uint32_t d)
-global _leftRotate64	; uint64_t leftRotate64(uint64_t n, unsigned int c)
-global _rightRotate64	; uint64_t rightRotate64(uint64_t n, unsigned int c)
+global _leftRotate	; uint32_t leftRotate(uint32_t n, uint32_t d)
+global _rightRotate	; uint32_t rightRotate(uint32_t n, uint32_t d)
+global _leftRotate64	; uint64_t leftRotate64(uint64_t n, uint32_t c)
+global _rightRotate64	; uint64_t rightRotate64(uint64_t n, uint32_t c)
 
 segment .text align=16
 

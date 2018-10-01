@@ -5,7 +5,10 @@ global @isEqual64@8
 global @isGreater64@8
 global _divide64	; int64_t divide64(int64_t dividend, int64_t divisor)
 global _modulo64	; int64_t modulo64(int64_t x, int64_t n)
-global _get64	; int64_t get64(int64_t x)
+global _getVal64	; int64_t getVal64(int64_t x)
+global _getOpposite64	; int64_t getOpposite64(int64_t x)
+global _getComplement64	; int64_t getComplement64(int64_t x)
+global _getAbs64	; uint64_t getAbs(int64_t n) 
 
 segment .text align=16
 
@@ -388,7 +391,29 @@ _modulo64BMI2:
 	
 	
 	
-_get64:
+_getVal64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
+	ret
+	
+	
+	
+	
+	
+_getOpposite64:
+	xor edx, edx
+	xor eax, eax
+	sub eax, [esp + 4]
+	sbb edx, [esp + 8]
+	ret
+	
+	
+	
+	
+	
+_getComplement64:
+	mov eax, [esp + 4]
+	mov edx, [esp + 8]
+	neg eax
+	neg edx
 	ret
