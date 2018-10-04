@@ -1,4 +1,5 @@
 global _sumArray	; int64_t sumArray(int *arr, size_t size)
+global _getMedian
 
 segment .text align=16
 
@@ -386,4 +387,60 @@ _sumArrayAVX2:
 .return:
 	ret
 	
+	
+	
+	
+	
+_getMedian:
+	xor ecx, ecx
+	xor r9d, r9d
+	mov r10, rsi
+	mov [rsp - 16], r12
+	mov r8, rdi
+	mov [rsp - 24], r13
+	mov edi, -1
+	xor esi, esi
+	
+.loop:
+	mov eax, edi
+	cmp rcx, rdx
+	je .iEqualsn
+	
+	cmp r9, rdx
+	je .jEqualsn
+	
+	mov r11d, [r8 + rcx * 4]
+	lea rdi, [rcx + 1]
+	mov r12d, [r10 + r9 * 4]
+	cmp r11d, r12d
+	lea r13, [r9 + 1]
+	cmovl rcx, rdi
+	
+	mov edi, r12d
+	cmovl edi, r11d
+	
+	cmovge r9, r13
+	
+	inc rsi
+	cmp rsi, rdx
+	
+	jbe .loop
+	
+.return:
+	mov r12, [rsp - 16]
+	mov r13, [rsp - 24]
+	add eax, edi
+	mov edx, eax
+	shr edx, 31
+	add eax, edx
+	sar eax, 1
+	ret
+	
+.jEqualsn:
+	mov edi, [r8]
+	jmp .return
+	
+.iEqualsn:
+	mov edi, [r10]
+	jmp .return
 	

@@ -13,6 +13,8 @@ nasm -f elf32 floatShit.asm
 nasm -f elf32 gcd_Lcm.asm
 nasm -f elf32 intDiv.asm
 nasm -f elf32 intSqrt.asm
+nasm -f elf32 intToBase.asm
+nasm -f elf32 isCpuidAvailable.asm
 nasm -f elf32 isLeapYear.asm
 nasm -f elf32 isPowerOf2.asm
 nasm -f elf32 isPowerOf4.asm

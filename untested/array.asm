@@ -1,4 +1,5 @@
 global _sumArray	; int64_t sum(const int arr[], size_t n)
+global _getMedian	; int32_t getMedian(int32_t ar1[], int32_t ar2[], size_t n) 
 
 segment .data align=4
 
@@ -8,7 +9,7 @@ segment .data align=4
 
 segment .text align=16
 
-_sumArrayi386:
+_sumArray:
 	push ebx
 	push ebp
 	sub esp, 20
@@ -675,3 +676,155 @@ _sumArrayAVX2:
 	and edi, -4
 	xor edx, edx
 	jmp .noStartLoop
+	
+	
+	
+	
+	
+_getMedian:
+	push esi
+	sub esp, 24
+	
+	xor ecx, ecx
+	xor esi, esi
+	mov edx, -1
+	
+	mov [esp + 8], edi
+	xor eax, eax
+	mov [esp + 4], ebx
+	mov [esp], ebp
+	mov edi, [esp + 40]
+	
+.loop:
+	mov ebp, ebx
+	
+	cmp ecx, edi
+	je .iEqualsn
+	
+	cmp esi, edi
+	je .jEqualsn
+	
+	mov ebx, [esp + 32]
+	mov edx, [esp + 36]
+	mov ebx, [ebx + ecx * 4]
+	mov edx, [edx + ecx * 4]
+	
+	cmp ebx, edx
+	jge .bigger
+	
+	mov edx, ebx
+	
+	inc ecx
+	jmp .check
+	
+	align 16
+.bigger:
+	inc esi
+	
+.check:
+	inc eax
+	cmp eax, edi
+	jbe .loop
+	
+	mov edi, [esp + 8]
+	mov eax, ebp
+	mov ebx, [esp + 4]
+	mov ebp, [esp]
+	
+.return:
+	add eax, edx
+	mov edx, eax
+	shr edx, 31
+	add eax, edx
+	sar eax, 1
+	add esp, 24
+	pop esi
+	ret
+	
+.jEqualsn:
+	mov edx, [esp + 32]
+	mov eax, ebp
+	mov edi, [esp + 8]
+	mov ebx, [esp + 4]
+	mov ebp, [esp]
+	mov edx, [edx]
+	jmp .return
+	
+.iEqualsn:
+	mov edx, [esp + 36]
+	mov eax, ebp
+	mov edi, [esp + 8]
+	mov ebx, [esp + 4]
+	mov ebp, [esp]
+	mov edx, [edx]
+	jmp .return
+	
+	
+	
+_getMediani686:
+	push ebp
+	xor ecx, ecx
+	push edi
+	push esi
+	xor esi, esi
+	push ebx
+	xor ebx, ebx
+	sub esp, 4
+	
+	mov dword [esp], -1
+	mov ebp, [esp + 28]
+	mov edx, [esp + 32]
+	jmp .startLoop
+
+	align 16
+.loop:
+	inc esi
+	inc ecx
+	cmp esi, edx
+	ja .return
+	
+.loop2:
+	mov [esp], eax
+	
+.startLoop:
+	cmp ecx, edx
+	je .iEqualsn
+	
+	cmp ebx, edx
+	mov eax, [esp + 24]
+	je .jEqualsn
+	
+	mov eax, [eax + ecx * 4]
+	mov edi, [ebp + ebx * 4]
+	cmp eax, edi
+	jl .loop
+	
+	inc esi
+	inc ebx
+	cmp esi, ebx
+	mov eax, edi
+	jbe .loop2
+	
+.return:
+	mov edi, [esp]
+	
+	pop ecx
+	pop ebx
+	
+	add eax, edi
+	mov edx, eax
+	shr edx, 31
+	pop esi
+	add eax, edx
+	sar eax, 1
+	pop edi
+	pop ebp
+	ret
+	
+.jEqualsn:
+	mov eax, [ebp]
+	jmp .return
+	
+.iEqualsn:
+	mov eax, [eax]
+	jmp .return
