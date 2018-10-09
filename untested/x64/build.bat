@@ -25,4 +25,5 @@ nasm -f elf64 mulStuff.asm
 nasm -f elf64 nextPowOf2.asm
 nasm -f elf64 oppositeSigns.asm
 nasm -f elf64 rotate.asm
+nasm -f elf64 uint128_t.asm
 pause

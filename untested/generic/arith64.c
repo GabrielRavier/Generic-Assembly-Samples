@@ -1,26 +1,26 @@
-void add64(int64_t *a1, int64_t *a2)
+int64_t add64(int64_t a1, int64_t a2)
 {
-	*a1 += *a2;
+	return a1 + a2;
 }
 
-void sub64(int64_t *a1, int64_t *a2)
+int64_t sub64(int64_t a1, int64_t a2)
 {
-	*a1 -= *a2;
+	return a1 - a2;
 }
 
-void mul64(int64_t *a1, int64_t *a2)
+int64_t mul64(int64_t a1, int64_t a2)
 {
-	*a1 *= *a2;
+  return a1 * a2;
 }
 
-bool isEqual64(int64_t *a1, int64_t *a2)
+bool isEqual64(int64_t a1, int64_t a2)
 {
-	return *a1 == *a2;
+	return a1 == a2;
 }
 
-bool isGreater64(int64_t *a1, int64_t *a2)
+bool isGreater64(int64_t a1, int64_t a2)
 {
-	return *a1 > *a2;
+	return a1 > a2;
 }
 
 int64_t divide64(int64_t a1, int64_t a2)
@@ -69,4 +69,14 @@ int64_t getOpposite64(int64_t a1)
 int64_t getComplement64(int64_t a1)
 {
 	return ~a1;
+}
+
+int64_t shiftLeft64(int64_t a1, uint8_t a2)
+{
+  return a1 << a2;
+}
+
+int64_t shiftRight64(int64_t a1, uint8_t a2)
+{
+  return a1 >> a2;
 }

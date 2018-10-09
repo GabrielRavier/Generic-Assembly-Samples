@@ -8,12 +8,13 @@ global _modulo64
 global _getVal64
 global _getOpposite64
 global _getComplement64
+global _shiftLeft64
+global _shiftRight64
 
 segment .text align=16
 
 _add64:
-	mov rax, [rsi]
-	add [rdi], rax
+	lea rax, [rdi + rsi]
 	ret
 	
 	
@@ -21,8 +22,8 @@ _add64:
 	
 	
 _sub64:
-	mov rax, [rsi]
-	sub [rdi], rax
+	mov rax, rdi
+	sub rax, rsi
 	ret
 	
 	
@@ -30,9 +31,8 @@ _sub64:
 	
 	
 _mul64:
-	mov rax, [rdi]
-	imul rax, [rsi]
-	mov [rdi], rax
+	mov rax, rdi
+	imul rax, rsi
 	ret
 	
 	
@@ -40,8 +40,7 @@ _mul64:
 	
 	
 _isEqual64:
-	mov rax, [rsi]
-	cmp [rdi], rax
+	cmp rdi, rsi
 	sete al
 	ret
 	
@@ -50,8 +49,7 @@ _isEqual64:
 	
 	
 _isGreater64:
-	mov rax, [rsi]
-	cmp [rdi], rax
+	cmp rdi, rsi
 	setg al
 	ret
 	
@@ -100,4 +98,24 @@ _getOpposite64:
 _getComplement64:
 	mov rax, rdi
 	not rax
+	ret
+	
+	
+	
+	
+	
+_shiftLeft64:
+	mov ecx, esi
+	shl rdi, cl
+	mov rax, rdi
+	ret
+	
+	
+	
+	
+	
+_shiftRight64:
+	mov ecx, esi
+	sal rdi, cl
+	mov rax, rdi
 	ret

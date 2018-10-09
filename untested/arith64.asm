@@ -1,210 +1,219 @@
-global @add64@8
-global @sub64@8
-global @mul64@8
-global @isEqual64@8
-global @isGreater64@8
+global _add64
+global _sub64
+global _mul64
+global _isEqual64
+global _isGreater64
 global _divide64	; int64_t divide64(int64_t dividend, int64_t divisor)
 global _modulo64	; int64_t modulo64(int64_t x, int64_t n)
 global _getVal64	; int64_t getVal64(int64_t x)
 global _getOpposite64	; int64_t getOpposite64(int64_t x)
 global _getComplement64	; int64_t getComplement64(int64_t x)
 global _getAbs64	; uint64_t getAbs(int64_t n) 
+global _shiftLeft64
+global _shiftRight64
 
 segment .text align=16
 
-@add64i386@8:
-	mov eax, [edx]
-	mov edx, [edx + 4]
+_add64:
+	mov eax, [esp + 12]
+	mov edx, [esp + 16]
 	
-	add [ecx], eax
-	adc [ecx + 4], edx
-	
+	add eax, [esp + 4]
+	adc edx, [esp + 8]
 	ret
 	
 	
 	
-@add64SSSE3@8:
-	movq xmm1, [edx]
-	movq xmm0, [ecx]
+_add64SSE3:
+	movq xmm1, [esp + 4]
+	movq xmm0, [esp + 12]
+	
+	paddq xmm1, xmm0
+	
+	movd eax, xmm1
+	psrlq xmm1, 32
+	movd edx, xmm1
+	ret
+	
+	
+	
+_add64SSE4:
+	movq xmm1, [esp + 4]
+	movq xmm0, [esp + 12]
 	
 	paddq xmm0, xmm1
-	movq [ecx], xmm0
 	
+	movd eax, xmm0
+	pextrd edx, xmm0, 1
+	ret
+	
+	
+	
+_add64AVX:
+	vmovq xmm1, [esp + 12]
+	vmovq xmm0, [esp + 4]
+	
+	vpaddq xmm2, xmm0, xmm1
+	
+	vmovd eax, xmm2
+	vpextrd edx, xmm2, 1
 	ret
 	
 	
 	
 	
 	
-@sub64i386@8:
-	mov eax, [edx]
-	mov edx, [edx + 4]
+_sub64:
+	mov eax, [esp + 4]
+	mov edx, [esp + 8]
 	
-	sub [ecx], eax
-	sbb [ecx + 4], edx
-	
+	sub eax, [esp + 12]
+	sbb edx, [esp + 16]
 	ret
 	
 	
 	
-@sub64SSSE3@8:
-	movq xmm1, [edx]
-	movq xmm0, [ecx]
-	psubq xmm0, xmm1
-	movq [ecx], xmm0 
-	ret
+_sub64SSE3:
+	movq xmm1, [esp + 4]
+	movq xmm0, [esp + 12]
 	
-
+	psubq xmm1, xmm0
 	
-	
-	
-@mul64i386@8:
-	push esi
-	push edi
-	
-	mov esi, [ecx + 4]
-	mov eax, [edx + 4]
-	
-	imul esi, [edx]
-	imul eax, [ecx]
-	add esi, eax
-	mov eax, [ecx]
-	mul dword [edx]
-	add edx, esi
-	
-	mov [ecx], eax
-	mov [ecx + 4], edx
-	
-	pop edi
-	pop esi
-	ret
-	
-	
-	
-@mul64SSE2@8:
-	movq xmm2, [ecx]
-	movq xmm0, [edx]
-	
-	movdqa xmm1, xmm2
-	movdqa xmm3, xmm0
-	
+	movd eax, xmm1
 	psrlq xmm1, 32
-	psrlq xmm3, 32
-	
-	pmuludq xmm3, xmm2
-	pmuludq xmm1, xmm0
-	pmuludq xmm2, xmm0
-	
-	paddq xmm3, xmm1
-	psllq xmm3, 32
-	paddq xmm3, xmm2
-	
-	movq [ecx], xmm3
+	movd edx, xmm1
 	ret
 	
 	
 	
-@mul64AVX@8:
-	vmovq xmm2, [ecx]
-	vmovq xmm3, [edx]
+_sub64SSE4:
+	movq xmm0, [esp + 4]
+	movq xmm1, [esp + 12]
 	
-	vpsrlq xmm1, xmm2, 32
-	vpsrlq xmm0, xmm3, 32
+	psubq xmm0, xmm1
 	
-	vpmuludq xmm4, xmm0, xmm2
-	vpmuludq xmm5, xmm1, xmm3
-	vpmuludq xmm0, xmm2, xmm3
-	
-	vpaddq xmm6, xmm4, xmm5
-	vpsllq xmm7, xmm6, 32
-	vpaddq xmm1, xmm7, xmm0
-	
-	vmovq [ecx], xmm1
+	movd eax, xmm0
+	pextrd edx, xmm0, 1
 	ret
 	
 	
 	
-@mul64AVX512@8:
-	vmovq xmm0, [ecx]
-	vmovq xmm1, [edx]
-	vpmullq xmm2, xmm0, xmm1
-	vmovq [ecx], xmm2
+_sub64AVX:
+	vmovq xmm0, [esp + 4]
+	vmovq xmm1, [esp + 12]
+	
+	vpsubq xmm2, xmm0, xmm1
+	
+	vmovd eax, xmm2
+	vpextrd edx, xmm2, 1
 	ret
 	
 	
 	
 	
 	
-@isEqual64i386@8:
-	mov eax, [ecx]
-	mov ecx, [ecx + 4]
-	sub eax, [edx]
-	sub ecx, [edx + 4]
-	or eax, ecx
-	jne .false
+_mul64:
+	push ebx
+	mov eax, [esp + 8]
+	mov edx, [esp + 16]
+	mov ecx, [esp + 12]
 	
-	mov eax, 1
-	ret
+	imul ecx, edx
+	mov ebx, [esp + 20]
 	
-.false:
-	xor eax, eax
-	ret
+	imul ebx, eax
+	add ecx, ebx
+	mul edx
+	add edx, ecx
 	
-	
-	
-@isEqual64SSE4@8:
-	movq xmm1, [ecx]
-	movq xmm0, [edx]
-	pcmpeqq xmm1, xmm0
-	movd eax, xmm1
-	
-	test eax, eax
-	je .false
-	
-	mov eax, 1
-	ret
-	
-.false:
-	xor eax, eax
+	pop ebx
 	ret
 	
 	
 	
+_mul64BMI:
+	push ebx
 	
+	mov eax, [esp + 8]
+	mov edx, [esp + 16]
+	mov ecx, [esp + 12]
+	mov ebx, [esp + 20]
 	
-@isGreater64i386@8:
-	mov eax, [ecx]
-	sub eax, [edx]
-	mov ecx, [ecx + 4]
-	sbb ecx, [edx + 4]
-	jl .false
+	imul ecx, edx
+	imul ebx, eax
+	mulx edx, eax, eax
+	add ecx, ebx
 	
-	or eax, ecx
-	je .false
-	
-	mov eax, 1
+	pop ebx
+	add edx, ecx
 	ret
 	
-.false:
-	xor eax, eax
+	
+	
+	
+	
+_isEqual64:
+	mov edx, [esp + 12]
+	xor edx, [esp + 4]
+	mov eax, [esp + 16]
+	xor eax, [esp + 8]
+	
+	or edx, eax
+	sete al
 	ret
 	
 	
 	
-@isGreater64SSE4@8:
-	movq xmm1, [ecx]
-	movq xmm0, [edx]
-	pcmpgtq xmm1, xmm0
-	movd eax, xmm1
+_isEqual64SSSE3:
+	movq xmm1, [esp + 12]
+	movq xmm0, [esp + 4]
 	
-	test eax, eax
-	je .false
+	pxor xmm0, xmm1
+	movd edx, xmm0
+	psrlq xmm0, 32
+	movd eax, xmm0
 	
-	mov eax, 1
+	or edx, eax
+	sete al
 	ret
 	
-.false:
-	xor eax, eax
+	
+	
+_isEqual64SSE4:
+	movq xmm1, [esp + 12]
+	movq xmm0, [esp + 4]
+	
+	pxor xmm0, xmm1
+	punpcklqdq xmm0, xmm0
+	
+	ptest xmm0, xmm0
+	sete al
+	ret
+	
+	
+	
+_isEqual64AVX:
+	vmovq xmm1, [esp + 12]
+	vmovq xmm0, [esp + 4]
+	
+	vpxor xmm2, xmm0, xmm1
+	vpunpcklqdq xmm3, xmm2, xmm2
+	
+	vptest xmm3, xmm3
+	sete al
+	ret
+	
+	
+	
+	
+	
+_isGreater64:
+	mov eax, [esp + 4]
+	cmp [esp + 12], eax
+	mov edx, [esp + 16]
+	sbb edx, [esp + 8]
+	
+	setl al
 	ret
 	
 	
@@ -398,7 +407,7 @@ _getVal64:
 	
 	
 	
-	
+
 	
 _getOpposite64:
 	xor edx, edx
@@ -410,10 +419,107 @@ _getOpposite64:
 	
 	
 	
-	
+
 _getComplement64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
 	neg eax
 	neg edx
+	ret
+
+	
+	
+	
+	
+_shiftLeft64:
+	push edi
+	movzx ecx, byte [esp + 16]
+	
+	cmp ecx, 31
+	jbe .bigShiftLol
+	
+	mov edx, [esp + 8]
+	xor eax, eax
+	shl edx, cl
+	
+	pop edi
+	ret
+	
+.bigShiftLol:
+	mov edx, [esp + 12]
+	mov eax, [esp + 8]
+	
+	shld edx, eax, cl
+	shl eax, cl
+	
+	pop edi
+	ret
+	
+	
+	
+_shiftLeft64SSE2:
+	movzx edx, byte [esp + 12]
+	movq xmm1, [esp + 4]
+	movd xmm0, edx
+	
+	psllq xmm1, xmm0
+	
+	movd eax, xmm1
+	psrlq xmm1, 32
+	movd edx, xmm1
+	ret
+	
+	
+	
+_shiftLeft64SSE4:
+	movzx eax, byte [esp + 12]
+	movq xmm0, [esp + 4]
+	movd xmm1, eax
+	
+	psllq xmm0, xmm1
+	
+	movd eax, xmm0
+	pextrd edx, xmm0, 1
+	ret
+	
+	
+	
+_shiftLeft64AVX:
+	movzx eax, byte [esp + 12]
+	vmovq xmm0, [esp + 4]
+	vmovd xmm1, edx
+	
+	vpsllq xmm2, xmm0, xmm1
+	
+	vmovd eax, xmm2
+	vpextrd edx, xmm2, 1
+	ret
+	
+	
+	
+	
+	
+_shiftRight64:
+	push edi
+	
+	movzx ecx, byte [esp + 16]
+	cmp ecx, 31
+	mov edi, [esp + 12]
+	jbe .bigShiftLol
+	
+	mov edx, edi
+	mov eax, edi
+	sar edx, 31
+	sar eax, cl
+	
+	pop edi
+	ret
+	
+.bigShiftLol:
+	mov edx, edi
+	mov eax, [esp + 8]
+	shrd eax, edi, cl
+	sar edx, cl
+	
+	pop edi
 	ret
