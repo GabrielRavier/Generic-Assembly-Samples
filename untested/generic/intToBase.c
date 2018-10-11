@@ -13,7 +13,7 @@ inline void reverse(char str[], int length)
         start++; 
         end--; 
     } 
-} 
+}
  
 void intToBase(int num, char* str, int base) 
 { 
