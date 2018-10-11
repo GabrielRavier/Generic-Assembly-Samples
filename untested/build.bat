@@ -2,6 +2,7 @@ echo off
 nasm -f elf32 arith64.asm
 nasm -f elf32 array.asm
 nasm -f elf32 arrayBitManip.asm
+nasm -f elf32 bithacks.asm
 nasm -f elf32 bmiStuff.asm
 nasm -f elf32 bmi2Stuff.asm
 nasm -f elf32 bswap.asm
