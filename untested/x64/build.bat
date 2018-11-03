@@ -3,6 +3,7 @@ nasm -f elf64 arith64.asm
 nasm -f elf64 array.asm
 nasm -f elf64 arrayBitManip.asm
 nasm -f elf64 aw-ima.asm
+nasm -f elf64 aw-wav.asm
 nasm -f elf64 bithacks.asm
 nasm -f elf64 bmiStuff.asm
 nasm -f elf64 bmi2Stuff.asm
