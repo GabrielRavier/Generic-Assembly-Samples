@@ -11,6 +11,7 @@ _bswap16:
 	
 	
 	
+	align 16
 _bswap16MOVBE:
 	movbe ax, [esp + 4]
 	ret
@@ -19,6 +20,7 @@ _bswap16MOVBE:
 	
 	
 	
+	align 16
 _bswap32:
 	mov eax, [esp + 4]
 	bswap eax
@@ -26,14 +28,26 @@ _bswap32:
 	
 	
 	
+	align 16
 _bswap32MOVBE:
 	movbe eax, [esp + 4]
 	ret
 	
 	
 	
+	align 16
+_bswap32NoBswap:
+	mov eax, [esp + 4]
+	xchg al, ah
+	rol eax, 16
+	xchg al, ah
+	ret
 	
 	
+	
+	
+	
+	align 16
 _bswap64:
 	mov eax, [esp + 8]
 	mov edx, [esp + 4]
@@ -43,7 +57,23 @@ _bswap64:
 	
 	
 	
+	align 16
 _bswap64MOVBE:
 	movbe edx, [esp + 4]
 	movbe eax, [esp + 8]
+	ret
+	
+	
+	
+	align 16
+_bswap64NoBswap:
+	mov edx, [esp + 4]
+	xchg dl, dh
+	rol edx, 16
+	xchg dl, dh
+	
+	mov eax, [esp + 8]
+	xchg al, ah
+	rol eax, 16
+	xchg al, ah
 	ret

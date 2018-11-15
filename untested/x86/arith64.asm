@@ -24,6 +24,7 @@ _add64:
 	
 	
 	
+	align 16
 _add64SSE3:
 	movq xmm1, [esp + 4]
 	movq xmm0, [esp + 12]
@@ -37,6 +38,7 @@ _add64SSE3:
 	
 	
 	
+	align 16
 _add64SSE4:
 	movq xmm1, [esp + 4]
 	movq xmm0, [esp + 12]
@@ -49,6 +51,7 @@ _add64SSE4:
 	
 	
 	
+	align 16
 _add64AVX:
 	vmovq xmm1, [esp + 12]
 	vmovq xmm0, [esp + 4]
@@ -63,6 +66,7 @@ _add64AVX:
 	
 	
 	
+	align 16
 _sub64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
@@ -73,6 +77,7 @@ _sub64:
 	
 	
 	
+	align 16
 _sub64SSE3:
 	movq xmm1, [esp + 4]
 	movq xmm0, [esp + 12]
@@ -86,6 +91,7 @@ _sub64SSE3:
 	
 	
 	
+	align 16
 _sub64SSE4:
 	movq xmm0, [esp + 4]
 	movq xmm1, [esp + 12]
@@ -98,6 +104,7 @@ _sub64SSE4:
 	
 	
 	
+	align 16
 _sub64AVX:
 	vmovq xmm0, [esp + 4]
 	vmovq xmm1, [esp + 12]
@@ -112,6 +119,7 @@ _sub64AVX:
 	
 	
 	
+	align 16
 _mul64:
 	push ebx
 	mov eax, [esp + 8]
@@ -131,6 +139,7 @@ _mul64:
 	
 	
 	
+	align 16
 _mul64BMI:
 	push ebx
 	
@@ -152,6 +161,7 @@ _mul64BMI:
 	
 	
 	
+	align 16
 _isEqual64:
 	mov edx, [esp + 12]
 	xor edx, [esp + 4]
@@ -164,6 +174,7 @@ _isEqual64:
 	
 	
 	
+	align 16
 _isEqual64SSSE3:
 	movq xmm1, [esp + 12]
 	movq xmm0, [esp + 4]
@@ -179,6 +190,7 @@ _isEqual64SSSE3:
 	
 	
 	
+	align 16
 _isEqual64SSE4:
 	movq xmm1, [esp + 12]
 	movq xmm0, [esp + 4]
@@ -192,6 +204,7 @@ _isEqual64SSE4:
 	
 	
 	
+	align 16
 _isEqual64AVX:
 	vmovq xmm1, [esp + 12]
 	vmovq xmm0, [esp + 4]
@@ -207,6 +220,7 @@ _isEqual64AVX:
 	
 	
 	
+	align 16
 _isGreater64:
 	mov eax, [esp + 4]
 	cmp [esp + 12], eax
@@ -220,6 +234,7 @@ _isGreater64:
 	
 	
 	
+	align 16
 _divide64:
 	push esi
 	push edi
@@ -316,90 +331,240 @@ _divide64:
 	
 	
 	
-_modulo64i386:
-	push esi
-	push edi
-	push ebx
+	align 16
+_modulo64:
 	push ebp
-	sub esp, 12
-	
-	mov ebx, [esp + 44]
-	mov ebp, [esp + 40]
-	mov esi, [esp + 32]
-	mov edi, [esp + 36]
-	
 	push ebx
-	push ebp
 	push edi
 	push esi
-	call _divide64
+	push eax
+	mov edx, [esp + 24]
+	mov ebp, [esp + 28]
+	mov eax, [esp + 32]
+	mov ebx, [esp + 36]
 	
-	mov ecx, eax
-	add esp, 16
-	imul ecx, ebp
-	imul ebx, eax
-	mul ebp
-	add ecx, ebx
-	add edx, ecx
-	sub esi, eax
-	mov eax, esi
-	sbb edi, edx
-	mov edx, edi
+	mov edi, ebp
+	mov ecx, ebx
+	mov esi, ebx
+	sar edi, 31
+	add edx, edi
+	adc ebp, edi
 	
-	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
-	ret
+	sar ecx, 31
+	xor ebp, edi
+	add eax, ecx
+	adc esi, ecx
 	
+	xor ebx, [esp + 28]
+	xor edx, edi
+	xor eax, ecx
+	xor esi, ecx
+	xor ecx, ecx
 	
+	cmp eax, edx
+	mov [esp], ebx
+	mov ebx, esi
+	sbb ebx, ebp
+	mov ebx, 0
+	jge .endLoop
 	
+	xor ecx, ecx
+	xor ebx, ebx
 	
-	
-_modulo64BMI2:
-	push esi
-	push edi
-	push ebx
-	push ebp
-	sub esp, 12
-	
-	mov ebx, [esp + 44]
-	mov ebp, [esp + 40]
-	mov esi, [esp + 32]
-	mov edi, [esp + 36]
-	
-	push ebx
-	push ebp
-	push edi
-	push esi
-	call _divide64
-	
-	mov ecx, eax
-	mov eax, edx
-	add esp, 16
-	
-	imul eax, ebp
-	mov edx, ecx
-	imul ebx, ecx
-	mulx ebp, ecx, ebp
-	add eax, ebx
-	add ebp, eax
-	sub esi, ecx
-	mov eax, esi
+.loop:
+	sub edx, eax
+	mov edi, esi
+	sbb ebp, esi
+	add ecx, 1
+	adc ebx, 0
+	cmp eax, ebx
 	sbb edi, ebp
-	mov edx, edi
-	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
+	jl .loop
+	
+.endLoop:
+	mov edx, [esp]
+	mov eax, [esp + 36]
+
+	sar edx, 31
+	and ebx, edx
+	and edx, ecx
+	mov ecx, eax
+	
+	imul ecx, edx
+	mov eax, edx
+	mov edx, [esp + 32]
+	mov esi, edx
+	mul edx
+	
+	add edx, ecx
+	imul ebx, esi
+	mov ecx, [esp + 24]
+	add ebx, edx
+	mov edx, [esp + 28]
+	
+	sub ecx, eax
+	sbb edx, ebx
+	
+	mov eax, ecx
+	add esp, 4
 	pop esi
+	pop edi
+	pop ebx
+	pop ebp
+	ret
+	
+	
+	
+	align 16
+_modulo64SSE4:
+	push ebp
+	push ebx
+	push edi
+	push esi
+	push eax
+	mov eax, [esp + 36]
+	xor eax, [esp + 28]
+	
+	mov [esp], eax
+	movdqa xmm0, [esp + 24]
+	pxor xmm1, xmm1
+	pcmpgtq xmm1, xmm0
+	paddq xmm0, xmm1
+	pxor xmm0, xmm1
+	
+	pextrd edx, xmm0, 1
+	movd ecx, xmm0
+	pextrd edi, xmm0, 2
+	xor eax, eax
+	cmp edi, ecx
+	pextrd esi, xmm0, 3
+	mov ebp, esi
+	sbb ebp, edx
+	mov ebp, 0
+	jae .endLoop
+	
+	xor eax, eax
+	xor ebp, ebp
+	
+.loop:
+	sub ecx, edi
+	sbb edx, esi
+	
+	add eax, 1
+	adc ebp, 0
+	
+	cmp edi, ecx
+	mov ebx, esi
+	sbb ebx, edx
+	jl .loop
+	
+.endLoop:
+	mov esi, [esp]
+	
+	sar esi, 31
+	and ebp, esi
+	and esi, eax
+	
+	mov eax, esi
+	mov ecx, [esp + 32]
+	mov edi, ecx
+	mul ecx
+	mov ecx, [esp + 36]
+	imul ecx, esi
+	add edx, ecx
+	imul ebp, edi
+	add ebp, edx
+	mov ecx, [esp + 24]
+	
+	sub ecx, eax
+	mov edx, [esp + 28]
+	sbb edx, ebp
+	
+	mov eax, ecx
+	add esp, 4
+	pop esi
+	pop edi
+	pop ebx
+	pop ebp
+	ret
+	
+	
+	
+	align 16
+_modulu64BMI:
+	push ebp
+	push ebx
+	push edi
+	push esi
+	push eax
+	mov eax, [esp + 36]
+	xor eax, [esp + 28]
+	
+	mov [esp], eax
+	vmovdqa xmm0, [esp + 24]
+	vpxor xmm1, xmm1, xmm1
+	vpcmpgtq xmm1, xmm1, xmm0
+	vpaddq xmm0, xmm0, xmm1
+	vpxor xmm0, xmm0, xmm1
+	
+	vpextrd ebx, xmm0, 1
+	vmovd ecx, xmm0
+	vpextrd edx, xmm0, 2
+	xor ebp, ebp
+	cmp edx, ecx
+	vpextrd esi, xmm0, 3
+	mov edi, esi
+	sbb edi, ebx
+	mov edi, 0
+	jae .endLoop
+	
+	xor ebp, ebp
+	xor edi, edi
+	
+.loop:
+	sub ecx, edx
+	sbb ebx, esi
+	
+	add ebp, 1
+	adc edi, 0
+	
+	cmp edx, ecx
+	mov eax, esi
+	sbb eax, ebx
+	jl .loop
+	
+.endLoop:
+	mov esi, [esp]
+	sar esi, 31
+	and edi, esi
+	and esi, ebp
+	
+	mov edx, esi
+	mov eax, [esp + 32]
+	mulx ecx, ebx, eax
+	mov edx, [esp + 36]
+	imul edx, esi
+	add ecx, edx
+	imul edi, eax
+	add edi, ecx
+	mov eax, [esp + 24]
+	
+	sub eax, ebx
+	mov edx, [esp + 28]
+	sbb edx, edi
+	
+	add esp, 4
+	pop esi
+	pop edi
+	pop ebx
+	pop ebp
 	ret
 	
 	
 	
 	
 	
+	align 16
 _getVal64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
@@ -409,6 +574,7 @@ _getVal64:
 	
 
 	
+	align 16
 _getOpposite64:
 	xor edx, edx
 	xor eax, eax
@@ -420,6 +586,7 @@ _getOpposite64:
 	
 	
 
+	align 16
 _getComplement64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
@@ -431,6 +598,7 @@ _getComplement64:
 	
 	
 	
+	align 16
 _shiftLeft64:
 	push edi
 	movzx ecx, byte [esp + 16]
@@ -457,6 +625,7 @@ _shiftLeft64:
 	
 	
 	
+	align 16
 _shiftLeft64SSE2:
 	movzx edx, byte [esp + 12]
 	movq xmm1, [esp + 4]
@@ -471,6 +640,7 @@ _shiftLeft64SSE2:
 	
 	
 	
+	align 16
 _shiftLeft64SSE4:
 	movzx eax, byte [esp + 12]
 	movq xmm0, [esp + 4]
@@ -484,6 +654,7 @@ _shiftLeft64SSE4:
 	
 	
 	
+	align 16
 _shiftLeft64AVX:
 	movzx eax, byte [esp + 12]
 	vmovq xmm0, [esp + 4]
@@ -499,6 +670,7 @@ _shiftLeft64AVX:
 	
 	
 	
+	align 16
 _shiftRight64:
 	push edi
 	

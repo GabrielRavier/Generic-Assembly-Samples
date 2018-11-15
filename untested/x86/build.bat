@@ -1,33 +1,38 @@
 echo off
-nasm -f elf32 arith64.asm
-nasm -f elf32 array.asm
-nasm -f elf32 arrayBitManip.asm
-nasm -f elf32 aw-ima.asm
-nasm -f elf32 aw-wav.asm
-nasm -f elf32 bithacks.asm
-nasm -f elf32 bmiStuff.asm
-nasm -f elf32 bmi2Stuff.asm
-nasm -f elf32 bswap.asm
-nasm -f elf32 convert.asm
-nasm -f elf32 debugBreak.asm
-nasm -f elf32 detab.asm
-nasm -f elf32 findFirstSet.asm
-nasm -f elf32 floatShit.asm
-nasm -f elf32 gcd_Lcm.asm
-nasm -f elf32 intDiv.asm
-nasm -f elf32 intSqrt.asm
-nasm -f elf32 intToBase.asm
-nasm -f elf32 isCpuidAvailable.asm
-nasm -f elf32 isLeapYear.asm
-nasm -f elf32 isPowerOf2.asm
-nasm -f elf32 isPowerOf4.asm
-nasm -f elf32 lcmArray.asm
-nasm -f elf32 mostSignificantBitIndex.asm
-nasm -f elf32 mulDiv.asm
-nasm -f elf32 mulStuff.asm
-nasm -f elf32 nextPowOf2.asm
-nasm -f elf32 oppositeSigns.asm
-nasm -f elf32 rand.asm
-nasm -f elf32 rotate.asm
-nasm -f elf32 string.asm
+nasm -Wall -f elf32 arith64.asm
+nasm -Wall -f elf32 array.asm
+nasm -Wall -f elf32 arrayBitManip.asm
+nasm -Wall -f elf32 aw-ima.asm
+nasm -Wall -f elf32 aw-wav.asm
+nasm -Wall -f elf32 bithacks.asm
+nasm -Wall -f elf32 bmiStuff.asm
+nasm -Wall -f elf32 bmi2Stuff.asm
+nasm -Wall -f elf32 bswap.asm
+nasm -Wall -f elf32 convert.asm
+nasm -Wall -f elf32 cute_alloc.asm
+nasm -Wall -f elf32 debugBreak.asm
+nasm -Wall -f elf32 detab.asm
+nasm -Wall -f elf32 fast_ilog10.asm
+nasm -Wall -f elf32 findFirstSet.asm
+nasm -Wall -f elf32 floatShit.asm
+nasm -Wall -f elf32 gcd_Lcm.asm
+nasm -Wall -f elf32 intDiv.asm
+nasm -Wall -f elf32 intSqrt.asm
+nasm -Wall -f elf32 intToBase.asm
+nasm -Wall -f elf32 isCpuidAvailable.asm
+nasm -Wall -f elf32 isLeapYear.asm
+nasm -Wall -f elf32 isPowerOf2.asm
+nasm -Wall -f elf32 isPowerOf4.asm
+nasm -Wall -f elf32 lcmArray.asm
+nasm -Wall -f elf32 makeFrom.asm
+nasm -Wall -f elf32 mostSignificantBitIndex.asm
+nasm -Wall -f elf32 mulDiv.asm
+nasm -Wall -f elf32 mulStuff.asm
+nasm -Wall -f elf32 nextPowOf2.asm
+nasm -Wall -f elf32 npr_bittree.asm
+nasm -Wall -f elf32 pollDelay.asm
+nasm -Wall -f elf32 oppositeSigns.asm
+nasm -Wall -f elf32 rand.asm
+nasm -Wall -f elf32 rotate.asm
+nasm -Wall -f elf32 string.asm
 pause

@@ -13,6 +13,7 @@ nasm -f elf64 debugBreak.asm
 nasm -f elf64 detab.asm
 nasm -f elf64 findFirstSet.asm
 nasm -f elf64 floatShit.asm
+rem floatShit.asm is not updated
 nasm -f elf64 gcd_Lcm.asm
 nasm -f elf64 intDiv.asm
 nasm -f elf64 intSqrt.asm

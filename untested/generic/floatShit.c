@@ -1,8 +1,6 @@
 float fmin(float a1, float a2)
 {
-  float result;
-
-  result = a1;
+  float result = a1;
   if ( a2 <= a1 )
     result = a2;
   return result;
@@ -10,9 +8,7 @@ float fmin(float a1, float a2)
 
 float fmax(float a1, float a2)
 {
-  float result;
-
-  result = a1;
+  float result = a1;
   if ( a2 >= a1 )
     result = a2;
   return result;
@@ -60,4 +56,94 @@ float fpatan(float a1, float a2)
 	if (!a1)
 		return 0;
 	return atan2(1, a2 / a1);
+}
+
+float fclamp(float a, float lo, float hi) 
+{ 
+	return fmax(lo, fmin(a, hi)); 
+}
+
+float fsign(float a) 
+{ 
+	return a < 0 ? -1.0f : 1.0f; 
+}
+
+float fintersect(float da, float db) 
+{ 
+	return da / (da - db); 
+}
+
+int ftoi(float a)
+{
+	return a;
+}
+
+float facos(float x)
+{
+	return acos(x); 
+}
+
+float fasin(float x)
+{
+	return asin(x); 
+}
+
+float fatan(float x)
+{
+	return atan(x); 
+}
+
+float fceil(float x)
+{
+	return ceil(x); 
+}
+
+float fexp(float x)
+{
+	return exp(x);
+}
+
+float ffloor(float x)
+{
+	return floor(x);
+}
+
+float ffmod(float x, float y)
+{
+	return fmod(x, y);
+}
+
+float fldexp(float x, int exp)
+{
+	return ldexp(x, exp);
+}
+
+float flog(float x)
+{
+	return log(x);
+}
+
+float flog10(float x)
+{
+	return log10(x);
+}
+
+int ffpclassify(float x)
+{
+	return fpclassify(x);
+}
+
+bool fisfinite(float x)
+{
+	return isfinite(x);
+}
+
+float fpow(float a, float b)
+{
+	return exp(log(a) * b);
+}
+
+bool fisinf(float a)
+{
+	return isinf(a);
 }
