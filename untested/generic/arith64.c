@@ -80,3 +80,19 @@ int64_t shiftRight64(int64_t a1, uint8_t a2)
 {
   return a1 >> a2;
 }
+
+uint64_t rol64(uint64_t n, uint8_t c)
+{
+  const unsigned int mask = (CHAR_BIT*sizeof(n) - 1);  // assumes width is a power of 2.
+
+  c &= mask;
+  return (n<<c) | (n>>( (-c)&mask ));
+}
+
+uint64_t ror64(uint64_t n, uint8_t c)
+{
+  const unsigned int mask = (CHAR_BIT*sizeof(n) - 1);
+
+  c &= mask;
+  return (n>>c) | (n<<( (-c)&mask ));
+}

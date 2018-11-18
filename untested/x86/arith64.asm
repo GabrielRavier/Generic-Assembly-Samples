@@ -11,6 +11,8 @@ global _getComplement64	; int64_t getComplement64(int64_t x)
 global _getAbs64	; uint64_t getAbs(int64_t n) 
 global _shiftLeft64
 global _shiftRight64
+global _rol64
+global _ror64
 
 segment .text align=16
 
@@ -694,4 +696,174 @@ _shiftRight64:
 	sar edx, cl
 	
 	pop edi
+	ret
+	
+	
+	
+	
+	
+	align 16
+_rol64:
+	push ebp
+	push ebx
+	push edi
+	push esi
+	mov cl, [esp + 28]
+	mov eax, [esp + 30]
+	mov esi, [esp + 24]
+	
+	mov edi, eax
+	shl edi, cl
+	mov ebx, esi
+	shld ebx, eax, cl
+	xor ebp, ebp
+	test cl, 32
+	cmovne ebx, edi
+	cmovne edi, ebp
+	
+	neg cl
+	
+	mov edx, esi
+	shr edx, cl
+	shrd eax, esi, cl
+	test cl, 32
+	cmovne eax, edx
+	cmovne edx, ebp
+	
+	or eax, edi
+	or edx, ebx
+	
+	pop esi
+	pop edi
+	pop ebx
+	pop ebp
+	ret
+	
+	
+	
+	align 16
+_rol64SSE2:
+	movzx edx, byte [esp + 12]
+	and edx, 63
+	movq xmm2, [esp + 4]
+	
+	movdqa xmm3, xmm2
+	movd xmm0, edx
+	
+	neg edx
+	and edx, 63
+	
+	psllq xmm3, xmm0
+	movd xmm1, edx
+	psrlq xmm2, xmm1
+	por xmm3, xmm2
+	
+	movd eax, xmm3
+	psrlq xmm3, 32
+	movd edx, xmm3
+	ret
+	
+	
+	
+	align 16
+_rol64AVX:
+	movzx edx, byte [esp + 12]
+	and edx, 63
+	vmovq xmm1, [esp + 4]
+	vmovd xmm0, edx
+	neg edx
+	and edx, 63
+	vpsllq xmm3, xmm1, xmm0
+	vmovd xmm2, edx
+	vpsrlq xmm4, xmm1, xmm2
+	vpor xmm5, xmm4, xmm3
+	vmovd eax, xmm5
+	vpextrd edx, xmm0, 1
+	ret
+	
+	
+	
+	
+	
+	align 16
+_ror64:
+	push ebp
+	push ebx
+	push edi
+	push esi
+	mov cl, [esp + 28]
+	mov esi, [esp + 20]
+	mov edx, [esp + 24]
+	
+	mov edi, edx
+	shr edi, cl
+	mov ebx, esi
+	shrd ebx, edx, cl
+	xor ebp, ebp
+	test cl, 32
+	cmovne ebx, edi
+	cmovne edi, ebp
+	
+	neg cl
+	
+	mov eax, esi
+	shl eax, cl
+	shld edx, esi, cl
+	test cl, 32
+	cmovne edx, eax
+	cmovne eax, ebp
+	
+	or eax, ebx
+	or edx, edi
+	
+	pop esi
+	pop edi
+	pop ebx
+	pop ebp
+	ret
+	
+	
+	
+	align 16
+_ror64SSE2:
+	movzx edx, byte [esp + 12]
+	and edx, 63
+	movq xmm2, [esp + 4]
+	
+	movdqa xmm3, xmm2
+	movd xmm0, edx
+	
+	neg edx
+	and edx, 63
+	
+	psrlq xmm3, xmm0
+	
+	movd xmm1, edx
+	psllq xmm2, xmm1
+	por xmm3, xmm2
+	
+	movd eax, xmm3
+	psrlq xmm3, 32
+	movd edx, xmm3
+	ret
+	
+	
+	
+	align 16
+_ror64AVX:
+	movzx edx, byte [esp + 12]
+	and edx, 63
+	vmovq xmm1, [esp + 4]
+	vmovd xmm0, edx
+	
+	neg edx
+	and edx, 63
+	
+	vpsrlq xmm3, xmm1, xmm0
+	vmovd xmm2, edx
+	vpsllq xmm4, xmm1, xmm2
+	vpor xmm5, xmm3, xmm4
+	
+	vmovd eax, xmm5
+	vpextrd edx, xmm5, 1
 	ret

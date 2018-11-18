@@ -1,5 +1,6 @@
 echo off
 nasm -f elf64 arith64.asm
+rem arith64.asm is not updated
 nasm -f elf64 array.asm
 nasm -f elf64 arrayBitManip.asm
 nasm -f elf64 aw-ima.asm

@@ -25,6 +25,22 @@ global _ffpclassify
 global _fisfinite
 global _fpow
 global _fisinf
+global _fisnan
+global _fisnormal
+global _fsignbit
+global _fisunordered
+global _fcopysign
+global _fexp2
+global _fexpm1
+global _filogb
+global _fllrint
+global _fllround
+global _flog1p
+global _flog2
+global _flogb
+global _fnearbyint
+global _fremainder
+global _fhypot
 
 segment .rodata
 	
@@ -47,13 +63,17 @@ segment .rodata
 	onePoint5 dd 1.5
 	
 	align 16
-	minus0 dd -0.0
+	fourMinus0 dd -0.0, -0.0, -0.0, -0.0
+	minus0 equ fourMinus0
 	
 	align 16
 	plusInf dd 0x7F800000
 	
 	align 16
-	smallestIThink dd 0x800000
+	plusInfMin1 dd 0x7F7FFFFF
+	
+	align 16
+	fltMin dd 0x800000
 	
 	align 16
 	fourNaNs dd 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF
@@ -1111,7 +1131,7 @@ _ffpclassify:
 	ret
 	
 .continue:
-	fld dword [smallestIThink]
+	fld dword [fltMin]
 	fxch st1
 	fucompp
 	fnstsw ax
@@ -1181,7 +1201,7 @@ _ffpclassifySSE2:
 	ucomiss xmm0, [plusInf]
 	jae .ret
 	
-	movss xmm1, [smallestIThink]
+	movss xmm1, [fltMin]
 	xor eax, eax
 	ucomiss xmm1, xmm0
 	setbe al
@@ -1282,3 +1302,540 @@ _fisinfSSE:
 	ucomiss xmm0, [plusInf]
 	sete al
 	ret
+	
+	
+	
+	
+	
+	align 16
+_fisnan:
+	fld dword [esp + 4]
+	fucomp st0
+	fnstsw ax
+	test ah, 4
+	setne al
+	ret
+	
+	
+	
+	align 16
+_fisnani686:
+	fld dword [esp + 4]
+	fucomip st0, st0
+	setp al
+	ret
+	
+	
+	
+	align 16
+_fisnanSSE:
+	movss xmm0, [esp + 4]
+	ucomiss xmm0, xmm0
+	setp al
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fisnormal:
+	fld dword [esp + 4]
+	fabs
+	fld dword [plusInfMin1]
+	fucomp st1
+	fnstsw ax
+	test ah, 1
+	setne dl
+	
+	fld dword [fltMin]
+	fxch st1
+	fucompp
+	fnstsw ax
+	test ax, 1
+	setne al
+	
+	or al, dl
+	xor al, 1
+	ret
+	
+	
+	
+	align 16
+_fisnormali686:
+	fld dword [esp + 4]
+	fabs
+	
+	fld dword [plusInfMin1]
+	fucomip st0, st1
+	
+	fld dword [fltMin]
+	fxch st1
+	setb al
+	
+	fucomip st0, st1
+	fstp st0
+	setb dl
+	
+	or al, dl
+	xor al, 1
+	ret
+	
+	
+	
+	align 16
+_fisnormalSSE:
+	movss xmm0, [esp + 4]
+	ucomiss xmm0, xmm0
+	setnp cl
+	
+	andps xmm0, [fourNaNs]
+	ucomiss xmm0, [plusInf]
+	setb dl
+	
+	movss xmm1, [fltMin]
+	ucomiss xmm1, xmm0
+	setbe al
+	
+	and al, dl
+	and al, cl
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fsignbit:
+	mov eax, [esp + 4]
+	shr eax, 31
+	ret
+	
+	
+	
+	align 16
+_fisunordered:
+	fld dword [esp + 4]
+	fld dword [esp + 8]
+	fucompp
+	fnstsw ax
+	
+	test ah, 4
+	setne al
+	ret
+	
+	
+	
+	align 16
+_fisunorderedi686:
+	fld dword [esp + 4]
+	fld dword [esp + 8]
+	fucomip st0, st1
+	fstp st0
+	setp al
+	ret
+	
+	
+	
+	align 16
+_fisunorderedSSE:
+	movss xmm0, [esp + 4]
+	ucomiss xmm0, [esp + 8]
+	setp al
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fcopysign:
+	fld dword [esp + 4]
+	fxam
+	fnstsw ax
+	fstp st0
+	fld dword [esp + 8]
+	fabs
+	
+	test ah, 2
+	je .noInverse
+	
+	fchs
+	
+.noInverse:
+	ret
+	
+	
+	
+	align 16
+_fcopysignSSE:
+	push eax
+	movss xmm0, [esp + 8]
+	movss xmm1, [esp + 12]
+	
+	andps xmm1, [fourMinus0]
+	andps xmm0, [fourNaNs]
+	
+	orps xmm0, xmm1
+	
+	movss [esp], xmm0
+	fld dword [esp]
+	pop eax
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fexp2:
+	fld dword [esp + 4]
+	fld st0
+	frndint
+	fsub st1, st0
+	fxch st1
+	f2xm1
+	fadd dword [one]
+	fscale
+	fstp st1
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fexpm1:
+	fldl2e
+	fmul dword [esp + 4]
+	
+	fld st0
+	frndint
+	fsub st1, st0
+	
+	fld1
+	fxch st2
+	f2xm1
+	fscale
+	fxch st2
+	fscale
+	fstp st1
+	
+	fsub dword [one]
+	faddp st1, st0
+	ret
+	
+	
+	
+	
+	
+	align 16
+_filogb:
+	sub esp, 8
+	fnstcw [esp + 6]
+	fld dword [esp + 12]
+	fxtract
+	fstp st0
+	
+	movzx eax, word [esp + 6]
+	or ax, 0xC00
+	mov [esp + 4], ax
+	
+	fldcw [esp + 4]
+	fistp dword [esp]
+	fldcw [esp + 6]
+	
+	mov eax, [esp]
+	add esp, 8
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fllrint:
+	sub esp, 12
+	
+	fld dword [esp + 16]
+	fistp qword [esp]
+	
+	mov eax, [esp]
+	mov edx, [esp + 4]
+	add esp, 12
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fllround:
+	sub esp, 20
+	fld dword [esp + 24]
+	fxam
+	fnstsw ax
+	
+	mov ecx, eax
+	fabs
+	fadd dword [zeroPoint5]
+
+	fnstcw [esp + 14]
+	mov dx, [esp + 14]
+	and dh, -0xD
+	or dh, 4
+	mov [esp + 12], dx
+	
+	fldcw [esp + 12]
+	fistp qword [esp]
+	fldcw [esp + 14]
+	
+	mov eax, [esp]
+	mov edx, [esp + 4]
+	and ch, 2
+	je .return
+	
+	neg eax
+	adc edx, 0
+	neg edx
+	
+.return:
+	add esp, 20
+	ret
+	
+	
+	
+	
+	
+segment .rodata align=16
+
+	log1pDat1 dd 0xC4336F8, 0x95F61998, 0x3FFD
+	
+	align 16
+	log1pDat2 dd 0xD1CF79AC, 0xB17217F7, 0x3FFE
+	
+segment .text align=16
+
+_flog1p:
+	fld dword [esp + 4]
+	fld st0
+	fabs
+	
+	fld tword [log1pDat1]
+	fxch st1
+	fcompp
+	fnstsw ax
+	test ah, 5
+	je .norm
+	
+	fld tword [log1pDat2]
+	fxch st1
+	fyl2xp1
+	ret
+	
+	align 16
+.norm:
+	fld1
+	faddp st1, st0
+	fld tword [log1pDat2]
+	fxch st1
+	fyl2x
+	ret
+	
+	
+	
+	align 16
+_flog1p:
+	fld dword [esp + 4]
+	fabs
+	fld tword [log1pDat1]
+	fxch st1
+	fcomip st0, st1
+	fstp st0
+	jnb .norm
+	
+	fldln2
+	fld dword [esp + 4]
+	fyl2xp1
+	ret
+	
+	align 16
+.norm:
+	fld1
+	fadd dword [esp + 4]
+	fldln2
+	fxch st1
+	fyl2x
+	ret
+	
+	
+	
+	
+	
+	align 16
+_flog2:
+	fld1
+	fld dword [esp + 4]
+	fyl2x
+	ret
+	
+	
+	
+	
+	
+	align 16
+_flogb:
+	fld dword [esp + 4]
+	fxtract
+	fstp st0
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fnearbyint:
+	sub esp, 4
+	fnstcw [esp + 2]
+	fld dword [esp + 8]
+	movzx eax, word [esp + 2]
+	or ax, 0x20
+	mov [esp], ax
+	fldcw [esp]
+	frndint
+	fclex
+	fldcw [esp + 2]
+	pop eax
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fremainder:
+	fld dword [esp + 8]
+	fld dword [esp + 4]
+	
+.loop:
+	fprem1
+	fnstsw ax
+	sahf
+	jp .loop
+	
+	fstp st1
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fhypot:
+	fld dword [esp + 4]
+	fld dword [esp + 8]
+	fld dword [esp + 12]
+	
+	fld st2
+	fabs
+	
+	fld st2
+	fabs
+	
+	fld st2
+	fabs
+	
+	fxch st2
+	fcom st1
+	fnstsw ax
+	test ah, 1
+	je .yup
+	
+	fstp st0
+	fld st0
+	fcomp st2
+	fnstsw ax
+	test ah, 5
+	jne .nope
+	
+	fstp st1
+	jmp .continue
+	
+.yup2:
+	fstp st1
+	
+.continue:
+	ftst
+	fnstsw ax
+	test ah, 64
+	jne .nope2
+	
+	fld1
+	fdiv st0, st1
+	fmul st4, st0
+	fmul st3, st0
+	fmulp st2, st0
+	fxch st3
+	fmul st0, st0
+	fxch st2
+	fmul st0, st0
+	faddp st2, st0
+	fmul st0, st0
+	faddp st1, st0
+	fsqrt
+	fmulp st1, st0
+	ret
+	
+.yup:
+	fstp st1
+	fcom st1
+	fnstsw ax
+	test ah, 5
+	je .yup2
+	
+	fstp st0
+	jmp .continue
+	
+.nope:
+	fstp st0
+	jmp .continue
+	
+.nope2:
+	fstp st0
+	fstp st0
+	fstp st0
+	fstp st0
+	fldz
+	ret
+	
+	
+	
+	align 16
+_fhypoti686:
+	fld dword [esp + 4]
+	fabs
+	
+	fld dword [esp + 8]
+	fabs
+	
+	fld dword [esp + 12]
+	fabs
+	
+	fxch st1
+	fcomi st0, st2
+	jbe .biggerEqual
+	
+	fstp st2
+	fxch st1
+	fcomi st0, st1
+	fcmovb st0, st1
+	fstp st1
+	fldz
+	fcomip st0, st1
+	je .equal
+	
+.L13:
+	fld1
+	fdiv st0, st1
+	fld dword [esp + 4]

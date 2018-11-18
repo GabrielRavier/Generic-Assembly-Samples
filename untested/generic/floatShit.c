@@ -147,3 +147,83 @@ bool fisinf(float a)
 {
 	return isinf(a);
 }
+
+bool fisnan(float a)
+{
+	return isnan(a);
+}
+
+bool fisnormal(float a)
+{
+	return isnormal(a);
+}
+
+bool fsignbit(float a)
+{
+	return signbit(a);
+}
+
+bool fisunordered(float a, float b)
+{
+	return isunordered(a, b);
+}
+
+float fcopysign(float a, float b)
+{
+	return copysign(a, b);
+}
+
+float fexp2(float a)
+{
+	return exp2(a);
+}
+
+float fexpm1(float a)
+{
+	return expm1(a);
+}
+
+int filogb(float a)
+{
+	return ilogb(a);
+}
+
+long long fllrint(float a)
+{
+	return llrint(a);
+}
+
+long long fllround(float a)
+{
+	return llround(a);
+}
+
+float flog1p(float a)
+{
+	return log1p(a);
+}
+
+float flog2(float a)
+{
+	return log2(a);
+}
+
+float flogb(float a)
+{
+	return logb(a);
+}
+
+float fnearbyint(float a)
+{
+	return nearbyint(a);
+}
+
+float fremainder(float a, float b)
+{
+	return remainder(a, b);
+}
+
+float fhypot(float a, float b, float c)
+{
+	return hypot(a, b, c);
+}
