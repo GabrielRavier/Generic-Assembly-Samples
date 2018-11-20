@@ -1,5 +1,5 @@
-global _nextPowerOf2	; unsigned int nextPowerOf2(unsigned int n)
-global _nextPowerOf264	; uint64_t nextPowerOf2(uint64_t n)
+global _nextPowerOf2
+global _nextPowerOf264
 
 segment .text align=16
 
@@ -11,8 +11,10 @@ _nextPowerOf2:
 	lea edx, [eax - 1]
 	test eax, edx
 	jne .continue
+	
 	ret
 	
+	align 16
 .continue:
 	xor ecx, ecx
 	
@@ -45,6 +47,7 @@ _nextPowerOf2BMI2:
 	
 	ret
 	
+	align 16
 .continue:
 	xor edx, edx
 	
@@ -57,6 +60,7 @@ _nextPowerOf2BMI2:
 	
 	jmp .return
 	
+	align 16
 .return1:
 	xor edx, edx
 	
@@ -69,6 +73,7 @@ _nextPowerOf2BMI2:
 	
 	
 	
+	align 16
 _nextPowerOf264:
 	push esi
 	
@@ -118,6 +123,7 @@ _nextPowerOf264:
 	pop esi
 	ret
 	
+	align 16
 .return64:
 	xor edx, edx
 	mov eax, 1
@@ -156,6 +162,7 @@ _nextPowerOf264SSE4:
 	pop edi
 	ret
 	
+	align 16
 .continue:
 	xor ecx, ecx
 	
@@ -169,6 +176,7 @@ _nextPowerOf264SSE4:
 	jne .loop
 	jmp .return
 	
+	align 16
 .return1:
 	xor ecx, ecx
 	
@@ -182,6 +190,7 @@ _nextPowerOf264SSE4:
 	pop edi
 	ret
 	
+	align 16
 .return64:
 	xor edx, edx
 	mov eax, 1
@@ -192,6 +201,7 @@ _nextPowerOf264SSE4:
 	
 	
 	
+	align 16
 _nextPowerOf264AVX:
 	push edi
 	
@@ -211,6 +221,7 @@ _nextPowerOf264AVX:
 	pop edi
 	ret
 	
+	align 16
 .continue:
 	xor ecx, ecx
 	
@@ -223,6 +234,7 @@ _nextPowerOf264AVX:
 	jne .loop
 	jmp .return
 	
+	align 16
 .return1:
 	xor ecx, ecx
 	
@@ -236,6 +248,7 @@ _nextPowerOf264AVX:
 	pop edi
 	ret
 	
+	align 16
 .return64:
 	xor edx, edx
 	mov eax, 1
@@ -246,6 +259,7 @@ _nextPowerOf264AVX:
 	
 	
 	
+	align 16
 _nextPowerOf264BMI2:
 	vmovq xmm1, [esp + 4]
 	vptest xmm1, xmm1
@@ -262,6 +276,7 @@ _nextPowerOf264BMI2:
 	vmovd edx, xmm0
 	ret
 	
+	align 16
 .continue:
 	xor ecx, ecx
 	
@@ -274,6 +289,7 @@ _nextPowerOf264BMI2:
 	jne .loop
 	jmp .return
 	
+	align 16
 .return1:
 	xor ecx, ecx
 	
@@ -286,6 +302,7 @@ _nextPowerOf264BMI2:
 	xor eax, eax
 	ret
 	
+	align 16
 .return64:
 	xor edx, edi
 	shld edx, eax, cl

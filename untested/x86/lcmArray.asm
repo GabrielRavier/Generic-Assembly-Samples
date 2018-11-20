@@ -1,4 +1,4 @@
-global _lcmArray	; int lcmArray(int arr[], int n) 
+global _lcmArray
 
 segment .text align=16
 
@@ -57,6 +57,7 @@ _lcmArray:
 	mov eax, ecx
 	ret
 	
+	align 16
 .zero:
 	add ebx, 4
 	cmp ebx, edi

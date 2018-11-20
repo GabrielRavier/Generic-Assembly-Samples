@@ -14,6 +14,9 @@ _mostSignificantBitIndex:
     mov     eax, -1
     ret
 	
+	
+	
+	align 16
 _mostSignificantBitIndexAlt:
     mov     edx, [esp+4]
     test    edx, edx
@@ -48,8 +51,8 @@ _mostSignificantBitIndexAlt:
     and     edx, 2
     cmovnz  eax, ecx
     ret
-; ---------------------------------------------------------------------------
 
+	align 16
 .retMinus1:
     mov     eax, -1
     ret

@@ -50,6 +50,7 @@ _bcopy:
 	
 	
 	
+	align 16
 _bzero:
 	push edi
 	
@@ -65,6 +66,7 @@ _bzero:
 	
 	
 	
+	align 16
 _memccpy:
 	push edi
 	push esi
@@ -116,6 +118,7 @@ _memccpy:
 	
 	
 	
+	align 16
 _memchr:
 	mov edx, [esp + 12]
 	mov eax, [esp + 4]
@@ -145,6 +148,7 @@ _memchr:
 	
 	
 	
+	align 16
 _memcmp:
 	push esi
 	push ebx
@@ -181,6 +185,7 @@ _memcmp:
 	pop esi
 	ret
 	
+	align 16
 .return:
 	movzx eax, cl
 	sub eax, ebx
@@ -193,6 +198,7 @@ _memcmp:
 	
 	
 	
+	align 16
 _memcpy:
 	push edi
 	push esi
@@ -210,6 +216,7 @@ _memcpy:
 	
 	
 	
+	align 16
 _memcpyMovsd:
 	push edi
 	push esi
@@ -262,6 +269,7 @@ _memcpyMovsd:
 	
 	
 	
+	align 16
 _memfrob:
 	mov ecx, [esp + 8]
 	mov eax, [esp + 4]
@@ -285,6 +293,7 @@ _memfrob:
 	
 	
 	
+	align 16
 _memmem:
 	push ebp
 	push edi
@@ -390,6 +399,7 @@ _memmem:
 	pop ebp
 	ret
 	
+	align 16
 .onlyOne:
 	movzx eax, byte [esp + 31]
 	mov [esp + 72], ebp
@@ -406,6 +416,7 @@ _memmem:
 	
 	
 	
+	align 16
 _memmove:
 	push ebp
 	push edi
@@ -444,6 +455,7 @@ _memmove:
 	pop ebp
 	ret
 	
+	align 16
 .srcBelowDest:
 	lea ecx, [ebx - 1]
 	add edx, ecx
@@ -473,6 +485,7 @@ _memmove:
 	
 	
 	
+	align 16
 _mempcpy:
 	push edi
 	push esi
@@ -491,6 +504,7 @@ _mempcpy:
 	
 	
 	
+	align 16
 _memrchr:
 	mov eax, [esp + 4]
 	mov ecx, [esp + 12]
@@ -520,6 +534,7 @@ _memrchr:
 	
 	
 	
+	align 16
 _memset:
 	push edi
 	mov edx, [esp + 8]
@@ -537,6 +552,7 @@ _memset:
 	
 	
 	
+	align 16
 _stpcpy:
 	push edi
 
@@ -570,6 +586,7 @@ _stpcpy:
 	
 	
 	
+	align 16
 _stpncpy:
 	push ebp
 	xor eax, eax
@@ -613,6 +630,7 @@ _stpncpy:
 	
 	
 	
+	align 16
 _strcasecmp:
 	push ebp
 	push edi
@@ -659,6 +677,7 @@ _strcasecmp:
 	pop ebp
 	ret
 	
+	align 16
 .return0:
 	pop ebx
 	pop esi
@@ -671,6 +690,7 @@ _strcasecmp:
 	
 	
 	
+	align 16
 _strcasestr:
 	push ebp
 	push edi
@@ -735,6 +755,7 @@ _strcasestr:
 	jne .continue
 	jmp .returnEbp
 	
+	align 16
 .return0:
 	xor ebp, ebp
 	
@@ -751,6 +772,7 @@ _strcasestr:
 	
 	
 	
+	align 16
 _strcat:
 	push ebp
 	
@@ -790,6 +812,7 @@ _strcat:
 	
 	
 	
+	align 16
 _strchr:
 	mov eax, [esp + 4]
 	movzx ecx, byte [esp + 8]
@@ -816,6 +839,7 @@ _strchr:
 	
 	
 	
+	align 16
 _strchrnul:
 	mov eax, [esp + 4]
 	movsx edx, byte [esp + 8]
@@ -840,6 +864,7 @@ _strchrnul:
 	
 	
 	
+	align 16
 _strcmp:
 	push esi
 	xor eax, eax
@@ -879,6 +904,7 @@ _strcmp:
 	
 	
 	
+	align 16
 _strcpy:
 	push edi
 	
@@ -905,6 +931,7 @@ _strcpy:
 	
 	
 	
+	align 16
 _strcspn:
 	push edi
 	xor edi, edi
@@ -919,6 +946,7 @@ _strcspn:
 	jne .startLoop
 	jmp .returnEdi
 	
+	align 16
 .loop:
 	inc edi
 	movsx eax, byte [ebx + edi]
@@ -946,6 +974,7 @@ _strcspn:
 	
 	
 	
+	align 16
 _strdup:
 	push edi
 	xor eax, eax
@@ -982,7 +1011,8 @@ _strdup:
 	
 	
 	
-	
+
+	align 16
 _strlen:
 	push edi
 	
@@ -1001,6 +1031,7 @@ _strlen:
 	
 	
 	
+	align 16
 _strncasecmp:
 	push ebp
 	push edi
@@ -1019,6 +1050,7 @@ _strncasecmp:
 	mov esi, ebx
 	jmp .startLoop
 	
+	align 16
 .loop:
 	inc esi
 	test bl, bl
@@ -1053,6 +1085,7 @@ _strncasecmp:
 	pop ebp
 	ret
 	
+	align 16
 .return0:
 	pop ebx
 	pop esi
@@ -1065,6 +1098,7 @@ _strncasecmp:
 	
 	
 	
+	align 16
 _strncat:
 	push ebp
 	
@@ -1105,6 +1139,7 @@ _strncat:
 	
 	
 	
+	align 16
 _strncmp:
 	sub esp, 12
 	
@@ -1152,6 +1187,7 @@ _strncmp:
 	add esp, 12
 	ret
 	
+	align 16
 .end:
 	mov edi, [esp]
 	mov ecx, esi
@@ -1165,6 +1201,7 @@ _strncmp:
 	mov eax, -1
 	jmp .return
 	
+	align 16
 .sign:
 	sub eax, ecx
 	shr eax, 31
@@ -1177,6 +1214,7 @@ _strncmp:
 	
 	
 	
+	align 16
 _strncpy:
 	push ebp
 	
@@ -1209,6 +1247,7 @@ _strncpy:
 	rep stosb	
 	jmp .nope
 	
+	align 16
 .noMemsetHere:
 	mov edx, ebp
 	
@@ -1229,6 +1268,7 @@ _strncpy:
 	
 	
 	
+	align 16
 _strndup:
 	push edi
 	xor eax, eax
@@ -1276,6 +1316,7 @@ _strndup:
 	
 	
 	
+	align 16
 _strnlen:
 	push edi
 	
@@ -1304,6 +1345,7 @@ _strnlen:
 	
 	
 	
+	align 16
 _strpbrk:
 	push ebx
 	sub esp, 16
@@ -1326,6 +1368,7 @@ _strpbrk:
 	
 	
 	
+	align 16
 _strrchr:
 	push edi
 	push esi
@@ -1348,6 +1391,7 @@ _strrchr:
 	lea ebx, [esi + edx - 1]
 	jmp .returnEbx
 	
+	align 16
 .notZero:
 .loop:
 	push eax
@@ -1375,6 +1419,7 @@ _strrchr:
 	
 	
 	
+	align 16
 _strsep:
 	push esi
 	push ebx
@@ -1407,6 +1452,7 @@ _strsep:
 	pop esi
 	ret
 	
+	align 16
 .lastToken:
 	mov dword [ebx], 0
 	
@@ -1420,6 +1466,7 @@ _strsep:
 	
 	
 	
+	align 16
 _strspn:
 	push edi
 	xor edi, edi
@@ -1461,6 +1508,7 @@ _strspn:
 	
 	
 	
+	align 16
 _strstr:
 	push edi
 	or ecx, -1
@@ -1494,6 +1542,7 @@ _strstr:
 	mov esi, edi
 	jmp .loop
 	
+	align 16
 .return0:
 	xor esi, esi
 	
@@ -1508,6 +1557,7 @@ _strstr:
 	
 	
 	
+	align 16
 _swab:
 	push esi
 	push ebx

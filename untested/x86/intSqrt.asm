@@ -1,28 +1,29 @@
-global _intSqrt	; int IntSqrt(int a1)
+global _intSqrt
 
 segment .text align=16
 
-_intSqrti386:
+_intSqrt:
 	sub esp, 12
 	
-	fild dword [esp + 12 + 4]
+	fild dword [esp + 16]
 	fsqrt
-	fnstcw [esp + 12 - 6]
+	fnstcw [esp + 6]
 	
-	mov ax, [esp + 12 - 6]
+	mov ax, [esp + 6]
 	mov ah, 12
-	mov [esp + 12 - 8], ax
+	mov [esp + 4], ax
 	
-	fldcw [esp + 12 - 8]
-	fistp dword [esp + 12 - 12]
-	fldcw [esp + 12 - 6]
+	fldcw [esp + 4]
+	fistp dword [esp]
+	fldcw [esp + 6]
 	
-	mov eax, [esp + 12 - 12]
+	mov eax, [esp]
 	add esp, 12
 	ret
 	
 
-	
+
+	align 16
 _intSqrtSSE2:
 	pxor xmm0, xmm0
 	cvtsi2sd xmm0, [esp + 4]
@@ -32,6 +33,7 @@ _intSqrtSSE2:
 	
 	
 	
+	align 16
 _intSqrtAVX:
 	vxorpd xmm0, xmm0, xmm0
 	vcvtsi2sd xmm0, xmm0, [esp + 4]

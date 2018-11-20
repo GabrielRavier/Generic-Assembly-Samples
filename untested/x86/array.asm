@@ -1,5 +1,5 @@
-global _sumArray	; int64_t sum(const int arr[], size_t n)
-global _getMedian	; int32_t getMedian(int32_t ar1[], int32_t ar2[], size_t n) 
+global _sumArray
+global _getMedian
 
 segment .data align=4
 
@@ -68,6 +68,7 @@ _sumArray:
 	adc ebp, edx
 	jmp .return
 	
+	align 16
 .return0:
 	xor ecx, ecx
 	xor ebp, ebp
@@ -89,6 +90,7 @@ _sumArray:
 	
 	
 	
+	align 16
 _sumArrayi686:
 	push esi
 	sub esp, 24
@@ -133,6 +135,7 @@ _sumArrayi686:
 	
 	
 	
+	align 16
 _sumArraySSSE3:
 	push esi
 	push edi
@@ -258,6 +261,7 @@ _sumArraySSSE3:
 	jb .trailingLoop
 	jmp .return
 	
+	align 16
 .return0:
 	xor esi, esi
 	xor edi, edi
@@ -283,6 +287,7 @@ _sumArraySSSE3:
 	
 	
 	
+	align 16
 _sumArraySSE4:
 	push esi
 	push edi
@@ -413,6 +418,7 @@ _sumArraySSE4:
 	
 	
 
+	align 16
 _sumArrayAVX:
 	push esi
 	push edi
@@ -517,6 +523,7 @@ _sumArrayAVX:
 	jb .trailingLoop
 	jmp .return
 	
+	align 16
 .return0:
 	xor ecx, ecx
 	xor ebx, ebx
@@ -541,6 +548,7 @@ _sumArrayAVX:
 	
 	
 	
+	align 16
 _sumArrayAVX2:
 	push esi
 	push edi
@@ -647,6 +655,7 @@ _sumArrayAVX2:
 	jb .trailingLoop
 	jmp .return
 	
+	align 16
 .return0:
 	xor ecx, ecx
 	xor ebx, ebx
@@ -668,6 +677,7 @@ _sumArrayAVX2:
 	xor edi, edi
 	jmp .startTrailingLoop
 	
+	align 16
 .medium:
 	xor ecx, ecx
 	mov edi, eax
@@ -681,6 +691,7 @@ _sumArrayAVX2:
 	
 	
 	
+	align 16
 _getMedian:
 	push esi
 	sub esp, 24
@@ -741,6 +752,7 @@ _getMedian:
 	pop esi
 	ret
 	
+	align 16
 .jEqualsn:
 	mov edx, [esp + 32]
 	mov eax, ebp
@@ -750,6 +762,7 @@ _getMedian:
 	mov edx, [edx]
 	jmp .return
 	
+	align 16
 .iEqualsn:
 	mov edx, [esp + 36]
 	mov eax, ebp
@@ -761,6 +774,7 @@ _getMedian:
 	
 	
 	
+	align 16
 _getMediani686:
 	push ebp
 	xor ecx, ecx
@@ -821,10 +835,12 @@ _getMediani686:
 	pop ebp
 	ret
 	
+	align 16
 .jEqualsn:
 	mov eax, [ebp]
 	jmp .return
 	
+	align 16
 .iEqualsn:
 	mov eax, [eax]
 	jmp .return

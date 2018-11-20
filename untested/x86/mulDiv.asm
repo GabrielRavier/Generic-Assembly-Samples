@@ -1,4 +1,4 @@
-global _mulDiv	; int64_t divide(int64_t dividend, int64_t divisor)
+global _mulDiv
 
 segment .text align=16
 

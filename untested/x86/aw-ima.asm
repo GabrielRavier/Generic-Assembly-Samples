@@ -35,6 +35,7 @@ _ima_parse:
 	add edx, 8
 	jmp .startLoop
 	
+	align 16
 .loop:
 	lea edx, [edx + ebx + 12]
 	
@@ -55,15 +56,18 @@ _ima_parse:
 	jne .loop
 	jmp .endLoop
 	
+	align 16
 .desc:
 	lea esi, [edx + 12]
 	jmp .loop
 	
+	align 16
 .pakt:
 	lea edi, [edx + 12]
 	lea edx, [edx + ebx + 12]
 	jmp .startLoop
 	
+	align 16
 .endLoop:
 	cmp dword [esi + 8], 0x34616D69
 	mov eax, -3

@@ -1,3 +1,16 @@
+global _ca_stack_create
+global _ca_stack_alloc
+global _ca_stack_free
+global _ca_stack_bytes_left
+global _ca_frame_create
+global _ca_frame_alloc
+global _ca_frame_free
+global _ca_alloc_head
+global _ca_leak_check_alloc
+global _ca_leak_check_calloc
+global _ca_leak_check_free
+global _CUTE_ALLOC_BYTES_IN_USE
+
 extern _malloc
 extern _memset
 extern _free
@@ -222,6 +235,7 @@ _ca_leak_check_alloc:
 	mov dword [ca_alloc_head_init], 1
 	jmp .endProper
 	
+	align 16
 .ret0:
 	xor eax, eax
 	jmp .return
@@ -275,6 +289,7 @@ _ca_leak_check_free:
 	mov [esp + 4], eax
 	jmp _free
 	
+	align 16
 .return:
 	ret
 	

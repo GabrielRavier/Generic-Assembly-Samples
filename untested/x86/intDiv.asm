@@ -1,12 +1,12 @@
-global _intDiv	; int IntSqrt(int a1, int a2)
+global _intDiv
 
 segment .text align=16
 
-_intDivi386:
+_intDiv:
 	sub esp, 28
 	
-	fild dword [esp + 28 + 4]
-	fild dword [esp + 28 + 8]
+	fild dword [esp + 32]
+	fild dword [esp + 36]
 	
 	fdivp st1, st0
 	fnstcw [esp]
@@ -25,6 +25,7 @@ _intDivi386:
 	
 	
 	
+	align 16
 _intDivSSE2:
 	pxor xmm1, xmm1
 	pxor xmm0, xmm0
@@ -39,6 +40,7 @@ _intDivSSE2:
 	
 	
 
+	align 16
 _intDivAVX:
 	vxorpd xmm0, xmm0, xmm0
 	vxorpd xmm1, xmm1, xmm1

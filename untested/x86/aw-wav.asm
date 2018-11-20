@@ -33,6 +33,7 @@ _wav_write:
 	mov eax, 4
 	jmp .noBytesSet
 	
+	align 16
 .nbytes2:
 	mov eax, 2
 	
@@ -140,10 +141,12 @@ _wav_parse:
 	jne .loop
 	jmp .foundData
 	
+	align 16
 .fmt:
 	lea edi, [edx + 8]
 	jmp .loop
 	
+	align 16
 .foundData:
 	add edx, 8
 	movsd xmm0, [xmmDat3]

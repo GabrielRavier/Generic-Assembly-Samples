@@ -1,5 +1,5 @@
-global _isPowerOf4	; bool isPowerOf4(int32_t n) 
-global _isPowerOf464	; bool isPowerOf464(int64_t n) 
+global _isPowerOf4
+global _isPowerOf464
 
 segment .text align=16
 
@@ -29,6 +29,7 @@ _isPowerOf4:
 	mov eax, 1
 	ret 
 	
+	align 16
 .false:
 	xor eax, eax
 	
@@ -37,6 +38,9 @@ _isPowerOf4:
 	
 	
 	
+	
+	
+	align 16
 _isPowerOf464:	
 	push edi
 	xor eax, eax
@@ -83,6 +87,7 @@ _isPowerOf464:
 	pop edi
 	ret
 	
+	align 16
 .return0:
 	pop ebx
 	pop esi

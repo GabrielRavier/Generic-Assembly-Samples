@@ -30,6 +30,7 @@ _getSign1:
 	
 	
 
+	align 16
 _getSign2:
 	mov eax, [esp + 4]	; x
 	sar eax, 31
@@ -40,6 +41,7 @@ _getSign2:
 	
 	
 	
+	align 16
 _getSign3:
 	mov edx, [esp + 4]	; x
 	
@@ -54,6 +56,7 @@ _getSign3:
 	
 	
 	
+	align 16
 _isNotNegative:
 	mov eax, [esp + 4]	; x
 	
@@ -65,6 +68,7 @@ _isNotNegative:
 	
 	
 	
+	align 16
 _areSignsOpposite:
 	mov eax, [esp + 8]	; y
 	xor eax, [esp + 4]	; x
@@ -75,6 +79,7 @@ _areSignsOpposite:
 	
 	
 	
+	align 16
 _signExtendFromWidth:
 	mov edx, 1
 	movzx eax, byte [esp + 8]	; bitWidth
@@ -93,6 +98,7 @@ _signExtendFromWidth:
 	
 	
 	
+	align 16
 _signExtendFromWidthBMI:
 	movzx ecx, byte [esp + 8]	; bitWidth
 	mov edx, 1
@@ -111,6 +117,7 @@ _signExtendFromWidthBMI:
 	
 	
 	
+	align 16
 _conditionalClearOrSet:
 	movzx eax, byte [esp + 12]	; doIt
 	mov edx, [esp + 4]	; wordToModify
@@ -125,6 +132,7 @@ _conditionalClearOrSet:
 	
 	
 	
+	align 16
 _swapBits:
 	push edi
 	push esi
@@ -163,6 +171,7 @@ _swapBits:
 	
 	
 	
+	align 16
 _swapBitsBMI:
 	push edi
 	push esi
@@ -193,6 +202,7 @@ _swapBitsBMI:
 	
 	
 	
+	align 16
 _hasZeroByte:
 	mov edx, [esp + 4]	; x
 	
@@ -216,6 +226,7 @@ _hasZeroByte:
 	
 	
 	
+	align 16
 _parity:
 	mov eax, [esp + 4]
 	mov edx, eax
@@ -229,6 +240,7 @@ _parity:
 	
 	
 	
+	align 16
 _getSign164:
 	mov eax, [esp + 8]	; x.hi
 	sar eax, 31
@@ -238,6 +250,7 @@ _getSign164:
 	
 	
 	
+	align 16
 _getSign264:
 	mov eax, [esp + 8]	; x.hi
 	sar eax, 31
@@ -248,6 +261,7 @@ _getSign264:
 	
 	
 	
+	align 16
 _getSign364:
 	push edi
 	push esi
@@ -273,6 +287,7 @@ _getSign364:
 	
 	
 	
+	align 16
 _isNotNegative64:
 	mov eax, [esp + 8]	; x.hi
 	shr eax, 31
@@ -284,6 +299,7 @@ _isNotNegative64:
 	
 	
 	
+	align 16
 _areSignsOpposite64:
 	mov eax, [esp + 16]	; y.hi
 	xor eax, [esp + 8]	; x.hi
@@ -294,6 +310,7 @@ _areSignsOpposite64:
 	
 	
 	
+	align 16
 _signExtendFromWidth64:
 	sub esp, 12
 	
@@ -349,6 +366,7 @@ _signExtendFromWidth64:
 	
 	
 	
+	align 16
 _conditionalClearOrSet64:
 	push edi
 	
@@ -370,6 +388,7 @@ _conditionalClearOrSet64:
 	
 	
 	
+	align 16
 _conditionalClearOrSet64SSE2:
 	movzx eax, byte [esp + 20]	; doIt
 	neg eax
@@ -392,6 +411,7 @@ _conditionalClearOrSet64SSE2:
 	
 	
 	
+	align 16
 _conditionalClearOrSet64SSE4:
 	movzx eax, byte [esp + 20]	; doIt
 	movq xmm1, [esp + 4]	; wordToModify
@@ -411,6 +431,7 @@ _conditionalClearOrSet64SSE4:
 	
 	
 	
+	align 16
 _conditionalClearOrSet64AVX:
 	movzx eax, byte [esp + 20]	; doIt
 	vmovq xmm1, [esp + 4]	; wordToModify
@@ -432,6 +453,7 @@ _conditionalClearOrSet64AVX:
 	
 	
 	
+	align 16
 _swapBits64:
 	sub esp, 16
 	xor eax, eax
@@ -520,6 +542,7 @@ _swapBits64:
 	
 	
 	
+	align 16
 _swapBits64SSE2:
 	movq xmm4, [esp + 16]	; bitsToSwap
 	movzx eax, byte [esp + 4]	; swapPos1
@@ -556,6 +579,7 @@ _swapBits64SSE2:
 	
 	
 	
+	align 16
 _hasZeroByte64:
 	mov edx, [esp + 4]	; x.lo
 	mov ecx, [esp + 8]	; x.hi
@@ -585,6 +609,7 @@ _hasZeroByte64:
 	
 	
 	
+	align 16
 _parity64:
 	push ebx
 	

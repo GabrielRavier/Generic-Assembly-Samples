@@ -3,12 +3,12 @@ global _sub64
 global _mul64
 global _isEqual64
 global _isGreater64
-global _divide64	; int64_t divide64(int64_t dividend, int64_t divisor)
-global _modulo64	; int64_t modulo64(int64_t x, int64_t n)
-global _getVal64	; int64_t getVal64(int64_t x)
-global _getOpposite64	; int64_t getOpposite64(int64_t x)
-global _getComplement64	; int64_t getComplement64(int64_t x)
-global _getAbs64	; uint64_t getAbs(int64_t n) 
+global _divide64
+global _modulo64
+global _getVal64
+global _getOpposite64
+global _getComplement64
+global _getAbs64
 global _shiftLeft64
 global _shiftRight64
 global _rol64

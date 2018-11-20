@@ -78,6 +78,9 @@ segment .rodata
 	align 16
 	fourNaNs dd 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF
 	NaN equ fourNaNs
+	
+	align 16
+	NaNPlus0s dd 0x7FFFFFFF, 0, 0, 0
 
 segment .text align=16
 
@@ -241,6 +244,7 @@ _ftrunc:
 .noAdd:
 	jmp .return
 	
+	align 16
 .above0:
 	fld st0
 	frndint
@@ -290,6 +294,7 @@ _ftruncSSE:
 	addss xmm0, xmm4
 	jmp .return
 	
+	align 16
 .above0:
 	movss xmm3, dword [maxInt]
 	movaps xmm0, xmm1
@@ -332,6 +337,7 @@ _ftruncSSE4:
 	roundss xmm0, xmm1, 2
 	jmp .return
 	
+	align 16
 .above0:
 	roundss xmm0, xmm1, 1
 	
@@ -356,6 +362,7 @@ _ftruncAVX:
 	vroundss xmm0, xmm1, 2
 	jmp .return
 	
+	align 16
 .above0:
 	vroundss xmm0, xmm1, 1
 	
@@ -1645,7 +1652,7 @@ _flog1p:
 	
 	
 	align 16
-_flog1p:
+_flog1pi686:
 	fld dword [esp + 4]
 	fabs
 	fld tword [log1pDat1]
@@ -1830,12 +1837,200 @@ _fhypoti686:
 	fxch st1
 	fcomi st0, st1
 	fcmovb st0, st1
+	
 	fstp st1
 	fldz
 	fcomip st0, st1
-	je .equal
+	je .popAndRet0
 	
-.L13:
+.notEqual:
 	fld1
 	fdiv st0, st1
+	
 	fld dword [esp + 4]
+	fmul st0, st1
+	
+	fld dword  [esp + 8]
+	fmul st0, st2
+	fxch st2
+	fmul dword [esp + 12]
+	fxch st1
+	fmul st0, st0
+	
+	fxch st2
+	
+	fmul st0, st0
+	faddp st2, st0
+	fmul st0, st0
+	faddp st1, st0
+	fsqrt
+	fmulp st1, st0
+	ret
+
+	align 16
+.biggerEqual:
+	fstp st0
+	fxch st1
+	fcomi st0, st1
+	fcmovb st0, st1
+
+	fstp st1
+	fldz
+	fcomip st0, st1
+	jne .notEqual
+
+	fstp st0
+	jmp .ret0
+
+	align 16
+.popAndRet0:
+	fstp st0
+.ret0:
+	fldz
+	ret
+	
+	
+	
+	
+	
+	align 16
+_fhypotSSE:
+	sub esp, 12
+	
+	movss xmm3, [esp + 16]
+	movss xmm1, [esp + 20]
+	
+	andps xmm3, [NaNPlus0s]
+	andps xmm1, [NaNPlus0s]
+	
+	movss xmm2, [esp + 24]
+	andps xmm2, [NaNPlus0s]
+	
+	comiss xmm1, xmm3
+	jbe .biggerEqual
+	
+	movaps xmm4, xmm2
+	maxss xmm4, xmm1
+	jmp .continue
+	
+	align 16
+.biggerEqual:
+	movaps xmm4, xmm2
+	maxss xmm4, xmm3
+	
+.continue:
+	xorps xmm0, xmm0
+	ucomiss xmm4, xmm0
+	jp .parity
+	je .ret0
+	
+.parity:
+	movss xmm0, [one]
+	divss xmm0, xmm4
+	
+	mulss xmm3, xmm3
+	mulss xmm1, xmm1
+	mulss xmm2, xmm2
+	addss xmm3, xmm1
+	addss xmm3, xmm2
+	
+	mulss xmm3, xmm0
+	mulss xmm3, xmm0
+	sqrtss xmm3, xmm3
+	mulss xmm4, xmm3
+	jmp .return
+	
+	align 16
+.ret0:
+	xorps xmm4, xmm4
+	
+.return:
+	movss [esp], xmm4
+	fld dword [esp]
+	add esp, 12
+	ret
+	
+	
+	
+	align 16
+_fhypotAVX:
+	push eax
+	vmovss xmm0, [esp + 16]
+	vmovss xmm1, [esp + 12]
+	vmovss xmm2, [esp + 8]
+	vmovaps xmm4, [fourNaNs]
+	
+	vandps xmm3, xmm2, xmm4
+	vandps xmm2, xmm1, xmm4
+	vandps xmm0, xmm0, xmm4
+	
+	vmaxss xmm1, xmm0, xmm2
+	vmaxss xmm4, xmm0, xmm3
+	vcmpltss xmm5, xmm3, xmm2
+	vblendvps xmm1, xmm4, xmm1, xmm5
+	
+	vxorps xmm4, xmm4, xmm4
+	vucomiss xmm1, xmm4
+	je .retXmm4
+	
+	vmovss xmm4, [one]
+	vdivss xmm4, xmm4, xmm1
+	
+	vmulss xmm3, xmm3, xmm4
+	vmulss xmm3, xmm3, xmm3
+	vmulss xmm2, xmm2, xmm4
+	vaddss xmm2, xmm3, xmm2
+	
+	vmulss xmm0, xmm0, xmm4
+	vmulss xmm0, xmm0, xmm0
+	vaddss xmm0, xmm2, xmm0
+	
+	vsqrtss xmm0, xmm0, xmm0
+	vmulss xmm4, xmm0, xmm1
+	
+.retXmm4:
+	vmovss [esp], xmm4
+	fld dword [esp]
+	pop eax
+	ret
+	
+	
+	
+	align 16
+_fhypotFMA:
+	push eax
+	vmovss xmm0, [esp + 16]
+	vmovss xmm1, [esp + 12]
+	vmovss xmm2, [esp + 8]
+	vbroadcastss xmm4, [NaN]
+	
+	vandps xmm2, xmm2, xmm4
+	vandps xmm3, xmm1, xmm4
+	vandps xmm0, xmm0, xmm4
+	
+	vmaxss xmm1, xmm0, xmm3
+	vmaxss xmm4, xmm0, xmm2
+	vcmpltss xmm5, xmm2, xmm3
+	vblendvps xmm1, xmm4, xmm1, xmm5
+	
+	vxorps xmm4, xmm4, xmm4
+	vucomiss xmm1, xmm4
+	je .retXmm4
+	
+	vmovss xmm4, [one]
+	vdivss xmm4, xmm4, xmm1
+	
+	vmulss xmm2, xmm2, xmm4
+	vmulss xmm3, xmm3, xmm4
+	vmulss xmm3, xmm3, xmm3
+	vfmadd231ss xmm3, xmm2, xmm2	; xmm3 = xmm2² + xmm3
+	vmulss xmm0, xmm0, xmm4
+	vfmadd213ss xmm0, xmm0, xmm3	; xmm0 = xmm0² + xmm3
+	vsqrtss xmm0, xmm0, xmm0
+	vmulss xmm4, xmm0, xmm1
+	
+.retXmm4:
+	vmovss [esp], xmm4
+	fld dword [esp]
+	pop eax
+	ret

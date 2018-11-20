@@ -1,5 +1,5 @@
-global _isPowerOf2	; bool isPowerOfTwo (int x) 
-global _isPowerOf264	; bool isPowerOfTwo64(int64_t x) 
+global _isPowerOf2
+global _isPowerOf264
 
 segment .text align=16
 
@@ -20,6 +20,7 @@ _isPowerOf2:
 	
 	
 	
+	align 16
 _isPowerOf2BMI2:
 	mov eax, [esp + 4]
 	test eax, eax
@@ -31,6 +32,7 @@ _isPowerOf2BMI2:
 	cmove eax, edx
 	ret
 	
+	align 16
 .return0:
 	xor eax, eax
 	ret
@@ -39,6 +41,7 @@ _isPowerOf2BMI2:
 	
 	
 	
+	align 16
 _isPowerOf264:
 	sub esp, 12
 	
@@ -75,6 +78,7 @@ _isPowerOf264:
 	
 	
 	
+	align 16
 _isPowerOf264SSSE3:
 	movq xmm1, [esp + 4]
 	
@@ -103,6 +107,7 @@ _isPowerOf264SSSE3:
 	
 	
 	
+	align 16
 _isPowerOf264SSE4:
 	movq xmm0, [esp + 4]
 	
@@ -123,6 +128,7 @@ _isPowerOf264SSE4:
 	
 	
 	
+	align 16
 _isPowerOf264AVX:
 	vmovq xmm0, [esp + 4]
 	

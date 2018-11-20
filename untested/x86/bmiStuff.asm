@@ -1,11 +1,11 @@
-global _andn	; uint32_t andn(uint32_t x, uint32_t y)
-global _bextr	; uint32_t bextr(uint32_t x, uint32_t y, uint32_t z)
-global _blsi	; uint32_t andn(uint32_t x)
-global _blsr	; uint32_t andn(uint32_t x)
-global _andn64	; uint64_t andn(uint64_t x, uint64_t y)
-global _bextr64	; uint64_t bextr(uint64_t x, uint64_t y, uint64_t z)
-global _blsi64	; uint64_t andn(uint64_t x)
-global _blsr64	; uint64_t andn(uint64_t x)
+global _andn
+global _bextr
+global _blsi
+global _blsr
+global _andn64
+global _bextr64
+global _blsi64
+global _blsr64
 
 segment .text align=16
 
@@ -15,6 +15,9 @@ _andn:
 	and eax, dword [esp + 8]
 	ret
 	
+	
+	
+	align 16
 _andnBMI:
 	mov eax, [esp + 4]
 	andn eax, eax, [esp + 8]
@@ -24,6 +27,7 @@ _andnBMI:
 	
 	
 	
+	align 16
 _blsi:
 	mov eax, [esp + 4]
 	mov edx, eax
@@ -31,6 +35,9 @@ _blsi:
 	and eax, edx
 	ret
 	
+	
+	
+	align 16
 _blsiBMI:
 	blsi eax, [esp + 4]
 	ret
@@ -39,12 +46,16 @@ _blsiBMI:
 	
 	
 	
+	align 16
 _blsr:
 	mov eax, [esp + 4]
 	lea edx, [eax - 1]
 	and eax, edx
 	ret
 	
+	
+	
+	align 16
 _blsrBMI:
 	blsr eax, [esp + 4]
 	ret
@@ -53,6 +64,7 @@ _blsrBMI:
 	
 	
 	
+	align 16
 _andn64:
 	mov eax, [esp + 4]
 	mov edx, [esp + 8]
@@ -66,6 +78,7 @@ _andn64:
 	
 	
 	
+	align 16
 _andn64SSE2:
 	movq xmm2, [esp + 4]
 	pcmpeqd xmm0, xmm0
@@ -80,6 +93,7 @@ _andn64SSE2:
 	
 	
 	
+	align 16
 _andn64SSE4:
 	movq xmm0, [esp + 4]
 	movq xmm1, [esp + 12]
@@ -90,6 +104,7 @@ _andn64SSE4:
 	
 	
 	
+	align 16
 _andn64AVX:
 	vmovq xmm0, [esp + 4]
 	vmovq xmm1, [esp + 12]
@@ -102,6 +117,7 @@ _andn64AVX:
 	
 	
 	
+	align 16
 _blsi64:
 	push edi
 	
@@ -120,6 +136,7 @@ _blsi64:
 	
 	
 	
+	align 16
 _blsi64SSE4:
 	movq xmm1, [esp + 4]
 	pxor xmm0, xmm0
@@ -131,6 +148,7 @@ _blsi64SSE4:
 	
 	
 	
+	align 16
 _blsi64AVX:
 	vmovq xmm1, [esp + 4]
 	vpxor xmm0, xmm0, xmm0
@@ -144,6 +162,7 @@ _blsi64AVX:
 	
 	
 	
+	align 16
 _blsr64:
 	push edi
 	
@@ -161,7 +180,7 @@ _blsr64:
 	
 	
 	
-segment .rodate align=4
+segment .rodate align=16
 
 	xmmDat1 dq -1
 	
@@ -179,6 +198,7 @@ _blsr64SSE2:
 	
 	
 	
+	align 16
 _blsr64SSE4:
 	movq xmm1, [esp + 4]
 	pcmpeqd xmm0, xmm0
@@ -190,6 +210,7 @@ _blsr64SSE4:
 	
 	
 	
+	align 16
 _blsr64AVX:
 	vmovq xmm1, [esp + 4]
 	vpcmpeqd xmm0, xmm0

@@ -1,5 +1,5 @@
-global _findFirstSet	; int32_t findFirstSet(int32_t n)
-global _findFirstSet64	; int64_t findFirstSet(int64_t n)
+global _findFirstSet
+global _findFirstSet64
 
 segment .text align=16
 
@@ -15,6 +15,7 @@ _findFirstSet:
 	
 	
 	
+	align 16
 _findFirstSetCMOV:
 	bsf eax, [esp + 4]
 	mov edx, -1
@@ -26,6 +27,7 @@ _findFirstSetCMOV:
 	
 	
 	
+	align 16
 _findFirstSet64:
 	xor eax, eax
 	mov edx, [esp + 4]

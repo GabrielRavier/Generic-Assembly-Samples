@@ -1,9 +1,9 @@
-global _gcd	; int gcd(int a, int b)
-global _gcd64	; int64_t gcd64(int64_t a, int64_t b)
-global _lcm	; int lcm(int a, int b)
-global _lcm64 ; int64_t lcm64(int64_t a, int64_t b)
-
-extern _divide64	; int64_t divide64(int64_t dividend, int64_t divisor)
+global _gcd
+global _gcd64	
+global _lcm
+global _lcm64
+                
+extern _divide64
 
 segment .text align=16
 
@@ -31,10 +31,12 @@ _gcd:
 	mov eax, ecx
 	jmp .restart
 	
+	align 16
 .aIsSmaller:
 	mov edx, ecx
 	jmp .restart
 	
+	align 16
 .return:
 	ret
 	
@@ -46,6 +48,7 @@ _gcd:
 	
 	
 	
+	align 16
 _gcd64:
 	push esi
 	push edi
@@ -53,13 +56,13 @@ _gcd64:
 	push ebp
 	sub esp, 12
 	
-	mov eax, [esp + 28 + 4]
+	mov eax, [esp + 32]
 	mov ecx, eax
-	mov edx, [esp + 28 + 8]
+	mov edx, [esp + 36]
 	or ecx, edx
 	
-	mov ebp, [esp + 28 + 12]
-	mov ebx, [esp + 28 + 16]
+	mov ebp, [esp + 40]
+	mov ebx, [esp + 44]
 	
 	je .return0
 	
@@ -106,6 +109,7 @@ _gcd64:
 	pop esi
 	jmp _gcd64
 	
+	align 16
 .callGcdABMinusA:
 	mov [esp + 36], edx
 	mov edx, [esp + 4]
@@ -119,14 +123,16 @@ _gcd64:
 	pop esi
 	jmp _gcd64
 	
+	align 16
 .return:
 	add esp, 12
 	pop ebp
 	pop ebx
 	pop edi
 	pop esi
-	ret 
+	ret
 	
+	align 16
 .return0:
 	xor eax, eax
 	xor edx, edx
@@ -141,6 +147,7 @@ _gcd64:
 	
 	
 	
+	align 16
 _lcm:
 	push ebx
 	push ebp
@@ -168,7 +175,8 @@ _lcm:
 	
 	
 	
-_lcm64i386:
+	align 16
+_lcm64:
 	push esi
 	push edi
 	push ebx
@@ -215,6 +223,7 @@ _lcm64i386:
 	
 	
 	
+	align 16
 _lcm64SSE2:
 	sub esp, 60
 	
@@ -257,6 +266,7 @@ _lcm64SSE2:
 	
 	
 	
+	align 16
 _lcm64AVX:
 	sub esp, 60
 	
@@ -296,6 +306,7 @@ _lcm64AVX:
 	
 	
 	
+	align 16
 _lcm64AVX512:
 	sub esp, 60
 	

@@ -14,6 +14,7 @@ _detab:
 	jne .notATab
 	
 	mov byte [edx], ' '
+	
 .notATab:
 	inc edx
 	movsx eax, byte [edx]

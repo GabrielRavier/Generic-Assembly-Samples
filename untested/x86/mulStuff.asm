@@ -1,5 +1,5 @@
-global _isMulOk	; bool isMulOk(uint32_t cnt, uint32_t elSize)
-global _saturatedMul	; uint32_t saturatedMul(uint32_t cnt, uint32_t elSize)
+global _isMulOk
+global _saturatedMul
 
 segment .text align=16
 
@@ -19,6 +19,7 @@ _isMulOk:
 	pop ebp
 	ret
 	
+	align 16
 .continue:
 	xor edx, edx
 	mov eax, -1
@@ -34,6 +35,7 @@ _isMulOk:
 	
 	
 	
+	align 16
 _saturatedMul:
 	mov ecx, [esp + 8]
 	test ecx, ecx
@@ -54,6 +56,7 @@ _saturatedMul:
 	imul eax, ecx
 	ret
 	
+	align 16
 .returnMax:
 	mov eax, -1
 	ret

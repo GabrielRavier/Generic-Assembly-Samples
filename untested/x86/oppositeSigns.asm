@@ -1,5 +1,5 @@
-global _oppositeSigns	; bool oppositeSigns(int x, int y)
-global _oppositeSigns64	; bool oppositeSigns64(int64_t x, int64_t y)
+global _oppositeSigns
+global _oppositeSigns64
 
 segment .text align=16
 
@@ -13,6 +13,7 @@ _oppositeSigns:
 	
 	
 	
+	align 16
 _oppositeSigns64:
 	xor edx, edx
 	mov eax, [esp + 8]
@@ -21,6 +22,7 @@ _oppositeSigns64:
 	jge .false
 	
 	mov edx, 1
+	
 .false:
 	mov eax, edx
 	ret

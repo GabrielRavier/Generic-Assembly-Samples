@@ -46,6 +46,7 @@ _rand:
 	
 	
 	
+	align 16
 _srand:
 	mov eax, [esp + 4]
 	mov [next], eax

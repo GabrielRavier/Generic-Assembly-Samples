@@ -1,4 +1,4 @@
-global _intToBase	; void intToBase(int num, char* str, int base) 
+global _intToBase 
 
 segment .text align=16
 

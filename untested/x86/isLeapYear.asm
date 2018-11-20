@@ -1,4 +1,4 @@
-global _isLeapYear	; bool isLeapYear(unsigned int a1)
+global _isLeapYear
 
 segment .text align=16
 
@@ -27,6 +27,7 @@ _isLeapYear:
 	mov eax, 1
 	ret
 
+	align 16
 .return0:
 	xor eax, eax
 	ret
@@ -35,6 +36,7 @@ _isLeapYear:
 	
 	
 	
+	align 16
 _isLeapYearBMI2:
 	imul edx, [esp + 4], 0xC28F5C29
 	mov eax, 1
