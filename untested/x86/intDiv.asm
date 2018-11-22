@@ -43,10 +43,10 @@ _intDivSSE2:
 	align 16
 _intDivAVX:
 	vxorpd xmm0, xmm0, xmm0
-	vxorpd xmm1, xmm1, xmm1
+	vxorpd xmm1, xmm1
 	
-	vcvtsi2sd xmm0, xmm0, [esp + 4]
-	vcvtsi2sd xmm1, xmm1, [esp + 8]
+	vcvtsi2sd xmm0, [esp + 4]
+	vcvtsi2sd xmm1, [esp + 8]
 	
 	vdivsd xmm2, xmm0, xmm1
 	

@@ -281,7 +281,7 @@ _nextPowerOf264BMI2:
 	xor ecx, ecx
 	
 .loop:
-	vpsrlq xmm1, xmm1, 1
+	vpsrlq xmm1, 1
 	inc ecx
 	vpand xmm2, xmm1, xmm0
 	movzx ecx, cl

@@ -133,14 +133,14 @@ _isPowerOf264AVX:
 	vmovq xmm0, [esp + 4]
 	
 	xor eax, eax
-	vpunpcklqdq xmm0, xmm0, xmm0
+	vpunpcklqdq xmm0, xmm0
 	vptest xmm0, xmm0
 	je .return
 	
-	vpcmpeqd xmm1, xmm1, xmm1
+	vpcmpeqd xmm1, xmm1
 	vpaddq xmm1, xmm0, xmm1
 	vpand xmm0, xmm1, xmm0
-	vpunpcklqdq xmm0, xmm0, xmm0
+	vpunpcklqdq xmm0, xmm0
 	vptest xmm0, xmm0
 	sete al
 	

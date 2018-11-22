@@ -35,8 +35,8 @@ _intSqrtSSE2:
 	
 	align 16
 _intSqrtAVX:
-	vxorpd xmm0, xmm0, xmm0
-	vcvtsi2sd xmm0, xmm0, [esp + 4]
-	vsqrtsd xmm0, xmm0, xmm0
+	vxorpd xmm0, xmm0
+	vcvtsi2sd xmm0, [esp + 4]
+	vsqrtsd xmm0, xmm0
 	vcvttsd2si eax, xmm0
 	ret

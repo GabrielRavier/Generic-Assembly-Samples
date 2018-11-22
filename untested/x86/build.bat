@@ -8,6 +8,7 @@ nasm -Wall -f elf32 bithacks.asm
 nasm -Wall -f elf32 bmiStuff.asm
 nasm -Wall -f elf32 bmi2Stuff.asm
 nasm -Wall -f elf32 bswap.asm
+nasm -Wall -f elf32 calcPi.asm
 nasm -Wall -f elf32 convert.asm
 nasm -Wall -f elf32 cute_alloc.asm
 nasm -Wall -f elf32 debugBreak.asm
@@ -35,4 +36,5 @@ nasm -Wall -f elf32 oppositeSigns.asm
 nasm -Wall -f elf32 rand.asm
 nasm -Wall -f elf32 rotate.asm
 nasm -Wall -f elf32 string.asm
+nasm -Wall -f elf32 sumTo.asm
 pause

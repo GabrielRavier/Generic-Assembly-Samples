@@ -1,6 +1,7 @@
 echo off
 REM fasmarm arith64.asm
 fasmarm array.asm
+rem array.asm is not up to date
 fasmarm arrayBitManip.asm
 fasmarm bmiStuff.asm
 fasmarm bmi2Stuff.asm

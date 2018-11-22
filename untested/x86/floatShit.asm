@@ -137,7 +137,7 @@ _fminAVX:
 	
 	vmovss xmm0, dword [esp + 16]
 	
-	vminss xmm0, xmm0, dword [esp + 20]
+	vminss xmm0, dword [esp + 20]
 	vmovss dword [esp], xmm0
 	fld dword [esp]
 	
@@ -205,7 +205,7 @@ _fmaxAVX:
 	
 	vmovss xmm0, dword [esp + 16]
 	
-	vmaxss xmm0, xmm0, dword [esp + 20]
+	vmaxss xmm0, dword [esp + 20]
 	vmovss dword [esp], xmm0
 	
 	fld dword [esp]
@@ -436,7 +436,7 @@ _froundAVX:
 	vcomiss xmm1, dword [zeroPoint5]
 	jae .return
 	
-	vxorps xmm1, xmm1, xmm1
+	vxorps xmm1, xmm1
 	
 .return:
 	vmovss dword [esp], xmm1
@@ -491,7 +491,7 @@ _fabsAVX:
 	sub esp, 4
 	
 	vmovss xmm0, dword [esp + 8]
-	vandps xmm0, xmm0, [xmmDat]
+	vandps xmm0, [xmmDat]
 	vmovss dword [esp], xmm0
 	fld dword [esp]
 	add esp, 4
@@ -528,7 +528,7 @@ _faddAVX:
 	sub esp, 4
 	
 	vmovss xmm0, [esp + 12]
-	vaddss xmm0, xmm0, [esp + 8]
+	vaddss xmm0, [esp + 8]
 	
 	vmovss [esp], xmm0
 	fld dword [esp]
@@ -571,7 +571,7 @@ _fchsAVX:
 	sub esp, 4
 	
 	vmovss xmm0, [esp + 4]
-	vxorps xmm0, xmm0, [xmmDat2]
+	vxorps xmm0, [xmmDat2]
 	
 	vmovss [esp], xmm0
 	fld dword [esp]
@@ -642,13 +642,13 @@ _fdivSSE:
 	align 16
 _fdivAVX:
 	sub esp, 4
-	vxorps xmm0, xmm0, xmm0
+	vxorps xmm0, xmm0
 	vmovss xmm1, [esp + 4 + 8]
 	vcomiss xmm1, xmm0
 	je .return
 	
 	vmovss xmm0, [esp + 4 + 4]
-	vdivss xmm0, xmm0, xmm1
+	vdivss xmm0, xmm1
 	
 .return:
 	vmovss [esp], xmm0
@@ -758,8 +758,8 @@ _fclampSSE:
 _fclampAVX:
 	push eax
 	vmovss xmm0, [esp + 8]
-	vminss xmm0, xmm0, [esp + 16]
-	vmaxss xmm0, xmm0, [esp + 12]
+	vminss xmm0, [esp + 16]
+	vmaxss xmm0, [esp + 12]
 	vmovss [esp], xmm0
 	fld dword [esp]
 	pop eax
@@ -830,7 +830,7 @@ _fsignSSE:
 	
 	align 16
 _fsignAVX:
-	vxorps xmm0, xmm0, xmm0
+	vxorps xmm0, xmm0
 	xor eax, eax
 	vucomiss xmm0, [esp + 4]
 	seta al
@@ -869,7 +869,7 @@ _fintersectAVX:
 	push eax
 	vmovss xmm0, [esp + 8]
 	vsubss xmm1, xmm0, [esp + 12]
-	vdivss xmm0, xmm0, xmm1
+	vdivss xmm0, xmm1
 	vmovss [esp], xmm0
 	fld dword [esp]
 	pop eax
@@ -1962,14 +1962,14 @@ _fhypotAVX:
 	
 	vandps xmm3, xmm2, xmm4
 	vandps xmm2, xmm1, xmm4
-	vandps xmm0, xmm0, xmm4
+	vandps xmm0, xmm4
 	
 	vmaxss xmm1, xmm0, xmm2
 	vmaxss xmm4, xmm0, xmm3
 	vcmpltss xmm5, xmm3, xmm2
 	vblendvps xmm1, xmm4, xmm1, xmm5
 	
-	vxorps xmm4, xmm4, xmm4
+	vxorps xmm4, xmm4
 	vucomiss xmm1, xmm4
 	je .retXmm4
 	

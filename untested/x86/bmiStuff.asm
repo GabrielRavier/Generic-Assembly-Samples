@@ -108,7 +108,7 @@ _andn64SSE4:
 _andn64AVX:
 	vmovq xmm0, [esp + 4]
 	vmovq xmm1, [esp + 12]
-	vpandn xmm0, xmm0, xmm1
+	vpandn xmm0, xmm1
 	vmovd eax, xmm0
 	vpextrd edx, xmm0, 1
 	ret
@@ -151,9 +151,9 @@ _blsi64SSE4:
 	align 16
 _blsi64AVX:
 	vmovq xmm1, [esp + 4]
-	vpxor xmm0, xmm0, xmm0
-	vpsubq xmm0, xmm0, xmm1
-	vpand xmm0, xmm0, xmm1
+	vpxor xmm0, xmm0
+	vpsubq xmm0, xmm1
+	vpand xmm0, xmm1
 	vmovd eax, xmm0
 	pextrd edx, xmm0, 1
 	ret

@@ -1,12 +1,12 @@
-int64_t sumArray(int *arr, size_t size)
+int sumArray(int *arr, size_t size)
 {
-	int64_t result = 0;
+	int result = 0;
 	for (size_t i = 0; i < size; ++i)
 		result += arr[i];
 	return result;
 }
 
-int32_t getMedian(int32_t ar1[], int32_t ar2[], size_t n) 
+int getMedian(int *ar1, int *ar2, size_t n) 
 { 
     int i = 0; /* Current index of  
                   i/p array ar1[] */

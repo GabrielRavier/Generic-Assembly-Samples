@@ -440,10 +440,10 @@ _conditionalClearOrSet64AVX:
 	cdq
 	
 	vmovd xmm0, eax
-	vpinsrd xmm0, xmm0, edx, 1
-	vpxor xmm0, xmm0, xmm1
-	vpand xmm0, xmm0, xmm2
-	vpxor xmm0, xmm0, xmm1
+	vpinsrd xmm0, edx, 1
+	vpxor xmm0, xmm1
+	vpand xmm0, xmm2
+	vpxor xmm0, xmm1
 	
 	vmovd eax, xmm0
 	vpextrd edx, xmm0, 1
