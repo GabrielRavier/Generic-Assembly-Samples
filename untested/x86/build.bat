@@ -4,6 +4,7 @@ nasm -Wall -f elf32 array.asm
 nasm -Wall -f elf32 arrayBitManip.asm
 nasm -Wall -f elf32 aw-ima.asm
 nasm -Wall -f elf32 aw-wav.asm
+nasm -Wall -f elf32 bitcount.asm
 nasm -Wall -f elf32 bithacks.asm
 nasm -Wall -f elf32 bmiStuff.asm
 nasm -Wall -f elf32 bmi2Stuff.asm
