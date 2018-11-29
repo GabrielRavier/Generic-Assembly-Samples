@@ -1,4 +1,4 @@
-global _detab	; void detab(char *a1)
+global _detab
 
 segment .text align=16
 

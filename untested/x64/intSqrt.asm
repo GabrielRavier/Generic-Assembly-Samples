@@ -1,4 +1,4 @@
-global _intSqrt	; int32_t intSqrt(int32_t a1)
+global _intSqrt
 
 segment .text align=16
 
@@ -11,6 +11,7 @@ _intSqrt:
 	
 	
 	
+	align 16
 _intSqrtAVX:
 	vxorpd xmm0, xmm0, xmm0
 	vcvtsi2sd xmm0, xmm0, edi

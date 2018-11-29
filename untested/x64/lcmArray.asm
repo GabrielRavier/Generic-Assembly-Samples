@@ -1,4 +1,4 @@
-global _lcmArray	; int lcmArray(int arr[], int n) 
+global _lcmArray
 
 segment .text align=16
 

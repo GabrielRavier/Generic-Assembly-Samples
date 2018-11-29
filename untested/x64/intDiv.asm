@@ -1,4 +1,4 @@
-global _intDiv	; int32_t intDiv(int32_t a1, int32_t a2)
+global _intDiv
 
 segment .text align=16
 
@@ -13,6 +13,7 @@ _intDiv:
 	
 	
 	
+	align 16
 _intDivAVX:
 	vxorps xmm0, xmm0, xmm0
 	vxorps xmm1, xmm1, xmm1

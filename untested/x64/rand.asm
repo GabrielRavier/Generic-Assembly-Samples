@@ -41,6 +41,7 @@ _rand:
 	
 	
 	
+	align 16
 _srand:
 	mov [rel next], edi
 	ret

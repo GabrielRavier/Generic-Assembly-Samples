@@ -46,6 +46,7 @@ _bcopy:
 	
 	
 	
+	align 16
 _bzero:
 	mov rcx, rsi
 	xor eax, eax
@@ -56,6 +57,7 @@ _bzero:
 	
 	
 	
+	align 16
 _memccpy:
 	push r12
 	mov r12, rdi
@@ -96,6 +98,7 @@ _memccpy:
 	
 	
 	
+	align 16
 _memchr:
 	dec rdx
 	cmp rdx, -1
@@ -123,6 +126,7 @@ _memchr:
 	
 	
 	
+	align 16
 _memcmp:
 	mov rcx, rdx
 	
@@ -154,6 +158,7 @@ _memcmp:
 	
 	
 	
+	align 16
 _memcpy:
 	mov rax, rdi
 	mov rcx, rdx
@@ -164,6 +169,7 @@ _memcpy:
 	
 	
 	
+	align 16
 _memfrob:
 	mov rax, rdi
 	lea rcx, [rsi - 1]
@@ -191,6 +197,7 @@ _memfrob:
 	
 	
 	
+	align 16
 _memmem:
 	cmp rcx, rsi
 	seta r8b
@@ -299,6 +306,7 @@ _memmem:
 	
 	
 	
+	align 16
 _memmove:
 	mov rax, rsi
 	cmp rdi, rsi
@@ -350,6 +358,7 @@ _memmove:
 	
 	
 	
+	align 16
 _mempcpy:
 	mov rcx, rdx
 	rep movsb
@@ -360,6 +369,7 @@ _mempcpy:
 	
 	
 	
+	align 16
 _memrchr:
 	dec rdx
 	movsxd rdx, edx
@@ -388,6 +398,7 @@ _memrchr:
 	
 	
 	
+	align 16
 _memset:
 	mov r8, rdi
 	mov eax, esi
@@ -400,6 +411,7 @@ _memset:
 	
 	
 	
+	align 16
 _stpcpy:
 	mov rdx, rdi
 	xor eax, eax
@@ -420,6 +432,7 @@ _stpcpy:
 	
 	
 	
+	align 16
 _stpncpy:
 	mov r11, rdi
 	xor eax, eax
@@ -452,6 +465,7 @@ _stpncpy:
 	
 	
 	
+	align 16
 _strcasecmp:
 	cmp rdi, rsi
 	je .return0
@@ -493,6 +507,7 @@ _strcasecmp:
 	
 	
 	
+	align 16
 _strcasestr:
 	push r14
 	push r13
@@ -569,6 +584,7 @@ _strcasestr:
 	
 	
 	
+	align 16
 _strcat:
 	or r9, -1
 	xor eax, eax
@@ -594,6 +610,7 @@ _strcat:
 	
 	
 	
+	align 16
 _strchr:
 	mov rax, rdi
 	jmp .startLoop
@@ -618,6 +635,7 @@ _strchr:
 	
 	
 	
+	align 16
 _strchrnul:
 	jmp .startLoop
 	
@@ -641,6 +659,7 @@ _strchrnul:
 	
 	
 	
+	align 16
 _strcmp:
 	xor ecx, ecx
 	
@@ -667,6 +686,7 @@ _strcmp:
 	
 	
 	
+	align 16
 _strcpy:
 	mov rdx, rdi
 	xor eax, eax
@@ -685,6 +705,7 @@ _strcpy:
 	
 	
 	
+	align 16
 _strcspn:
 	push r12
 	mov r12, rsi
@@ -718,6 +739,7 @@ _strcspn:
 	
 	
 	
+	align 16
 _strdup:
 	push rbx
 	
@@ -756,6 +778,7 @@ _strdup:
 	
 	
 	
+	align 16
 _strlen:
 	xor eax, eax
 	or rcx, -1
@@ -770,6 +793,7 @@ _strlen:
 	
 	
 	
+	align 16
 _strncasecmp:
 	cmp rdi, rsi
 	je .return0
@@ -817,6 +841,7 @@ _strncasecmp:
 	
 	
 	
+	align 16
 _strncat:
 	or r10, -1
 	xor eax, eax
@@ -846,6 +871,7 @@ _strncat:
 	
 	
 	
+	align 16
 _strncmp:
 	test rdx, rdx
 	je .return0
@@ -895,6 +921,7 @@ _strncmp:
 	
 	
 	
+	align 16
 _strncpy:
 	mov r9, rdi
 	
@@ -933,6 +960,7 @@ _strncpy:
 	
 	
 	
+	align 16
 _strndup:
 	push rbp
 	or rcx, -1
@@ -972,6 +1000,7 @@ _strndup:
 	
 	
 	
+	align 16
 _strnlen:
 	xor eax, eax
 	or rcx, -1
@@ -990,6 +1019,7 @@ _strnlen:
 	
 	
 	
+	align 16
 _strpcrk:
 	push rbx
 	mov rbx, rdi
@@ -1008,6 +1038,7 @@ _strpcrk:
 	
 	
 	
+	align 16
 _strrchr:
 	push rbp
 	mov rdx, rdi
@@ -1052,6 +1083,7 @@ _strrchr:
 	
 	
 	
+	align 16
 _strsep:
 	push rbp
 	push rbx
@@ -1093,6 +1125,7 @@ _strsep:
 	
 	
 	
+	align 16
 _strspn:
 	push r12
 	push rbp
@@ -1138,6 +1171,7 @@ _strspn:
 	
 	
 	
+	align 16
 _strstr:
 	push r13
 	push r12
@@ -1189,6 +1223,7 @@ _strstr:
 	
 	
 	
+	align 16
 _swab:
 	and rdx, -2
 	cmp rdx, 1

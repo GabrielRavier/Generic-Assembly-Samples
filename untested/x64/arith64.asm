@@ -10,6 +10,8 @@ global _getOpposite64
 global _getComplement64
 global _shiftLeft64
 global _shiftRight64
+global _rol64
+global _ror64
 
 segment .text align=16
 
@@ -21,6 +23,7 @@ _add64:
 	
 	
 	
+	align 16
 _sub64:
 	mov rax, rdi
 	sub rax, rsi
@@ -30,6 +33,7 @@ _sub64:
 	
 	
 	
+	align 16
 _mul64:
 	mov rax, rdi
 	imul rax, rsi
@@ -39,6 +43,7 @@ _mul64:
 	
 	
 	
+	align 16
 _isEqual64:
 	cmp rdi, rsi
 	sete al
@@ -48,6 +53,7 @@ _isEqual64:
 	
 	
 	
+	align 16
 _isGreater64:
 	cmp rdi, rsi
 	setg al
@@ -57,6 +63,7 @@ _isGreater64:
 	
 	
 	
+	align 16
 _divide64:
 	mov rax, rdi
 	cqo
@@ -67,6 +74,7 @@ _divide64:
 	
 	
 	
+	align 16
 _modulo64:
 	mov rax, rdi
 	cqo
@@ -78,6 +86,7 @@ _modulo64:
 	
 	
 	
+	align 16
 _getVal64:
 	mov rax, rdi
 	ret
@@ -86,6 +95,7 @@ _getVal64:
 	
 	
 	
+	align 16
 _getOpposite64:
 	mov rax, rdi
 	neg rax
@@ -95,6 +105,7 @@ _getOpposite64:
 	
 	
 	
+	align 16
 _getComplement64:
 	mov rax, rdi
 	not rax
@@ -104,6 +115,7 @@ _getComplement64:
 	
 	
 	
+	align 16
 _shiftLeft64:
 	mov ecx, esi
 	shl rdi, cl
@@ -114,8 +126,31 @@ _shiftLeft64:
 	
 	
 	
+	align 16
 _shiftRight64:
 	mov ecx, esi
 	sal rdi, cl
+	mov rax, rdi
+	ret
+	
+	
+	
+	
+	
+	align 16
+_rol64:
+	mov ecx, esi
+	rol rdi, cl
+	mov rax, rdi
+	ret
+	
+	
+	
+	
+	
+	align 16
+_ror64:
+	mov ecx, esi
+	rol rdi, cl
 	mov rax, rdi
 	ret

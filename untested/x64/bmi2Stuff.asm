@@ -1,4 +1,4 @@
-global _mulx	; uint32_t mulx(uint32_t a1, uint32_t a2, int32_t *a3)
+global _mulx
 
 segment .text align=16
 

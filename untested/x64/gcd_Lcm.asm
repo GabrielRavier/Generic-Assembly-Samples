@@ -1,7 +1,7 @@
-global _gcd	; int32_t gcd(int32_t a1, int32_t a2)
-global _lcm	; int32_t lcm(int32_t a1, int32_t a2)
-global _gcd64	; int64_t gcd64(int64_t a1, int64_t a2)
-global _lcm64	; int64_t lcm64(int64_t a1, int64_t a2)
+global _gcd
+global _lcm
+global _gcd64
+global _lcm64
 
 segment .text align=16
 
@@ -36,6 +36,7 @@ _gcd:
 	
 	
 	
+	align 16
 _lcm:
 	push rbx
 	
@@ -59,6 +60,7 @@ _lcm:
 	
 	
 	
+	align 16
 _gcd64:
 	test rdi, rdi
 	je .return0
@@ -90,6 +92,7 @@ _gcd64:
 	
 	
 	
+	align 16
 _lcm64:
 	push rbx
 	

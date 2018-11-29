@@ -1,5 +1,5 @@
-global _nextPowerOf2	; uint32_t nextPowerOf2(uint32_t a1)
-global _nextPowerOf264	; uint64_t nextPowerOf264(uint64_t a1)
+global _nextPowerOf2
+global _nextPowerOf264
 
 segment .text align=16
 
@@ -31,6 +31,7 @@ _nextPowerOf2:
 	
 	
 	
+	align 16
 _nextPowerOf264:
 	mov eax, 1
 	test rdi, rdi

@@ -1,4 +1,4 @@
-global _mostSignificantBitIndex32	; int32_t mostSignificantBitIndex32(uint32_t x)
+global _mostSignificantBitIndex32
 
 segment .text align=16
 
@@ -17,6 +17,7 @@ _mostSignificantBitIndex32:
 	
 	
 	
+	align 16
 _mostSignificantBitIndex32Alt:
 	test edi, edi
 	je .returnMinus1

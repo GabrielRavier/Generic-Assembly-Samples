@@ -1,5 +1,5 @@
-global _isPowerOf2	; bool isPowerOf2(int32_t a1)
-global _isPowerOf264	; bool isPowerOf264(int64_t a1)
+global _isPowerOf2
+global _isPowerOf264
 
 segment .text align=16
 
@@ -18,6 +18,7 @@ _isPowerOf2:
 	
 	
 	
+	align 16
 _isPowerOf2BMI2:
 	xor eax, eax
 	
@@ -34,6 +35,7 @@ _isPowerOf2BMI2:
 	
 	
 	
+	align 16
 _isPowerOf264:
 	xor eax, eax
 	
@@ -49,6 +51,7 @@ _isPowerOf264:
 	
 	
 	
+	align 16
 _isPowerOf264BMI2:
 	xor eax, eax
 	

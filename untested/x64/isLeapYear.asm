@@ -1,4 +1,4 @@
-global _isLeapYear	; bool isLeapYear(int32_t year)
+global _isLeapYear
 
 segment .text align=16
 
@@ -29,6 +29,7 @@ _isLeapYear:
 	
 	
 	
+	align 16
 _isLeapYearBMI2:
 	imul edx, edi, 0xC28F5C29
 	mov eax, 1

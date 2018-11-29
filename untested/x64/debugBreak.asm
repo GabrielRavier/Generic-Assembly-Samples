@@ -1,4 +1,4 @@
-global _debugBreak	; void debugBreak()
+global _debugBreak
 
 segment .text align=16
 

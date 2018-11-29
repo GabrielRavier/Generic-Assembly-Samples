@@ -1,5 +1,5 @@
-global _oppositeSigns	; bool oppositeSigns(int32_t a1, int32_t a2)
-global _oppositeSigns64	; bool oppositeSigns64(int64_t a1, int64_t a2)
+global _oppositeSigns
+global _oppositeSigns64
 
 
 segment .text align=16
@@ -15,6 +15,7 @@ _oppositeSigns:
 	
 	
 	
+	align 16
 _oppositeSigns64:
 	xor rsi, rdi
 	shr rsi, 31

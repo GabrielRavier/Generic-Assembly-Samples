@@ -30,6 +30,7 @@ _getSign1:
 	
 	
 	
+	align 16
 _getSign2:
 	mov eax, edi
 	sar eax, 31
@@ -40,6 +41,7 @@ _getSign2:
 	
 	
 	
+	align 16
 _getSign3:
 	test edi, edi
 	setg al
@@ -52,6 +54,7 @@ _getSign3:
 	
 	
 	
+	align 16
 _isNotNegative:
 	not edi
 	shr edi, 31
@@ -62,6 +65,7 @@ _isNotNegative:
 	
 	
 	
+	align 16
 _areSignsOpposite:
 	xor edi, esi
 	mov eax, edi
@@ -72,6 +76,7 @@ _areSignsOpposite:
 	
 	
 	
+	align 16
 _signExtendFromWidth:
 	lea ecx, [rsi + 31]
 	mov r8d, 1
@@ -90,6 +95,7 @@ _signExtendFromWidth:
 	
 	
 	
+	align 16
 _signExtendFromWidthBMI:
 	movzx ecx, sil
 	mov edx, 1
@@ -106,6 +112,7 @@ _signExtendFromWidthBMI:
 	
 	
 	
+	align 16
 _conditionalClearOrSet:
 	movzx edx, dl
 	neg edx
@@ -119,6 +126,7 @@ _conditionalClearOrSet:
 	
 	
 	
+	align 16
 _swapBits:
 	mov r8d, ecx
 	mov ecx, edi
@@ -147,6 +155,7 @@ _swapBits:
 	
 	
 	
+	align 16
 _swapBitsBMI:
 	shrx r9d, ecx, edi
 	shrx eax, ecx, esi
@@ -166,6 +175,7 @@ _swapBitsBMI:
 	
 	
 	
+	align 16
 _hasZeroByte:
 	xor eax, eax
 	test dil, dil
@@ -187,6 +197,7 @@ _hasZeroByte:
 	
 	
 	
+	align 16
 _parity:
 	mov edx, edi
 	mov eax, edi
@@ -200,6 +211,7 @@ _parity:
 	
 	
 	
+	align 16
 _getSign164:
 	sar rdi, 63
 	mov rax, rdi
@@ -209,6 +221,7 @@ _getSign164:
 	
 	
 	
+	align 16
 _getSign264:
 	sar rdi, 63
 	or rdi, 1
@@ -219,6 +232,7 @@ _getSign264:
 	
 	
 	
+	align 16
 _getSign364:
 	test rdi, rdi
 	setg al
@@ -231,6 +245,7 @@ _getSign364:
 	
 	
 	
+	align 16
 _isNotNegative64:
 	mov rax, rdi
 	shr rax, 63
@@ -241,6 +256,7 @@ _isNotNegative64:
 	
 	
 	
+	align 16
 _areSignsOpposite64:
 	xor rdi, rsi
 	shr rdi, 63
@@ -251,6 +267,7 @@ _areSignsOpposite64:
 	
 	
 	
+	align 16
 _signExtendFromWidth64:
 	movzx esi, sil
 	mov r8d, 1
@@ -271,6 +288,7 @@ _signExtendFromWidth64:
 	
 	
 	
+	align 16
 _signExtendFromWidth64BMI:
 	movzx ecx, sil
 	mov edx, 1
@@ -289,6 +307,7 @@ _signExtendFromWidth64BMI:
 	
 	
 	
+	align 16
 _conditionalClearOrSet64:
 	movzx edx, dl
 	neg edx
@@ -303,6 +322,7 @@ _conditionalClearOrSet64:
 	
 	
 	
+	align 16
 _swapBits64:
 	mov r8, rcx
 	mov ecx, edi
@@ -333,6 +353,7 @@ _swapBits64:
 	
 	
 	
+	align 16
 _swapBits64BMI:
 	shrx r9, rcx, rdi
 	shrx rax, rcx, rsi
@@ -353,6 +374,7 @@ _swapBits64BMI:
 	
 	
 	
+	align 16
 _hasZeroByte64:
 	xor eax, eax
 	test dil, dil
@@ -392,6 +414,7 @@ _hasZeroByte64:
 	
 	
 	
+	align 16
 _parity64:
 	mov edx, edi
 	shr rdi, 32

@@ -23,7 +23,7 @@ _wav_write:
 	mov r8d, [rsi + 8]
 	lea ecx, [r8 + 36]
 	mov [rdi + 4], ecx
-	movabs rcx, 0x20746D6645564157
+	mov rcx, 0x20746D6645564157
 	mov [rdi + 8], rcx
 	mov dword [rdi + 16], 16
 	mov [rdi + 20], dx

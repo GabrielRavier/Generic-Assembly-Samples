@@ -1,4 +1,5 @@
-global _isPowerOf4	; bool isPowerOf4(int32_t n)
+global _isPowerOf4
+global _isPowerOf464
 
 segment .text align=16
 
@@ -39,6 +40,7 @@ _isPowerOf4:
 	
 	
 	
+	align 16
 _isPowerOf464:
 	test rdi, rdi
 	je .return0

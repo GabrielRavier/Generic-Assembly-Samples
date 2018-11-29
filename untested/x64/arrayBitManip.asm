@@ -1,6 +1,6 @@
-global _setBit	; void setBit(uint8_t *buf, size_t pos)
-global _clearBit	; void clearBit(uint8_t *buf, size_t pos)
-global _getBit	; bool getBit(uint8_t *buf, size_t pos)
+global _setBit
+global _clearBit
+global _getBit
 
 segment .text align=16
 
@@ -18,6 +18,7 @@ _setBit:
 	
 	
 	
+	align 16
 _setBitBMI2:
 	mov rdx, rsi
 	mov eax, 1
@@ -33,6 +34,7 @@ _setBitBMI2:
 	
 	
 	
+	align 16
 _clearBit:
 	mov ecx, esi
 	mov rdx, rsi
@@ -48,6 +50,7 @@ _clearBit:
 	
 	
 	
+	align 16
 _clearBitBMI2:
 	mov rdx, rsi
 	mov eax, 1
@@ -64,6 +67,7 @@ _clearBitBMI2:
 	
 	
 	
+	align 16
 _getBit:
 	mov rax, rsi
 	mov ecx, esi
@@ -80,6 +84,7 @@ _getBit:
 	
 	
 	
+	align 16
 _getBitBMI2:
 	mov rax, rsi
 	

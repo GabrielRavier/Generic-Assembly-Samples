@@ -1,9 +1,9 @@
-global _andn	; int32_t andn(int32_t a1, int32_t a2)
-global _blsi	; int32_t blsi(int32_t a1)
-global _blsr	; int32_t blsr(int32_t a1)
-global _andn64	; int64_t andn64(int64_t a1, int64_t a2)
-global _blsi64	; int64_t blsi64(int64_t a1)
-global _blsr64	; int64_t blsr64(int64_t a1)
+global _andn
+global _blsi
+global _blsr
+global _andn64
+global _blsi64
+global _blsr64
 
 segment .text align=16
 
@@ -15,6 +15,7 @@ _andn:
 	
 	
 	
+	align 16
 _andnBMI2:
 	andn eax, edi, esi
 	ret
@@ -23,6 +24,7 @@ _andnBMI2:
 	
 	
 	
+	align 16
 _blsi:
 	mov eax, edi
 	neg eax
@@ -31,13 +33,16 @@ _blsi:
 	
 	
 	
+	align 16
 _blsiBMI2:
 	blsi eax, edi
+	ret
 	
 	
 	
 	
 	
+	align 16
 _blsr:
 	lea eax, [rdi - 1]
 	and eax, edi
@@ -45,6 +50,7 @@ _blsr:
 	
 	
 	
+	align 16
 _blsrBMI2:
 	blsr eax, edi
 	ret
@@ -53,6 +59,7 @@ _blsrBMI2:
 	
 	
 	
+	align 16
 _andn64:
 	not rdi
 	mov rax, rdi
@@ -61,13 +68,16 @@ _andn64:
 	
 	
 	
+	align 16
 _andn64BMI2:
 	andn rax, rdi, rsi
+	ret
 	
 	
 	
 	
 	
+	align 16
 _blsi64:
 	mov rax, rdi
 	neg rax
@@ -76,6 +86,7 @@ _blsi64:
 	
 	
 	
+	align 16
 _blsi64BMI2:
 	blsi rax, rdi
 	ret
@@ -84,6 +95,7 @@ _blsi64BMI2:
 	
 	
 	
+	align 16
 _blsr64:
 	lea rax, [rdi - 1]
 	and rax, rdi
@@ -91,6 +103,7 @@ _blsr64:
 	
 	
 	
+	align 16
 _blsr64BMI2:
 	blsr rax, rdi
 	ret

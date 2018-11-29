@@ -30,12 +30,15 @@ nasm -Wall -f elf32 makeFrom.asm
 nasm -Wall -f elf32 mostSignificantBitIndex.asm
 nasm -Wall -f elf32 mulDiv.asm
 nasm -Wall -f elf32 mulStuff.asm
+nasm -Wall -f elf32 my_ia32intrin.asm
+nasm -Wall -f elf32 my_mmintrin.asm
+nasm -Wall -f elf32 my_prfchwintrin.asm
+nasm -Wall -f elf32 my_string.asm
 nasm -Wall -f elf32 nextPowOf2.asm
 nasm -Wall -f elf32 npr_bittree.asm
 nasm -Wall -f elf32 pollDelay.asm
 nasm -Wall -f elf32 oppositeSigns.asm
 nasm -Wall -f elf32 rand.asm
 nasm -Wall -f elf32 rotate.asm
-nasm -Wall -f elf32 string.asm
 nasm -Wall -f elf32 sumTo.asm
 pause

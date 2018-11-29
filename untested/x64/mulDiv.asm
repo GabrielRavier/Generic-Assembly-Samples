@@ -1,4 +1,4 @@
-global _MulDiv	; int32_t MulDiv(int32_t a, int32_t b, int32_t c)
+global _MulDiv
 
 segment .text align=16
 

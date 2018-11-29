@@ -1,396 +1,199 @@
-global _sumArray	; int64_t sumArray(int *arr, size_t size)
+global _sumArray
 global _getMedian
 
 segment .text align=16
 
 _sumArray:
-	xor eax, eax
-	
-	test rsi, rsi
-	jbe .return
-	
-	cmp rsi, 8
-	jb .small
-	
-	mov rdx, rsi
-	
-	movdqa xmm1, [rel .dat1]
-	pxor xmm2, xmm2
-	movdqa xmm0, [rel .dat2]
-	and rdx, -8
-
-.xmmLoop:
-	movq xmm3, [rdi + rax * 4]
-	punpckldq xmm3, xmm3
-	movq xmm5, [rdi + rax * 4 + 8]
-	movdqa xmm4, xmm3
-	punpckldq xmm5, xmm5
-	psrad xmm4, 31
-	movq xmm7, [rdi + rax * 4 + 16]
-	movdqa xmm6, xmm5
-	pand xmm4, xmm1
-	pand xmm3, xmm0
-	punpckldq xmm7, xmm7
-	psrad xmm6, 31
-	por xmm4, xmm3
-	movdqa xmm8, xmm7
-	movq xmm9, [rdi + rax * 4 + 24]
-	pand xmm6, xmm1
-	pand xmm5, xmm0
-	psrad xmm8, 31
-	paddq xmm2, xmm4
-	punpckldq xmm9, xmm9
-	por xmm6, xmm5
-	movdqa xmm10, xmm9
-	pand xmm8, xmm1
-	pand xmm7, xmm0
-	psrad xmm10, 31
-	paddq xmm2, xmm6
-	por xmm8, xmm7
-	pand xmm10,xmm1
-	pand xmm9, xmm0
-	
-	add rax, 8
-	
-	paddq xmm2, xmm8
-	por xmm10, xmm9
-	
-	cmp rax, rdx
-	
-	paddq xmm2, xmm10
-	
-	jb .xmmLoop
-	
-	movdqa xmm0, xmm2
-	psrldq xmm0, 8
-	paddq xmm2, xmm0
-	movq rax, xmm2
-	
-.startEndBytes:
-	cmp rdx, rsi
-	jae .return
-	
-.endBytesLoop:
-	movsxd rcx, dword [rdi + rdx * 4]
-	
-	inc rdx
-	
-	add rax, rcx
-	
-	cmp rdx, rsi
-	jb .endBytesLoop
-	
-.return:
-	ret
-	
-.small:
-	mov rdx, rax
-	jmp .startEndBytes
-	
-segment .data align=4
-
-	.dat1 dd 0, -1, 0, -1
-	align 4
-	.dat2 dd -1, 0, -1, 0
-	
-	
-	
-	
-	
-segment .text align=16
-
-_sumArraySSSE3:
-	test rsi, rsi
-	je .return0
-	
-	lea rax, [rsi - 1]
-	cmp rax, 2
-	jbe .small
-	
 	mov r8, rsi
-	mov rcx, rdi
-	pxor xmm0, xmm0
+	xor eax, eax
 	
-	pxor xmm4, xmm4
-	shr r8, 2
-	sal r8, 4
-	add r8, rdi
-	
-.xmmLoop:
-	movdqu xmm1, [rcx]
-	movdqa xmm2, xmm4
-	
-	add rcx, 16
-	cmp rcx, r8
-	
-	pcmpgtd xmm2, xmm1
-	movdqa xmm3, xmm1
-	punpckldq xmm3, xmm2
-	paddq xmm0, xmm3
-	punpckhdq xmm1, xmm3
-	paddq xmm0, xmm1
-	jne .xmmLoop
-	
-	movdqa xmm5, xmm0
-	mov rdx, rsi
-	psrlq xmm5, 8
-	and rdx, -4
-	test sil, 3
-	paddq xmm0, xmm5
-	movq rax, xmm0
-	je .return
-	
-.endBytesLoop:
-	movsx r9, dword [rdi + rdx * 4]
-	lea r10, [rdx + 1]
-	add rax, r9
-	cmp rsi, r10
+	test r8, r8
 	jbe .return
 	
-	movsx r11, dword [rdi + r10 * 4]
-	add rdx, 2
-	add rax, r11
-	cmp rsi, rdx
-	jbe .return
+	cmp r8, 8
+	jb .noSSE
 	
-	movsx rsi, dword [rdi + rdx * 4]
-	add rax, rsi
+	mov rsi, rdi
+	and rsi, 0xF
+	je .aligned
 	
-.return:
-	ret
+	test rsi, 3
+	jne .noSSE
 	
-.return0:
-	xor eax, eax
-	ret
+	neg rsi
+	add rsi, 16
+	shr rsi, 2
+	lea rdx, [rsi + 8]
+	cmp r8, rdx
+	jb .noSSE
 	
-.small:
-	xor edx, edx
-	xor eax, eax
-	jmp .endBytesLoop
-	
-	
-	
-_sumArraySSE4:
-	xor eax, eax
+	mov rdx, r8
+	xor ecx, ecx
+	sub rdx, rsi
+	and rdx, 7
+	neg rdx
+	add rdx, r8
 	
 	test rsi, rsi
-	jbe .return
+	jbe .startSSE
 	
-	cmp rsi, 8
-	jb .small
+.alignLoop:
+	add eax, [rdi + rcx * 4]
+	inc rcx
+	cmp rcx, rsi
+	jb .alignLoop
+	jmp .startSSE
 	
-	mov rdx, rsi
-	and rdx, -8
+.aligned:
+	mov rdx, r8
+	and rdx, 7
+	neg rdx
+	add rdx, r8
 	
-	pxor xmm0, xmm0
+.startSSE:
+	movd xmm0, eax
 	
-.xmmLoop:
-	pmovsxdq xmm1, [rdi + rax * 4]
-	paddq xmm0, xmm1
-	pmovsxdq xmm2, [rdi + rax * 4 + 8]
-	paddq xmm0, xmm2
-	pmovsxdq xmm3, [rdi + rax * 4 + 16]
-	paddq xmm0, xmm3
-	pmovsxdq xmm4, [rdi + rax * 4 + 24]
-	add rax, 8
-	paddq xmm0, xmm4
-	cmp rax, rdx
-	jb .xmmLoop
+.sseLoop:
+	paddd xmm0, [rdi + rsi * 4]
+	paddd xmm0, [rdi + rsi * 4 + 16]
+	
+	add rsi, 8
+	cmp rsi, rdx
+	jb .sseLoop
 	
 	movdqa xmm1, xmm0
 	psrldq xmm1, 8
-	paddq xmm0, xmm1
-	movq rax, xmm0
+	paddd xmm0, xmm1
+	movdqa xmm2, xmm0
+	psrlq xmm2, 32
+	paddd xmm0, xmm2
+	movd eax, xmm0
 	
-.startEndBytes:
-	cmp rdx, rsi
+.startEndLoop:
+	cmp rdx, r8
 	jae .return
 	
-.endBytesLoop:
-	movsxd rcx, dword [rdi + rdx * 4]
+.endLoop:
+	add eax, [rdi + rdx * 4]
 	inc rdx
-	add rax, rcx
-	cmp rdx, rsi
-	jb .endBytesLoop
+	cmp rdx, r8
+	jb .endLoop
 	
 .return:
 	ret
 	
-.small:
-	mov rdx, rax
-	jmp .startEndBytes
+.noSSE:
+	xor edx, edx
+	jmp .startEndLoop
 	
 	
 	
-_sumArrayAVX:
-	test rsi, rsi
-	je .return0
-	
-	lea rax, [rsi - 1]
-	cmp rax, 2
-	jbe .small
-	
+	align 16
+_sumArrayAVX2:
 	mov r8, rsi
-	mov rcx, rdi
+	xor eax, eax
 	
-	vpxor xmm5, xmm5, xmm5
-	
-	shr r8, 2
-	sal r8, 4
-	add r8, rdi
-	
-.avxLoop:
-	vmovdqu xmm0, [rcx]
-	
-	add rcx, 16
-	
-	vpmovsxdq xmm2, xmm0
-	vpsrldq xmm3, xmm0, 8
-	vpaddq xmm1, xmm2, xmm5
-	vpmovsxdq xmm4, xmm3
-	vpaddq xmm5, xmm4, xmm1
-	
-	cmp rcx, r8
-	jne .avxLoop
-	
-	vpsrldq xmm6, xmm5, 8
-	
-	mov rdx, rsi
-	
-	vpaddq xmm7, xmm5, xmm6
-	
-	and rdx, -4
-	
-	vmovq rax, xmm7
-	test sil, 3
-	je .return
-	
-.endBytesLoop:
-	movsx r9, dword [rdi + rdx * 4]
-	lea r10, [rdx + 1]
-	add rax, r9
-	cmp rdi, r10
+	test r8, r8
 	jbe .return
 	
-	movsx r11, dword [rdi + rdx * 4]
-	add rax, rsi
-	ret
+	cmp r8, 16
+	jb .small
 	
-.return0:
-	xor eax, eax
+	cmp r8, 57
+	jb .middle
+	
+	mov rsi, rdi
+	and rsi, 0x1F
+	je .aligned
+	
+	test rsi, 3
+	jne .small
+	
+	neg rsi
+	add rsi, 32
+	shr rsi, 2
+	lea rdx, [rsi + 16]
+	
+	cmp r8, rdx
+	jb .small
+	
+	mov rdx, r8
+	xor ecx, ecx
+	sub rdx, rsi
+	and rdx, 0xF
+	neg rdx
+	add rdx, r8
+	
+	test rsi, rsi
+	je .startAVX
+	
+.alignLoop:
+	add eax, [rdi + rcx * 4]
+	inc rcx
+	cmp rcx, rsi
+	jb .alignLoop
+	jmp .startAVX
+	
+	align 16
+.aligned:
+	mov rdx, r8
+	and rdx, 0xF
+	neg rdx
+	add rdx, r8
+	
+.startAVX:
+	vmovd xmm1, eax
+	vpxor ymm0, ymm0
+	vmovaps xmm1, xmm1
+	
+.avxLoop:
+	vpaddd ymm1, [rdi + rsi * 4]
+	vpaddd ymm0, [rdi + rsi * 4 + 32]
+	
+	add rsi, 16
+	cmp rsi, rdx
+	jb .avxLoop
 
+	vpaddd ymm0, ymm1, ymm0
+	vextractf128 xmm1, ymm0, 1
+	vpaddd xmm2, xmm0, xmm1
+	vpsrldq xmm3, xmm2, 8
+	vpaddd xmm4, xmm2, xmm3
+	vpsrlq xmm5, xmm4, 32
+	vpaddd xmm6, xmm4, xmm5
+	vmovd eax, xmm6
+	
+.checkEnd:
+	cmp rdx, r8
+	jae .return
+	
+.endLoop:
+	add eax, [rdi + rdx * 4]
+	inc rdx
+	cmp rdx, r8
+	jb .endLoop
+	
 .return:
+	vzeroupper
 	ret
 	
+	align 16
 .small:
 	xor edx, edx
-	xor eax, eax
-	jmp .endBytesLoop
+	jmp .checkEnd
 	
-	
-	
-_sumArrayAVX2:
-	test rsi, rsi
-	je .return0
-	
-	lea rax, [rsi - 1]
-	cmp rax, 6
-	jbe .endBytesLoop
-	
-	mov rdx, rsi
-	mov rcx, rdi
-	
-	vpxor xmm5, xmm5, xmm5
-	
-	shr rdx, 3
-	sal rdx, 5
-	add rdx, rdi
-	
-.avxLoop:
-	vmovdqu ymm2, [rcx]
-	vpmovsxdq ymm1, [rcx]
-	
-	add rcx, 32
-	
-	vextracti128 xmm0, ymm2, 1
-	vpaddq ymm3, ymm1, ymm5
-	vpmovsxdq ymm4, xmm0
-	vpaddq ymm5, ymm4, ymm3
-	
-	cmp rcx, rdx
-	jne .avxLoop
-	
-	vextracti128 xmm7, ymm5, 1
-	
-	mov r8, rsi
-	
-	vpaddq xmm8, xmm5, xmm7
-	
-	and r8, -8
-	
-	vpsrlq xmm9, xmm8, 8
-	vpaddq xmm10, xmm8, xmm9
-	vmovq rax, xmm10
-	vzeroupper
-	test sil, 7
-	je .return
-	
-.endBytesLoop:
-	movsx r9, dword [rdi + r8 * 4]
-	lea r10, [r8 + 1]
-	add rax, r9
-	
-	cmp rsi, r10
-	jbe .return
-	
-	movsx r11, dword [rdi + r10 * 4]
-	lea rcx, [r8 + 2]
-	add rax, r11
-	
-	cmp rsi, rcx
-	jbe .return
-	
-	movsx rdx, dword [rdi + rcx * 4]
-	lea r9, [r8 + 3]
-	add rax, rdx
-	
-	cmp rsi, r9
-	jbe .return
-	
-	movsx r10, dword [rdi + r9 * 4]
-	lea r11, [r8 + 4]
-	add rax, r10
-	
-	cmp rsi, r11
-	jbe .return
-	
-	movsx rcx, dword [rdi + r11 * 4]
-	lea rdx, [r8 + 5]
-	add rax, rcx
-	
-	cmp rsi, rcx
-	jbe .return
-	
-	movsx r11, dword [rdi + rdx * 4]
-	add r8, 6
-	add rax, r9
-	cmp rsi, r8
-	jbe .return
-	
-	movsx rsi, dword [rdi + r8 * 4]
-	add rax, rsi
-	ret
-	
-.return0:
-	xor eax, eax
-	
-.return:
-	ret
+	align 16
+.middle:
+	mov rdx, r8
+	xor esi, esi
+	and rdx, -16
+	jmp .startAVX
 	
 	
 	
 	
 	
+	align 16
 _getMedian:
 	xor ecx, ecx
 	xor r9d, r9d

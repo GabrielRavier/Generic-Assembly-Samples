@@ -1,13 +1,13 @@
-global _fmin	; float fmin(float a1, float a2)
-global _fmax	; float fmax(float a1, float a2)
-global _ftrunc	; float ftrunc(float a1)
-global _fround	; float fround(float a1)
-global _fabs	; float fabs(float x)
-global _fadd	; float fadd(float a1, float a2)
-global _fchs	; float fchs(float a1)
-global _fdiv	; float fdiv(float a1, float a2)
-global _fatan	; float fatan(float a1)
-global _fpatan	; float fpatan(float a1, float a2)
+global _fmin
+global _fmax
+global _ftrunc
+global _fround
+global _fabs
+global _fadd
+global _fchs
+global _fdiv
+global _fatan
+global _fpatan
 
 extern _atanf
 extern _atan2
@@ -20,6 +20,7 @@ _fmin:
 	
 	
 	
+	align 16
 _fminAVX:
 	vminss xmm0, xmm0, xmm1
 	ret
@@ -28,12 +29,14 @@ _fminAVX:
 	
 	
 	
+	align 16
 _fmax:
 	maxss xmm0, xmm1
 	ret
 	
 	
 	
+	align 16
 _fmaxAVX:
 	vmaxss xmm0, xmm0, xmm1
 	ret
@@ -42,6 +45,7 @@ _fmaxAVX:
 	
 	
 	
+	align 16
 _ftrunc:
 	movss xmm1, [rel .dat1]
 	andps xmm1, xmm0
@@ -64,18 +68,21 @@ _ftrunc:
 
 
 
+	align 16
 _ftruncSSE4:
 	roundss xmm0, xmm0, 11
 	ret
 	
 	
 	
+	align 16
 _ftruncAVX:
 	vroundss xmm0, xmm0, xmm0, 11
 	ret
 	
 	
 	
+	align 16
 _ftruncAVX512F:
 	vrndscaless xmm0, xmm0, xmm0, 11
 	ret
@@ -84,6 +91,7 @@ _ftruncAVX512F:
 	
 	
 	
+	align 16
 _fround:
 	movss xmm2, [rel .dat1]
 	movaps xmm1, xmm0
@@ -114,6 +122,7 @@ _fround:
 
 
 
+	align 16
 _froundSSE4:
 	movaps xmm1, xmm0
 	andps xmm1, [rel .dat1]
@@ -130,6 +139,7 @@ _froundSSE4:
 
 
 
+	align 16
 _froundAVX:
 	vmovaps xmm1, xmm0
 	vandps xmm2, xmm1, [rel .dat1]
@@ -148,6 +158,7 @@ _froundAVX:
 
 
 
+	align 16
 _fabs:
 	cvttss2si eax, xmm0
 	cdq
@@ -159,6 +170,7 @@ _fabs:
 	
 	
 	
+	align 16
 _fabsAVX:
 	vcvttss2si eax, xmm0
 	vxorps xmm0, xmm0, xmm0
@@ -172,12 +184,14 @@ _fabsAVX:
 	
 	
 	
+	align 16
 _fadd:
 	addss xmm0, xmm1
 	ret
 	
 	
 	
+	align 16
 _faddAVX:
 	vaddss xmm0, xmm0, xmm1
 	ret
@@ -186,6 +200,7 @@ _faddAVX:
 	
 	
 	
+	align 16
 _fchs:
 	xorps xmm0, [rel .dat]
 	ret
@@ -195,6 +210,7 @@ _fchs:
 
 
 
+	align 16
 _fchsAVX:
 	vxorps xmm0, xmm0, [rel .dat]
 	ret
@@ -206,6 +222,7 @@ _fchsAVX:
 
 
 
+	align 16
 _fdiv:
 	pxor xmm2, xmm2
 	comiss xmm1, xmm2
@@ -220,6 +237,7 @@ _fdiv:
 
 
 	
+	align 16
 _fdivAVX:
 	vxorps xmm2, xmm2, xmm2
 	vcomiss xmm1, xmm2
@@ -236,6 +254,7 @@ _fdivAVX:
 	
 	
 	
+	align 16
 _fatan:
 	jmp _atanf
 	
@@ -243,6 +262,7 @@ _fatan:
 	
 	
 	
+	align 16
 _fpatan:
 	push rsi
 	
