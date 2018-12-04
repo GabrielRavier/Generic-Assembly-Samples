@@ -60,7 +60,7 @@ float fpatan(float a1, float a2)
 
 float fclamp(float a, float lo, float hi) 
 { 
-	return fmax(lo, fmin(a, hi)); 
+	return std::max(lo, std::min(a, hi)); 
 }
 
 float fsign(float a) 

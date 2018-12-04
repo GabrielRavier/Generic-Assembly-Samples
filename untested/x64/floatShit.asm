@@ -8,9 +8,31 @@ global _fchs
 global _fdiv
 global _fatan
 global _fpatan
+global _fclamp
+global _fsign
 
 extern _atanf
 extern _atan2
+
+segment .rodata align=16
+
+	NaNAnd0s dd 0x7FFFFFFF, 0, 0, 0
+	
+	align 16
+	num1 dd 8388608.0, 0, 0, 0
+	
+	align 16
+	minus0And0s dd 0x80000000, 0, 0, 0
+	
+	align 16
+	num2 dd 0.49999997, 0, 0, 0
+	
+	align 16
+	weird1 dd 0
+	       dq 1.0
+		   
+	align 16
+	
 
 segment .text align=16
 
@@ -47,9 +69,9 @@ _fmaxAVX:
 	
 	align 16
 _ftrunc:
-	movss xmm1, [rel .dat1]
+	movss xmm1, [rel NaNAnd0s]
 	andps xmm1, xmm0
-	movss xmm2, [rel .dat2]
+	movss xmm2, [rel tructDat]
 	comiss xmm2, xmm1
 	jbe .return
 	
@@ -60,11 +82,7 @@ _ftrunc:
 .return:
 	ret
 	
-	align 4
-.dat1 dd 0x7FFFFFFF, 0, 0, 0
-
-	align 4
-.dat2 dd 0x4B000000
+	
 
 
 
@@ -93,14 +111,14 @@ _ftruncAVX512F:
 	
 	align 16
 _fround:
-	movss xmm2, [rel .dat1]
+	movss xmm2, [rel NaNAnd0s]
 	movaps xmm1, xmm0
 	andps xmm1, xmm2
-	movss xmm3, [rel .dat2]
+	movss xmm3, [rel ]
 	comiss xmm3, xmm1
 	jbe .return
 	
-	addss xmm1, [rel .dat3]
+	addss xmm1, [rel num1]
 	cvttss2si eax, xmm1
 	pxor xmm4, xmm4
 	cvtsi2ss xmm4, eax
@@ -111,48 +129,31 @@ _fround:
 .return:
 	ret
 	
-	align 4
-.dat1 dd 0x7FFFFFFF, 0, 0, 0
 	
-	align 4
-.dat2 dd 0x4B000000
-
-	align 4
-.dat3 dd 0x3EFFFFFF
 
 
 
 	align 16
 _froundSSE4:
 	movaps xmm1, xmm0
-	andps xmm1, [rel .dat1]
-	orps xmm1, [rel .dat2]
+	andps xmm1, [rel minus0And0s]
+	orps xmm1, [rel num2]
 	addss xmm0, xmm1
 	roundss xmm0, xmm0, 3
 	ret
 	
-	align 4
-.dat1 dd 0x80000000, 0, 0, 0
-
-	align 4
-.dat2 dd 0x3EFFFFFF, 0, 0, 0
-
+	
+	
 
 
 	align 16
 _froundAVX:
 	vmovaps xmm1, xmm0
-	vandps xmm2, xmm1, [rel .dat1]
-	vorps xmm3, xmm2, [rel .dat2]
+	vandps xmm2, xmm1, [rel minus0And0s]
+	vorps xmm3, xmm2, [rel num2]
 	vaddss xmm0, xmm0, xmm3
 	vroundss xmm0, xmm0, 3
 	ret
-	
-	align 4
-.dat1 dd 0x80000000, 0, 0, 0
-
-	align 4
-.dat2 dd 0x3EFFFFFF, 0, 0, 0
 
 
 
@@ -191,32 +192,12 @@ _fadd:
 	
 	
 	
-	align 16
-_faddAVX:
-	vaddss xmm0, xmm0, xmm1
-	ret
-	
-	
-	
 	
 	
 	align 16
 _fchs:
-	xorps xmm0, [rel .dat]
+	xorps xmm0, [rel minus0And0s]
 	ret
-	
-	align 4
-.dat dd 0x80000000, 0, 0, 0
-
-
-
-	align 16
-_fchsAVX:
-	vxorps xmm0, xmm0, [rel .dat]
-	ret
-	
-	align 4
-.dat dd 0x80000000, 0, 0, 0
 
 
 
@@ -278,11 +259,18 @@ _fpatan:
 .yup:
 	divss xmm1, xmm0
 	cvtss2sd xmm1, xmm1
-	movsd xmm0, [rel .dat]
+	movsd xmm0, [rel weird1]
 	call _atan2
 	cvtsd2ss xmm0, xmm0
 	pop rcx
 	ret
 	
-	align 4
-.dat dd 0, 0x3FF00000, 0x3F800000
+	
+	
+	
+	
+	align 16
+_fclamp:
+	minss xmm0, xmm2
+	maxss xmm0, xmm1
+	ret
