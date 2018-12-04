@@ -1,17 +1,17 @@
 float fmin(float a1, float a2)
 {
-  float result = a1;
-  if ( a2 <= a1 )
-    result = a2;
-  return result;
+	float result = a1;
+	if ( a2 <= a1 )
+		result = a2;
+	return result;
 }
 
 float fmax(float a1, float a2)
 {
-  float result = a1;
-  if ( a2 >= a1 )
-    result = a2;
-  return result;
+	float result = a1;
+	if ( a2 >= a1 )
+		result = a2;
+	return result;
 }
 
 float ftrunc(float a1)

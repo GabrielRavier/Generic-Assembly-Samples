@@ -1,7 +1,9 @@
 echo off
+nasm -Wall -f elf32 aes_random_stuff.asm
 nasm -Wall -f elf32 arith64.asm
 nasm -Wall -f elf32 array.asm
 nasm -Wall -f elf32 arrayBitManip.asm
+nasm -Wall -f elf32 avx512_random_stuff.asm
 nasm -Wall -f elf32 aw-ima.asm
 nasm -Wall -f elf32 aw-wav.asm
 nasm -Wall -f elf32 bitcount.asm
@@ -31,7 +33,7 @@ nasm -Wall -f elf32 mostSignificantBitIndex.asm
 nasm -Wall -f elf32 mulDiv.asm
 nasm -Wall -f elf32 mulStuff.asm
 nasm -Wall -f elf32 my_ia32intrin.asm
-nasm -Wall -f elf32 my_mmintrin.asm
+nasm -Wall -f elf32 my_mm_malloc.asm
 nasm -Wall -f elf32 my_prfchwintrin.asm
 nasm -Wall -f elf32 my_string.asm
 nasm -Wall -f elf32 nextPowOf2.asm
