@@ -6,7 +6,6 @@ global _fabs
 global _fadd
 global _fchs
 global _fdiv
-global _fatan
 global _fpatan
 global _fclamp
 global _fsign
@@ -14,6 +13,7 @@ global _fintersect
 global _ftoi
 global _facos
 global _fasin
+global _fatan
 global _fceil
 global _fexp
 global _ffloor
@@ -48,7 +48,7 @@ segment .rodata
 	maxInt dd 0x80000000
 	
 	align 16
-	num1 dd 8388608.0
+	twoPow23 dd 8388608.0
 	
 	align 16
 	one dd 1.0
@@ -277,7 +277,7 @@ _ftruncSSE:
 	movaps xmm0, xmm1
 	andps xmm3, xmm1
 	
-	movss xmm2, dword [num1]
+	movss xmm2, dword [twoPow23]
 	xorps xmm0, xmm3
 	cmpltss xmm0, xmm2
 	andps xmm2, xmm0
@@ -300,7 +300,7 @@ _ftruncSSE:
 	movaps xmm0, xmm1
 	andps xmm3, xmm1
 	
-	movss xmm2, dword [num1]
+	movss xmm2, dword [twoPow23]
 	xorps xmm0, xmm3
 	cmpltss xmm0, xmm2
 	andps xmm2, xmm0
@@ -661,17 +661,6 @@ _fdivAVX:
 	
 	
 	align 16
-_fatan:
-	fld dword [esp + 4]
-	fld1
-	fpatan
-	ret
-	
-	
-	
-	
-	
-	align 16
 _fpatan:
 	fld dword [esp + 4]
 	
@@ -934,6 +923,17 @@ _fasin:
 	ret
 	
 	
+	
+	
+	
+	align 16
+_fatan:
+	fld dword [esp + 4]
+	fld1
+	fpatan
+	ret
+	
+	
 
 	
 	
@@ -1029,7 +1029,7 @@ _ffloorSSE:
 	movss xmm2, [esp + 16]
 	movss xmm3, [minus0]
 	xorps xmm0, xmm3
-	movss xmm4, [num1]
+	movss xmm4, [twoPow23]
 	cmpltss xmm0, xmm1
 	andps xmm1, xmm0
 	orps xmm1, xmm3

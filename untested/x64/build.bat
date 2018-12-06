@@ -13,7 +13,6 @@ nasm -Wall -f elf64 debugBreak.asm
 nasm -Wall -f elf64 detab.asm
 nasm -Wall -f elf64 findFirstSet.asm
 nasm -Wall -f elf64 floatShit.asm
-rem floatShit.asm is not updated
 nasm -Wall -f elf64 gcd_Lcm.asm
 nasm -Wall -f elf64 intDiv.asm
 nasm -Wall -f elf64 intSqrt.asm
@@ -26,6 +25,7 @@ nasm -Wall -f elf64 lcmArray.asm
 nasm -Wall -f elf64 mostSignificantBitIndex.asm
 nasm -Wall -f elf64 mulDiv.asm
 nasm -Wall -f elf64 mulStuff.asm
+nasm -Wall -f elf64 my_prfchwintrin.asm
 nasm -Wall -f elf64 my_string.asm
 nasm -Wall -f elf64 nextPowOf2.asm
 nasm -Wall -f elf64 oppositeSigns.asm

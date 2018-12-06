@@ -46,11 +46,6 @@ float fdiv(float a1, float a2)
 	return a1 / a2;
 }
 
-float fatan(float a1)
-{
-	return atan(a1);
-}
-
 float fpatan(float a1, float a2)
 {
 	if (!a1)

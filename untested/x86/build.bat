@@ -38,7 +38,6 @@ nasm -Wall -f elf32 my_prfchwintrin.asm
 nasm -Wall -f elf32 my_string.asm
 nasm -Wall -f elf32 nextPowOf2.asm
 nasm -Wall -f elf32 npr_bittree.asm
-nasm -Wall -f elf32 pollDelay.asm
 nasm -Wall -f elf32 oppositeSigns.asm
 nasm -Wall -f elf32 rand.asm
 nasm -Wall -f elf32 rotate.asm
