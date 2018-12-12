@@ -470,7 +470,7 @@ _my_popcntq:
 	mov rax, rdi
 	and rdi, rcx
 	shr rax, 2
-	and r9, 0x0101010101010101
+	mov r9, 0x0101010101010101
 	and rax, rcx
 	add rax, rdi
 	

@@ -76,4 +76,84 @@ _intToBase:
 	
 	align 16
 _intToBase64:
+	test rdi, rdi
+	je .prnt0
 	
+	mov rax, rdi
+	neg rax
+	cmovl rax, rdi
+	
+	test rax, rax
+	je .num0
+	
+	movsxd r8, edx
+	xor r10d, r10d
+	mov r9d, 87
+	
+.digitsLoop:
+	cqo
+	idiv r8
+	
+	cmp edx, 9
+	mov ecx, 48
+	cmovg ecx, r9d
+	
+	add ecx, edx
+	mov [rsi + r10], cl
+	inc r10
+	
+	test rax, rax
+	jne .digitsLoop
+	
+	test rdi, rdi
+	js .numIsNegative
+	
+.finishStr:
+	movsxd rax, r10d
+	mov byte [rsi + rax], 0
+	
+	add eax, -1
+	jne .startReverse
+	jmp .return
+	
+	align 16
+.prnt0:
+	mov word [rsi], 48
+	ret
+	
+	align 16
+.num0:
+	xor r10d, r10d
+	test rdi, rdi
+	jns .finishStr
+	
+.numIsNegative:
+	mov eax, r10d
+	inc r10d
+	mov byte [rsi + rax], 45
+	
+	movsxd rax, r10d
+	mov byte [rsi + rax], 0
+	
+	add eax, -1
+	je .return
+	
+.startReverse:
+	cdqe
+	mov ecx, 1
+	
+.reverseLoop:
+	movzx edi, byte [rsi + rcx - 1]
+	movzx edx, byte [rsi + rax]
+	
+	mov [rsi + rcx - 1], dl
+	mov [rsi + rax], dil
+	
+	add rax, -1
+	
+	cmp rcx, rax
+	lea rcx, [rcx + 1]
+	jb .reverseLoop
+	
+.return:
+	ret

@@ -39,7 +39,7 @@ void intToBase(int32_t num, char* str, int base)
     while (num != 0) 
     { 
         int rem = num % base; 
-        str[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0'; 
+        str[i++] = (rem > 9) ? (rem-10) + 'a' : rem + '0'; 
         num = num/base; 
     } 
   
@@ -77,7 +77,7 @@ void intToBase64(int64_t num, char* str, int base)
     while (num != 0) 
     { 
         int rem = num % base; 
-        str[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0'; 
+        str[i++] = (rem > 9) ? (rem-10) + 'a' : rem + '0'; 
         num = num/base; 
     } 
   

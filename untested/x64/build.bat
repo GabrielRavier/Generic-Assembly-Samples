@@ -20,7 +20,6 @@ nasm -Wall -f elf64 gcd_Lcm.asm
 nasm -Wall -f elf64 intDiv.asm
 nasm -Wall -f elf64 intSqrt.asm
 nasm -Wall -f elf64 intToBase.asm
-REM to be actualised
 nasm -Wall -f elf64 isLeapYear.asm
 nasm -Wall -f elf64 isPowerOf2.asm
 nasm -Wall -f elf64 isPowerOf4.asm
