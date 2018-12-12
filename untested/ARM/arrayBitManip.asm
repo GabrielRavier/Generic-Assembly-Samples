@@ -20,6 +20,7 @@ _setBit:
 	
 	
 	
+	align 16
 _clearBit:
 	and r2, r1, #7
 	ldrb r3, [r0, r1, lsr #3]
@@ -32,6 +33,7 @@ _clearBit:
 	
 	
 	
+	align 16
 _getBit:
 	ldrb r0, [r0, r1, lsr #3]
 	and r1, r1, #7

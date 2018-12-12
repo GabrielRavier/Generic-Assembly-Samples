@@ -19,6 +19,7 @@ _andn:
 	
 	
 	
+	align 16
 _blsi:
 	rsb r3, r0, #0
 	and r0, r0, r3
@@ -28,6 +29,7 @@ _blsi:
 	
 	
 	
+	align 16
 _blsr:
 	sub r3, r0, #1
 	and r0, r0, r3
@@ -46,6 +48,7 @@ _andn64:
 	
 	
 	
+	align 16
 _blsi64:
 	rsbs r2, r0, #0
 	rsc r3, r1, #0
@@ -58,6 +61,7 @@ _blsi64:
 	
 	
 	
+	align 16
 _blsr64:
 	subs r2, r0, #1
 	sbc r3, r1, #0

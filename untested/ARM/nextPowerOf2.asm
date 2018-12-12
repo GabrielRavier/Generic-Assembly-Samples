@@ -35,6 +35,7 @@ _nextPowerOf2:
 	
 	
 	
+	align 16
 _nextPowerOf264:
 	orrs r3, r0, r1
 	beq .return1

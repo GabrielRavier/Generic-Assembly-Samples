@@ -23,6 +23,7 @@ _isMulOk:
 	
 	
 	
+	align 16
 _isMulOkArmv5:
 	cmp r1, #0
 	cmpne r0, #0
@@ -39,6 +40,7 @@ _isMulOkArmv5:
 	
 	
 	
+	align 16
 _saturatedMul:
 	cmp r1, #0
 	cmpne r0, #0

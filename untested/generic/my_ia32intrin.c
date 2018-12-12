@@ -64,7 +64,7 @@ inline uint32_t mod2_64bit(uint64_t divisor, uint64_t dividend)
 	return (uint32_t)remainder;
 }
 
-constexpr uint64_t crc32Polymonial = 0x11edc6f41ULL;
+constexpr uint64_t crc32Polymonial = 0x11EDC6F41ULL;
 
 uint32_t my_crc32b(uint32_t c, uint8_t v)
 {

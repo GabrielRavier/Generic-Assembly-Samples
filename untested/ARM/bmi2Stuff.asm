@@ -20,6 +20,7 @@ _mulx:	; requires ARMv3m
 	
 	
 	
+	align 16
 _mulxARMv4:
 	str r4, [sp, #-4]
 	
@@ -48,6 +49,7 @@ _mulxARMv5e:
 	
 	
 	
+	align 16
 _mulxARMv6:
 	umull r0, r1, r1, r0
 	

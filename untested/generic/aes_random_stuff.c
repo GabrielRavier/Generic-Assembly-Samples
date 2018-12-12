@@ -19,5 +19,5 @@ unsigned gf_mul(unsigned a, unsigned b)
 
 uint32_t AES_RotWord(uint32_t x)
 {
-  return (x >> 8) | (x << 24);
+	return (x >> 8) | (x << 24);
 }

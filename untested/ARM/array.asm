@@ -33,6 +33,7 @@ _sumArray:
 	
 	
 	
+	align 16
 _sumArrayARMv6z:
 	subs ip, r1, #0
 	

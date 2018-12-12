@@ -16,6 +16,7 @@ _oppositeSigns:
 	
 	
 	
+	align 16
 _oppositeSigns64:
 	str fp, [sp, #-4]!
 	

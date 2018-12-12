@@ -2,7 +2,7 @@ global _my_mm_malloc
 global _my_mm_free
 extern _malloc
 extern _free
-extern __errno_location
+extern ___errno_location
 
 segment .text align=16
 
@@ -17,7 +17,7 @@ _my_mm_malloc:
 	test ecx, ecx
 	je .powOf2
 	
-	call __errno_location
+	call ___errno_location
 	mov dword [eax], 22
 	jmp .retEsi
 	

@@ -3,6 +3,7 @@
 
     format  ELF
     public _isPowerOf2
+    public _isPowerOf264
 
 section '.text' executable align 16
 
@@ -17,6 +18,11 @@ _isPowerOf2:
 	
 	mov pc, lr
 	
+	
+	
+	
+	
+	align 16
 _isPowerOf264:
 	str fp, [sp, #-4]!
 	mov fp, r0

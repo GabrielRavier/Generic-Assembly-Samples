@@ -43,7 +43,6 @@ int64_t divide64ForLibCallers(int64_t dividend, int64_t divisor)
 	}
 	
 	return sign * quotient;
-		
 }
 
 int64_t modulo64(int64_t a1, int64_t a2)

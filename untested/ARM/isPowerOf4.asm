@@ -34,6 +34,7 @@ _isPowerOf4:
 	
 	
 	
+	align 16
 _isPowerOf464:
 	orrs r3, r0, r1
 	beq .return0
