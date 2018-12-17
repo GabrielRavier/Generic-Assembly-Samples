@@ -170,17 +170,7 @@ int32_t my_bsfq(uint64_t x)
 
 int32_t my_bsrq(uint64_t x)
 {	
-	if (x == 0)
-		return 0;
-	
-	uint8_t result = 63;
-	while ((x & 0x8000000000000000ULL) == 0) 
-	{
-		result--;
-		x <<= 1;
-	}
-	
-	return result;
+	return __builtin_clzll(x)
 }
 
 int64_t my_bswapq(int64_t x)

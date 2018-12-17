@@ -28,6 +28,7 @@ fasmarm mulDiv.asm
 fasmarm mulStuff.asm
 fasmarm my_ia32intrin.asm
 fasmarm my_mm_malloc.asm
+REM fasmarm my_string.asm
 fasmarm nextPowerOf2.asm
 fasmarm oppositeSigns.asm
 fasmarm rand.asm
