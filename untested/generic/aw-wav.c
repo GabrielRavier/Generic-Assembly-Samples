@@ -1,4 +1,3 @@
-
 /*
    Copyright (c) 2014 Malte Hildingsson, malte (at) afterwi.se
 
@@ -21,8 +20,6 @@
    THE SOFTWARE.
  */
 
-#ifndef AW_WAV_H
-#define AW_WAV_H
 
 #if __GNUC__
 # define _wav_packed __attribute__((packed))
@@ -245,6 +242,3 @@ int wav_write(void *buffer, const struct wav_info *info) {
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
-#endif /* AW_WAV_H */
-

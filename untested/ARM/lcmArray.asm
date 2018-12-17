@@ -22,7 +22,7 @@ _lcmArray:	; Requires armv7ve
 	bne .startGcdLoop
 	b .check
 	
-	align 16
+	
 .gcdLoop:
 	mov r2, r3
 	

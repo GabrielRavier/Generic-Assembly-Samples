@@ -7,4 +7,5 @@
 section '.text' executable align 16
 
 _i32toi64:
-    mov pc, lr
+    bx lr
+	

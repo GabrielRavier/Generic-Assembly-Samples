@@ -16,11 +16,11 @@ _mulx:	; requires ARMv3m
 	str r4, [r2]
 	
 	ldr r4, [sp]
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _mulxARMv4:
 	str r4, [sp, #-4]
 	
@@ -49,7 +49,7 @@ _mulxARMv5e:
 	
 	
 	
-	align 16
+	
 _mulxARMv6:
 	umull r0, r1, r1, r0
 	

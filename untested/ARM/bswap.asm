@@ -14,7 +14,7 @@ _bswap16:
 	
 	lsl r1, r0, #16
 	lsr r0, r1, #16
-	mov pc, lr
+	bx lr
 	
 	
 	
@@ -28,18 +28,18 @@ _bswap16ARMv6:
 	
 	
 	
-	align 16
+	
 _bswap32:
 	eor r3, r0, r0, ror #16
 	lsr r1, r3, #8
 	bic r2, r1, #0xFF00
 	
 	eor r0, r2, r0, ror #8
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _bswap32ARMv6:
 	rev r0, r0
 	bx lr
@@ -48,7 +48,7 @@ _bswap32ARMv6:
 	
 	
 	
-	align 16
+	
 _bswap64:
 	mov r2, r1
 	eor r1, r0, r0, ror #16
@@ -60,11 +60,11 @@ _bswap64:
 	
 	eor r1, r1, r0, ror #8
 	eor r0, ip, r2, ror #8
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _bswap64ARMv6:
 	rev r3, r0
 	rev r0, r1

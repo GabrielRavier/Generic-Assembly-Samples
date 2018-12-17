@@ -9,7 +9,7 @@ section '.text' executable align 16
 
 _findFirstSet:
 	cmp r0, #0
-	moveq pc, lr
+	bxeq lr
 	
 	lsl r3, r0, #16
 	lsr r3, #16
@@ -43,11 +43,11 @@ _findFirstSet:
 	add r0, r2
 	
 	add r0, #1
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _findFirstSetARMv5:
 	rsb r3, r0, #0
 	and r0, r3
@@ -58,7 +58,7 @@ _findFirstSetARMv5:
 	
 	
 	
-	align 16
+	
 _findFirstSetARMv7:
 	cmp r0, #0
 	rbit r0, r0
@@ -71,7 +71,7 @@ _findFirstSetARMv7:
 	
 	
 	
-	align 16
+	
 _findFirstSetARMv7a:
 	cmp r0, #0
 	rbit r0, r0
@@ -85,7 +85,7 @@ _findFirstSetARMv7a:
 	
 	
 	
-	align 16
+	
 _findFirstSet64:
 	cmp r0, #0
 	bne .lowNot0
@@ -125,7 +125,7 @@ _findFirstSet64:
 	
 	add r0, r3
 	mov r1, #0
-	mov pc, lr
+	bx lr
 	
 .lowNot0:
 	lsl r3, r0, #16
@@ -160,19 +160,19 @@ _findFirstSet64:
 	
 	add r0, #1
 	asr r1, r0, #31
-	mov pc, lr
+	bx lr
 	
-	align 16
+	
 .ret0:
 	mov r0, #0
 	mov r1, #0
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _findFirstSet64ARMv5:
 	cmp r0, #0
 	bne .lowNot0

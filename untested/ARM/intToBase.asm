@@ -124,13 +124,13 @@ _intToBase:
 	mov r3, #48
 	strb r3, [r1]
 	strb r0, [r1, #1]
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _intToBaseARMv7ve:
 	cmp r0, #0
 	beq .prnt0
@@ -211,7 +211,7 @@ _intToBaseARMv7ve:
 	
 	
 	
-	align 16
+	
 _intToBase64:
 	push {r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	sub sp, #60
@@ -378,11 +378,11 @@ _intToBase64:
 	mov r8, r3
 	b .digitsLoop
 	
-	align 16
+	
 .den0:
 	dw 0xE7F0DEF0	; make invalid instruction exception
 	
-	align 16
+	
 .num0:
 	ldr ip, [sp, #48]
 	ldr r2, [sp, #52]
@@ -429,7 +429,7 @@ _intToBase64:
 	add r3, #1
 	b .startReverse
 	
-	align 16
+	
 .numNegative:
 	rsbs r0, #0
 	rsc r1, #0
@@ -440,13 +440,13 @@ _intToBase64:
 	str r1, [sp, #44]
 	b .startDigitsLoop
 	
-	align 16
+	
 .qbit0:
 	mov ip, r0
 	mov lr, r1
 	b .endDiv
 	
-	align 16
+	
 .prnt0:
 	mov r3, #48
 	strb r3, [r2]
@@ -459,7 +459,7 @@ _intToBase64:
 	
 	
 	
-	align 16
+	
 _intToBase64ARMv3m:
 	push {r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	sub sp, #68
@@ -614,11 +614,11 @@ _intToBase64ARMv3m:
 	str r3, [sp, #12]
 	b .digitsLoop
 	
-	align 16
+	
 .den0:
 	dw 0xE7F0DEF0	; make invalid instruction exception
 	
-	align 16
+	
 .num0:
 	ldr r1, [sp, #52]
 	cmp r1, #0
@@ -666,7 +666,7 @@ _intToBase64ARMv3m:
 	add r3, #1
 	b .startReverse
 	
-	align 16
+	
 .numNegative:
 	rsbs r0, #0
 	rsc r1, #0
@@ -676,13 +676,13 @@ _intToBase64ARMv3m:
 	str r1, [sp, #52]
 	b .startDigitsLoop
 	
-	align 16
+	
 .qbit0:
 	mov ip, r0
 	mov r4, r1
 	b .endDiv
 	
-	align 16
+	
 .denNegative:
 	str r3, [sp, #24]
 	str r4, [sp, #28]
@@ -691,7 +691,7 @@ _intToBase64ARMv3m:
 	mov r1, #0
 	b .doTheDiv
 	
-	align 16
+	
 .prnt0:
 	mov r1, #48
 	mov r3, #0
@@ -703,7 +703,7 @@ _intToBase64ARMv3m:
 	
 	
 	
-	align 16
+	
 _intToBase64ARMv5e:
 	push {r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	sub sp, #60
@@ -764,7 +764,7 @@ _intToBase64ARMv5e:
 	mov r0, #1
 	mov r1, #0
 	
-	blt .denNegative
+	blt .startQbitLoop
 	
 .denLoop:
 	adds r2, r2
@@ -852,11 +852,11 @@ _intToBase64ARMv5e:
 	str r3, [sp, #32]
 	b .digitsLoop
 	
-	align 16
+	
 .den0:
 	dw 0xE7F0DEF0	; make invalid instruction exception
 	
-	align 16
+	
 .num0:
 	ldr r1, [sp, #44]
 	ldr r9, [sp, #32]
@@ -891,7 +891,7 @@ _intToBase64ARMv5e:
 	add sp, #60
 	pop {r4, r5, r6, r7, r8, r9, r10, fp, pc}
 	
-	align 16
+	
 .numIsNegative:
 	mov r0, #45
 	add r1, r2, r9
@@ -903,7 +903,7 @@ _intToBase64ARMv5e:
 	add r3, r9, #1
 	b .startReverse
 	
-	align 16
+	
 .numNegative:
 	rsbs r0, #0
 	rsc r1, #0
@@ -913,13 +913,13 @@ _intToBase64ARMv5e:
 	str r1, [sp, #44]
 	b .startDigitsLoop
 	
-	align 16
+	
 .qbit0:
 	mov ip, r0
 	mov r4, r1
 	b .endDiv
 	
-	align 16
+	
 .prnt0:
 	mov r1, #48
 	mov r3, #0

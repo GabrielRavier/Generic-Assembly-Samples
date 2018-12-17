@@ -15,15 +15,15 @@ _isMulOk:
 	umull r2, r3, r0, r1
 	rsbs r0, r3, #1
 	movcc r0, #0
-	mov pc, lr
+	bx lr
 	
 .return1:
 	mov r0, #1
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _isMulOkArmv5:
 	cmp r1, #0
 	cmpne r0, #0
@@ -40,7 +40,7 @@ _isMulOkArmv5:
 	
 	
 	
-	align 16
+	
 _saturatedMul:
 	cmp r1, #0
 	cmpne r0, #0
@@ -53,8 +53,9 @@ _saturatedMul:
 	
 .doTheMul:
 	mul r0, r1, ip
-	mov pc, lr
+	bx lr
 	
 .nope:
 	mvn r0, #0
-	mov pc, lr
+	bx lr
+	

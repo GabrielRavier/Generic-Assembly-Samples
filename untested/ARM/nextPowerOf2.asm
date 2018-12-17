@@ -13,7 +13,7 @@ _nextPowerOf2:
 	
 	sub r3, r0, #1
 	tst r3, r0
-	moveq pc, lr
+	bxeq lr
 	
 	mov r2, #0
 	
@@ -25,17 +25,17 @@ _nextPowerOf2:
 	
 	mov r0, #1
 	lsl r0, r0, r2
-	mov pc, lr
+	bx lr
 	
 .return1:
 	mov r0, #1
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _nextPowerOf264:
 	orrs r3, r0, r1
 	beq .return1
@@ -69,10 +69,10 @@ _nextPowerOf264:
 
 .return:
 	ldr fp, [sp], #4
-	mov pc, lr
+	bx lr
 	
 .return1:
 	mov r0, #1
 	mov r1, #0
-	mov pc, lr
+	bx lr
 	

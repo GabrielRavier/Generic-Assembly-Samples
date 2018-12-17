@@ -21,7 +21,7 @@ _detab:
 	
 .return:
 	mov r0, #0
-	mov pc, lr
+	bx lr
 	
 .replace:
 	strb r2, [r0]
@@ -30,5 +30,5 @@ _detab:
 	bne .loop
 	
 	mov r0, #0
-	mov pc, lr
+	bx lr
 	

@@ -29,18 +29,18 @@ _gf_mul:
 	cmp r1, #0
 	bne .loop
 	
-	mov pc, lr
+	bx lr
 	
 .b0:
 	mov r0, r1
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _AES_RotWord:
 	ror r0, #8
-	mov pc, lr
+	bx lr
 	

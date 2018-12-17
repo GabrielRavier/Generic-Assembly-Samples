@@ -7,17 +7,7 @@ uint8_t my_bsfd(uint32_t x)
 
 uint8_t my_bsrd(uint32_t x)
 {
-	if (x == 0)
-		return 0;
-	
-	uint8_t result = 31;
-	while ((x & 0x80000000) == 0) 
-	{
-		result--;
-		x <<= 1;
-	}
-	
-	return result;
+	return __builtin_clz(x);
 }
 
 uint32_t my_bswapd(uint32_t x)

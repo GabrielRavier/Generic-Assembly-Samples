@@ -9,7 +9,7 @@ section '.text' executable align 16
 	
 _sumTo:
 	cmp r0, #0
-	moveq pc, lr
+	bxeq lr
 	
 	push {r4, r5, r6, r7, fp, lr}
 	sub sp, #24
@@ -55,10 +55,10 @@ _sumTo:
 	
 	
 	
-	align 16
+	
 _sumToARMv3m:
 	cmp r0, #0
-	moveq pc, lr
+	bxeq lr
 	
 	sub r1, r0, #1
 	sub r0, #2
@@ -66,16 +66,16 @@ _sumToARMv3m:
 	lsr r0, r2, #1
 	orr r0, r3, lsr #31
 	add r0, r1, r0
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _sumTo64:
 	orrs r3, r0, r1
-	moveq pc, lr
+	bxeq lr
 	
 	push {r4, r5, r6, r7, r8, lr}
 	sub sp, #24
@@ -132,15 +132,15 @@ _sumTo64:
 	
 	
 	
-	align 16
+	
 _sumTo64ARMv3m:
 	orrs r3, r0, r1
-	moveq pc, lr
+	bxeq lr
 	
 	subs r2, r0, #1
 	sbc r3, r1, #0
 	umull r0, r1, r3, r3
 	mul r3, r2
 	add r1, r3, lsl #1
-	mov pc, lr
+	bx lr
 	

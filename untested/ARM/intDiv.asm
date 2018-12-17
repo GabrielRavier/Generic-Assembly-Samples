@@ -15,4 +15,4 @@ _intDiv:
 	
 	vcvt.s32.f64 s1, d7
 	vmov r0, s1
-	mov pc, lr 
+	bx lr 

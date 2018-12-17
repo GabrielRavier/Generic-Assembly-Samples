@@ -23,17 +23,17 @@ _gcd:
 	
 .return0:
 	mov r0, #0
-	mov pc, lr
+	bx lr
 	
 .returnR1:
 	mov r0, r1
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _lcm:	; requires armv7ve
 	push {r4, lr}	
 	mul r4, r0, r1
@@ -46,7 +46,7 @@ _lcm:	; requires armv7ve
 	
 	
 	
-	align 16
+	
 _gcd64:
 	push {r4, lr}
 	
@@ -80,7 +80,7 @@ _gcd64:
 	mov r1, r0
 	pop {r4, pc}
 	
-	align 16
+	
 .neither:
 	subs r0, r2
 	sbc r1, r3
@@ -96,7 +96,7 @@ _gcd64:
 	
 	
 	
-	align 16
+	
 _lcm64:
 	push {r4, r5, r6, r7, r8, r9, lr}
 	sub sp, #28
@@ -203,7 +203,7 @@ _lcm64:
 	
 	
 	
-	align 16
+	
 _lcm64ARMv3m:
 	push {r4, r5, r6, r7, r8, r9, r10, lr}
 	mov r4, r0

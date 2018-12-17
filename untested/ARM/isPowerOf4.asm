@@ -11,9 +11,9 @@ _isPowerOf4:
 	cmp r0, #0
 	bne .startLoop
 	
-	mov pc, lr
+	bx lr
 	
-	align 16
+	
 .loop:
 	add r3, r0, #3
 	cmp r0, #0
@@ -22,19 +22,19 @@ _isPowerOf4:
 	
 .startLoop:
 	cmp r0, #1
-	moveq pc, lr
+	bxeq lr
 	
 	tst r0, #3
 	beq .loop
 	
 	mov r0, #0
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _isPowerOf464:
 	orrs r3, r0, r1
 	beq .return0
@@ -51,7 +51,7 @@ _isPowerOf464:
 	str fp, [sp, #-4]
 	b .startLoop
 	
-	align 16
+	
 .loop:
 	and r2, r0, #3
 	mov r3, #0
@@ -75,18 +75,18 @@ _isPowerOf464:
 	mov r0, #1
 	
 	ldr fp, [sp], #4
-	mov pc, lr
+	bx lr
 	
 .return0:
 	mov r0, #0
-	mov pc, lr
+	bx lr
 	
 .return02:
 	mov r0, #0
 	ldr fp, [sp], #4
-	mov pc, lr
+	bx lr
 	
 .return1:
 	mov r0, #1
-	mov pc, lr
+	bx lr
 	

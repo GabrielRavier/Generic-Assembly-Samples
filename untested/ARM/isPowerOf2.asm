@@ -9,20 +9,20 @@ section '.text' executable align 16
 
 _isPowerOf2:
 	cmp r0, #0
-	moveq pc, lr
+	bxeq lr
 	
 	sub r3, r0, #1
 	tst r3, r0
 	moveq r0, #1
 	movne r0, #0
 	
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _isPowerOf264:
 	str fp, [sp, #-4]!
 	mov fp, r0
@@ -42,5 +42,5 @@ _isPowerOf264:
 	
 .return:
 	ldr fp, [sp], #4
-	mov pc, lr
+	bx lr
 	

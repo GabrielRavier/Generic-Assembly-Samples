@@ -41,16 +41,16 @@ _mostSignificantBitIndex32:
 	add r0, r2
 	
 	rsb r0, #31
-	mov pc, lr
+	bx lr
 	
-	align 16
+	
 .retMin1:
 	mvn r0, #0
-	mov pc, lr
+	bx lr
 	
 	
 	
-	align 16
+	
 _mostSignificantBitIndex32ARMv5:
 	cmp r0, #0
 	clzne r0, r0
@@ -62,7 +62,7 @@ _mostSignificantBitIndex32ARMv5:
 	
 	
 	
-	align 16
+	
 _mostSignificantBitIndex32Alt:
 	push {r4, lr}
 	sub sp, sp, #40
@@ -121,7 +121,7 @@ _mostSignificantBitIndex32Alt:
 	add sp, #40
 	pop {r4, pc}
 	
-	align 16
+	
 .retMin1:
 	mvn r0, #0
 	b .return

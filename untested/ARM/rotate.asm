@@ -11,15 +11,15 @@ _rotateLeft:
 	and r1, #31
 	rsb r1, #32
 	ror r0, r1
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _rotateRight:
 	and r1, #31
 	ror r0, r1
-	mov pc, lr
+	bx lr
 	

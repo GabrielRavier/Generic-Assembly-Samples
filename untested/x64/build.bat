@@ -4,7 +4,6 @@ nasm -Wall -f elf64 arith64.asm
 nasm -Wall -f elf64 array.asm
 nasm -Wall -f elf64 arrayBitManip.asm
 nasm -Wall -f elf64 avx512_random_stuff.asm
-nasm -Wall -f elf64 aw-ima.asm
 nasm -Wall -f elf64 aw-wav.asm
 nasm -Wall -f elf64 bithacks.asm
 nasm -Wall -f elf64 bmiStuff.asm

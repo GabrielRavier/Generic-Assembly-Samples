@@ -13,4 +13,4 @@ _intSqrt:
 	
 	vcvt.s32.f64 s0, d7
 	vmov r0, s0 
-	mov pc, lr 
+	bx lr 

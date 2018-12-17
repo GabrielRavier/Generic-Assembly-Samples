@@ -39,7 +39,7 @@ _rand:	; requires ARMv3m
 .finish:
 	str r3, [r1]
 	mov r0, ip
-	mov pc, lr
+	bx lr
 	
 .zeroIsForbiddenLol:
 	ldr r3, [.valFor0]
@@ -62,11 +62,11 @@ _rand:	; requires ARMv3m
 
 
 
-	align 16
+	
 _srand:
 	ldr r3, [.oNext]
 	str r0, [r3]
-	mov pc, lr
+	bx lr
 	
 .oNext:
 	dw next

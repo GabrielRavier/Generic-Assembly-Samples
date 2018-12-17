@@ -31,7 +31,7 @@ _isLeapYear:	; requires ARMv3m
 	
 .return:
 	pop {r4, r5}
-	mov pc, lr
+	bx lr
 	
 .dat1:
 	dd 0x51EB851F

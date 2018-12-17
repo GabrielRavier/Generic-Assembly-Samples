@@ -39,12 +39,12 @@ _my_mm_malloc:
 	str r3, [r0, #-4]
 	pop {r4, pc}
 	
-	align 16
+	
 .ret0:
 	mov r0, #0
 	pop {r4, pc}
 	
-	align 16
+	
 .notPowOf2:
 	bl ___errno_location
 	mov r3, #22
@@ -57,10 +57,10 @@ _my_mm_malloc:
 	
 	
 	
-	align 16
+	
 _my_mm_free:
 	cmp r0, #0
-	moveq pc, lr
+	bxeq lr
 	
 	ldr r0, [r0, #-4]
 	b _free

@@ -10,13 +10,13 @@ section '.text' executable align 16
 _oppositeSigns:
 	eor r0, r0, r1
 	lsr r0, r0, #31
-	mov pc, lr
+	bx lr
 	
 	
 	
 	
 	
-	align 16
+	
 _oppositeSigns64:
 	str fp, [sp, #-4]!
 	
@@ -29,5 +29,5 @@ _oppositeSigns64:
 	movne r0, #1
 	moveq r0, #0
 	ldr fp, [sp], #4
-	mov pc, lr
+	bx lr
 	
