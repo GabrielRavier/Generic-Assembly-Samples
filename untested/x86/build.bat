@@ -6,8 +6,8 @@ nasm -Wall -f elf32 arrayBitManip.asm
 nasm -Wall -f elf32 avx512_random_stuff.asm
 nasm -Wall -f elf32 aw-wav.asm
 nasm -Wall -f elf32 bithacks.asm
-nasm -Wall -f elf32 bmiStuff.asm
 nasm -Wall -f elf32 bmi2Stuff.asm
+nasm -Wall -f elf32 bmiStuff.asm
 nasm -Wall -f elf32 bswap.asm
 nasm -Wall -f elf32 calcPi.asm
 nasm -Wall -f elf32 convert.asm
@@ -23,6 +23,8 @@ nasm -Wall -f elf32 isLeapYear.asm
 nasm -Wall -f elf32 isPowerOf2.asm
 nasm -Wall -f elf32 isPowerOf4.asm
 nasm -Wall -f elf32 lcmArray.asm
+nasm -Wall -f elf32 m32lib.asm
+REM m32lib.asm is unfinished
 nasm -Wall -f elf32 mostSignificantBitIndex.asm
 nasm -Wall -f elf32 mulDiv.asm
 nasm -Wall -f elf32 mulStuff.asm
