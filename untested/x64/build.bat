@@ -23,6 +23,7 @@ nasm -Wall -f elf64 isLeapYear.asm
 nasm -Wall -f elf64 isPowerOf2.asm
 nasm -Wall -f elf64 isPowerOf4.asm
 nasm -Wall -f elf64 lcmArray.asm
+nasm -Wall -f elf64 m32lib.asm
 nasm -Wall -f elf64 mostSignificantBitIndex.asm
 nasm -Wall -f elf64 mulDiv.asm
 nasm -Wall -f elf64 mulStuff.asm

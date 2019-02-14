@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _ca_stack_create
 global _ca_stack_alloc
 global _ca_stack_free
@@ -177,11 +179,9 @@ _ca_frame_free:
 	
 	align 16
 _ca_leak_check_alloc:
-	push r12
+	multipush r12, rbp, rbx
 	mov r12, rsi
-	push rbp
 	mov ebp, edx
-	push rbx
 	mov rbx, rdi
 	
 	add rdi, 40
@@ -209,9 +209,7 @@ _ca_leak_check_alloc:
 	add rax, 40
 	
 .return:
-	pop rbx
-	pop rbp
-	pop r12
+	multipop r12, rbp, rbx
 	ret
 	
 	align 16

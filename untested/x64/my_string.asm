@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _bcopy
 global _bzero
 global _memccpy
@@ -59,11 +61,9 @@ _bzero:
 	
 	align 16
 _memccpy:
-	push r12
+	multipush r12, rbp, rbx
 	mov r12, rdi
-	push rbp
 	mov rbp, rcx
-	push rbx
 	mov rbx, rsi
 	mov rdi, rbx
 	mov esi, edx
@@ -89,9 +89,7 @@ _memccpy:
 	rep movsb
 	
 	xor eax, eax
-	pop rbx
-	pop rbp
-	pop r12
+	multipop r12, rbp, rbx
 	ret
 	
 	
@@ -211,12 +209,7 @@ _memmem:
 	test rsi, rsi
 	je .return0Early
 	
-	push r15
-	push r14
-	push r13
-	push r12
-	push rbp
-	push rbx
+	multipush r15, r14, r13, r12, rbp, rbx
 	sub rsp, 40
 	movzx r14d, byte [rdx]
 	
@@ -278,12 +271,7 @@ _memmem:
 	
 .return:
 	add rsp, 40
-	pop rbx
-	pop rbp
-	pop r12
-	pop r13
-	pop r14
-	pop r15
+	multipop r15, r14, r13, r12, rbp, rbx
 	ret
 	
 .return0Early:
@@ -292,14 +280,9 @@ _memmem:
 	
 .onlyOne:
 	add rsp, 40
-	pop rbx
-	pop rbp
-	pop r12
-	pop r13
 	movzx esi, r14b
 	mov rdx, rsi
-	pop r14
-	pop r15
+	multipop r15, r14, r13, r12, rbp, rbx
 	jmp _memchr
 	
 	
@@ -509,12 +492,8 @@ _strcasecmp:
 	
 	align 16
 _strcasestr:
-	push r14
-	push r13
+	multipush r14, r13, r12, rbp, rbx
 	mov r13, rdi
-	push r12
-	push rbp
-	push rbx
 	
 	movzx eax, byte [rsi]
 	test al, al
@@ -572,12 +551,8 @@ _strcasestr:
 	xor r13d, r13d
 	
 .return:
-	pop rbx
-	pop rbp
-	pop r12
 	mov rax, r13
-	pop r13
-	pop r14
+	multipop r14, r13, r12, rbp, rbx
 	ret
 	
 	
@@ -707,11 +682,9 @@ _strcpy:
 	
 	align 16
 _strcspn:
-	push r12
+	multipush r12, rbp, rbx
 	mov r12, rsi
-	push rbp
 	mov rbp, rdi
-	push rbx
 	xor ebx, ebx
 	
 .loop:
@@ -730,9 +703,7 @@ _strcspn:
 	
 .return:
 	mov rax, rbx
-	pop rbx
-	pop rbp
-	pop r12
+	multipop r12, rbp, rbx
 	ret
 	
 	
@@ -1040,11 +1011,9 @@ _strpcrk:
 	
 	align 16
 _strrchr:
-	push rbp
+	multipush rbp, rbx, rcx
 	mov rdx, rdi
-	push rbx
 	mov ebx, esi
-	push rcx
 	and ebx, 0xFF
 	jne .notZero
 	
@@ -1074,9 +1043,7 @@ _strrchr:
 	
 .returnRbp:
 	mov rax, rbp
-	pop rdx
-	pop rbx
-	pop rbp
+	multipop rbp, rbx, rcx
 	ret
 	
 	
@@ -1085,8 +1052,7 @@ _strrchr:
 	
 	align 16
 _strsep:
-	push rbp
-	push rbx
+	multipush rbp, rbx
 	sub rsp, 8
 	
 	mov rbx, [rdi]
@@ -1117,8 +1083,7 @@ _strsep:
 	mov qword [rbp], 0
 	add rsp, 8
 	mov rax, rbx
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	ret
 	
 	
@@ -1127,9 +1092,7 @@ _strsep:
 	
 	align 16
 _strspn:
-	push r12
-	push rbp
-	push rbx
+	multipush r12, rbp, rbx
 	
 	movzx eax, byte [rdi]
 	test al, al
@@ -1158,9 +1121,7 @@ _strspn:
 	
 .returnRbx:
 	mov rax, rbx
-	pop rbx
-	pop rbp
-	pop r12
+	multipop r12, rbp, rbx
 	ret
 	
 .return0:
@@ -1173,17 +1134,11 @@ _strspn:
 	
 	align 16
 _strstr:
-	push r13
-	push r12
+	multipush r13, r12, rbp, rbx, rcx
 	xor eax, eax
 	mov r12, rsi
-	
-	push rbp
-	push rbx
 	mov rbx, rdi
 	mov rdi, rsi
-	
-	push rcx
 	or rcx, -1
 	repnz scasb
 	
@@ -1211,12 +1166,8 @@ _strstr:
 	xor ebx, ebx
 	
 .return:
-	pop rdx
 	mov rax, rbx
-	pop rbx
-	pop rbp
-	pop r12
-	pop r13
+	multipop r13, r12, rbp, rbx, rcx
 	ret
 	
 	

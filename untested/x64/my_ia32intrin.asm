@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _my_bsfd
 global _my_bsrd
 global _my_bswapd
@@ -101,10 +103,9 @@ _BitReflect8:
 	
 	align 16
 _BitReflect16:
-	push rbp
+	multipush rbp, rbx
 	mov ebp, edi
 	movzx edi, dil
-	push rbx
 	sub rsp, 8
 	call _BitReflect8
 	
@@ -118,8 +119,7 @@ _BitReflect16:
 	movzx eax, al
 	or eax, ebx
 	
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	ret
 	
 	
@@ -128,10 +128,9 @@ _BitReflect16:
 	
 	align 16
 _BitReflect32:
-	push rbp
+	multipush rbp, rbx
 	mov ebp, edi
 	movzx edi, di
-	push rbx
 	sub rsp, 8
 	call _BitReflect16
 	
@@ -145,8 +144,7 @@ _BitReflect32:
 	movzx eax, ax
 	or eax, ebx
 	
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	ret
 	
 	
@@ -186,8 +184,7 @@ _mod2_64bit:
 %define crc32Polymonial 0x11EDC6F41
 	align 16
 _my_crc32b:
-	push rbp
-	push rbx
+	multipush rbp, rbx
 	sub rsp, 8
 	mov ebp, esi
 	
@@ -207,8 +204,7 @@ _my_crc32b:
 	mov edi, eax
 	
 	add rsp, 8
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	jmp _BitReflect32
 	
 	
@@ -217,8 +213,7 @@ _my_crc32b:
 	
 	align 16
 _my_crc32w:
-	push rbp
-	push rbx
+	multipush rbp, rbx
 	sub rsp, 8
 	mov ebp, esi
 	
@@ -238,8 +233,7 @@ _my_crc32w:
 	mov edi, eax
 	
 	add rsp, 8
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	call _BitReflect32
 	
 	
@@ -248,8 +242,7 @@ _my_crc32w:
 	
 	align 16
 _my_crc32d:
-	push rbp
-	push rbx
+	multipush rbp, rbx
 	sub rsp, 8
 	mov ebp, esi
 	
@@ -268,8 +261,7 @@ _my_crc32d:
 	mov edi, eax
 	
 	add rsp, 8
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	call _BitReflect32
 	
 	
@@ -426,9 +418,8 @@ _my_bswapq:
 	
 	align 16
 _my_crc32q:
-	push rbp
+	multipush rbp, rbx
 	mov rbp, rsi
-	push rbx
 	sub rsp, 8
 	
 	call _BitReflect32
@@ -449,8 +440,7 @@ _my_crc32q:
 	call _BitReflect32
 	
 	add rsp, 8
-	pop rbx
-	pop rbp
+	multipop rbp, rbx
 	ret
 	
 	
