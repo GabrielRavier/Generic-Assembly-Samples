@@ -1,12 +1,11 @@
+%include "macros.inc"
+
 global _mulDiv
 
 segment .text align=16
 
 _mulDiv:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	sub esp, 20
 	mov esi, [esp + 48]
 	
@@ -75,8 +74,5 @@ _mulDiv:
 	
 .return:
 	add esp, 20
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret

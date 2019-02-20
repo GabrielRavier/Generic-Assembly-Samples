@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _add64
 global _sub64
 global _mul64
@@ -238,10 +240,7 @@ _isGreater64:
 	
 	align 16
 _divide64:
-	push esi
-	push edi
-	push ebx
-	push ebp
+	multipush esi, edi, ebx, ebp
 	sub esp, 12
 	
 	xor esi, esi
@@ -323,10 +322,7 @@ _divide64:
 	mov edx, ecx
 	
 	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx, ebp
 	ret
 	
 	
@@ -335,10 +331,8 @@ _divide64:
 	
 	align 16
 _modulo64:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
+	
 	push eax
 	mov edx, [esp + 24]
 	mov ebp, [esp + 28]
@@ -409,20 +403,15 @@ _modulo64:
 	
 	mov eax, ecx
 	add esp, 4
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
 	
 	align 16
 _modulo64SSE4:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
+	
 	push eax
 	mov eax, [esp + 36]
 	xor eax, [esp + 28]
@@ -484,20 +473,14 @@ _modulo64SSE4:
 	
 	mov eax, ecx
 	add esp, 4
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
 	
 	align 16
 _modulu64BMI:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	push eax
 	mov eax, [esp + 36]
 	xor eax, [esp + 28]
@@ -556,10 +539,7 @@ _modulu64BMI:
 	sbb edx, edi
 	
 	add esp, 4
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
@@ -704,10 +684,7 @@ _shiftRight64:
 	
 	align 16
 _rol64:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	mov cl, [esp + 28]
 	mov eax, [esp + 30]
 	mov esi, [esp + 24]
@@ -733,10 +710,7 @@ _rol64:
 	or eax, edi
 	or edx, ebx
 	
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
@@ -787,10 +761,7 @@ _rol64AVX:
 	
 	align 16
 _ror64:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	mov cl, [esp + 28]
 	mov esi, [esp + 20]
 	mov edx, [esp + 24]
@@ -816,10 +787,7 @@ _ror64:
 	or eax, ebx
 	or edx, edi
 	
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	

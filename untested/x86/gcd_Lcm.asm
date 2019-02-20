@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _gcd
 global _gcd64	
 global _lcm
@@ -50,10 +52,7 @@ _gcd:
 	
 	align 16
 _gcd64:
-	push esi
-	push edi
-	push ebx
-	push ebp
+	multipush esi, edi, ebx, ebp
 	sub esp, 12
 	
 	mov eax, [esp + 32]
@@ -103,10 +102,7 @@ _gcd64:
 	mov [esp + 32], eax
 	
 	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx, ebp
 	jmp _gcd64
 	
 	align 16
@@ -117,10 +113,7 @@ _gcd64:
 	mov [esp + 40], ecx
 	mov [esp + 32], eax
 	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx, ebp
 	jmp _gcd64
 	
 	align 16
@@ -134,13 +127,9 @@ _gcd64:
 	
 	align 16
 .return0:
-	xor eax, eax
-	xor edx, edx
+	multizero eax, edx
 	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx, ebp
 	ret
 	
 	
@@ -149,8 +138,7 @@ _gcd64:
 	
 	align 16
 _lcm:
-	push ebx
-	push ebp
+	multipush ebx, ebp
 	sub esp, 20
 	
 	mov ebp, [esp + 32]
@@ -167,8 +155,7 @@ _lcm:
 	cdq
 	idiv ecx
 	add esp, 20
-	pop ebp
-	pop ebx
+	multipop ebx, ebp
 	ret
 	
 	
@@ -177,10 +164,7 @@ _lcm:
 	
 	align 16
 _lcm64:
-	push esi
-	push edi
-	push ebx
-	push ebp
+	multipush esi, edi, ebx, ebp
 	sub esp, 12
 	
 	mov edx, [esp + 44]
@@ -189,10 +173,7 @@ _lcm64:
 	mov esi, [esp + 36]
 	mov [esp], edx
 	
-	push edx
-	push ebx
-	push esi
-	push ebp
+	multipush edx, ebx, esi, ebp
 	call _gcd64
 	
 	mov edi, eax
@@ -213,10 +194,7 @@ _lcm64:
 	mov [esp + 32], eax
 	
 	add esp, 12
-	pop ebp
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx, ebp
 	jmp _divide64
 	
 	

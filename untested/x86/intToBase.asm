@@ -1,14 +1,12 @@
+%include "macros.inc"
+
 global _intToBase
 global _intToBase64
 
 segment .text align=16
 
 _intToBase:
-	push ebp
-	push edi
-	push esi
-	push ebx
-	push edx
+	multipush ebp, edi, esi, ebx, edx
 	
 	mov eax, [esp + 24]	; num
 	mov esi, [esp + 28]	; str
@@ -83,11 +81,7 @@ _intToBase:
 	jmp .reverseLoop
 	
 .return:
-	pop eax
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx, eax
 	ret
 	
 	
@@ -96,10 +90,7 @@ _intToBase:
 	
 	align 16
 _intToBase64:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	sub esp, 68
 	mov edx, [esp + 92]
 	mov eax, [esp + 88]
@@ -306,10 +297,7 @@ _intToBase64:
 	
 .return:
 	add esp, 68
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	align 16
@@ -355,8 +343,5 @@ _intToBase64:
 	mov [eax], di
 	
 	add esp, 68
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret

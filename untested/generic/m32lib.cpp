@@ -2,6 +2,7 @@
 #include <cstdarg>
 #include <cstring>
 #include <cmath>
+#include <cwchar>
 #include "idaStuff.h"
 
 size_t szappend(char *dest, const char *src, size_t location);
@@ -20,16 +21,12 @@ inline size_t lstrlenA(const char *str)
 
 int a2dw(const char *str)
 {
-	const char *v1;
-	size_t i; 
 	int result;
-	size_t lp;
-	int current;
 	
-	for ( i = lstrlenA(str); i; --i )
+	for ( size_t i = lstrlenA(str); i; --i )
 	{
-		lp = i - 1;
-		current = (uint8_t)(*str - 48);
+		auto lp = i - 1;
+		int current = (uint8_t)(*str - 48);
 		while (lp)
 		{
 			current *= 10;
@@ -76,16 +73,9 @@ ssize_t arr2text(void **arr, void *pmem)
 
 void **arr_add(void **arr, size_t cnt, size_t plus)
 {
-	void **result;
-	size_t i;
-	
-	result = &arr[cnt];
-	i = -1 * cnt;
-	do
-	{
-		result[i] = (char *)result[i] + plus;
-		++i;
-	} while ( i * 4 );
+	void **result = &arr[cnt];
+	for (size_t i = -1 * cnt; i * 4; ++i)
+		result[i] = (void *)((uintptr_t)result[i] + plus);
 	return result;
 }
 
@@ -109,48 +99,30 @@ void *arrget(void **arr, ssize_t indx)
 
 size_t arrlen(void **arr, size_t indx)
 {
-	return *((uint32_t *)arr[indx] - 1);
+	return *((uintptr_t *)arr[indx] - 1);
 }
 
 void **arr_mul(void **arr, size_t cnt, int mult)
 {
-	void **result;
-	size_t i;
-	
-	result = &arr[cnt];
-	i = -1 * cnt;
-	do
-	{
-		result[i] = (void *)((uint32_t)result[i] * mult);
-		++i;
-	} while ( i * 4 );
+	void **result = &arr[cnt];
+	for (size_t i = -1 * cnt; i * 4; ++i)
+		result[i] = (void *)((uintptr_t)result[i] * mult);
 	return result;
 }
 
-void **arr_sub(void **arr, size_t cnt, int mult)
+void **arr_sub(void **arr, size_t cnt, int sub)
 {
-	void **result;
-	size_t i;
-	
-	result = &arr[cnt];
-	i = -1 * cnt;
-	do
-	{
-		result[i] = (char *)result[i] - mult;
-		++i;
-	} while ( i * 4 );
+	void **result = &arr[cnt];
+	for (size_t i = -1 * cnt; i * 4; ++i)
+		result[i] = (void *)((uintptr_t)result[i] - sub);
 	return result;
 }
 
 char *arrtotal(void **arr, bool crlf)
 {
-	char *thisIsStupid;
-	char *total; 
-	signed int i;
-	
-	thisIsStupid = (char *)*arr;
-	total = NULL;
-	i = 1;
+	char *thisIsStupid = (char *)*arr;
+	char *total = NULL;
+	ssize_t i = 1;
 	
 	do
 	{
@@ -164,21 +136,17 @@ char *arrtotal(void **arr, bool crlf)
 
 int32_t atodw(const char *string)
 {
-	uint32_t retVal; 
-	int32_t weirdThingo;
-	uint8_t currentCharacter; 
-	const char *ptr;
-	
-	retVal = 0;
-	weirdThingo = 0;
-	currentCharacter = *string;
-	ptr = string + 1;
+	uint32_t retVal = 0;
+	int32_t weirdThingo = 0;
+	uint8_t currentCharacter = *string;
+	const char *ptr = string + 1;
 	if ( currentCharacter == 2 )
 	{
 		currentCharacter = *ptr;
 		weirdThingo = -1;
 		ptr = string + 2;
 	}
+	
 	while ( currentCharacter )
 	{
 		currentCharacter = currentCharacter - '0';
@@ -190,27 +158,20 @@ int32_t atodw(const char *string)
 
 long atol(const char *str)
 {
-	bool isNegative;
-	unsigned long currentCharacter;
-	const char *ptr;
-	long result;
-	bool isInvalid; 
-	long convertedChar;
-	
-	isNegative = false;
-	currentCharacter = *str;
-	ptr = str + 1;
+	bool isNegative = false;
+	unsigned long currentCharacter = *str;
+	const char *ptr = str + 1;
 	if ( currentCharacter == '-' )
 	{
 		isNegative = true;
 		currentCharacter = *ptr;
 		ptr = str + 2;
 	}
-	result = 0;
+	long result = 0;
 	while ( 1 )
 	{
-		isInvalid = currentCharacter < '0';
-		convertedChar = currentCharacter - '0';
+		bool isInvalid = currentCharacter < '0';
+		long convertedChar = currentCharacter - '0';
 		if ( isInvalid )
 			break;
 		result = convertedChar + 10 * result;
@@ -226,37 +187,25 @@ constexpr uint32_t bintable[0x200] =
 	'0000', '0000', '0000', '1000', '0000', '0100', '0000', '1100', '0000', '0010', '0000', '1010', '0000', '0110', '0000', '1110', '0000', '0001', '0000', '1001', '0000', '0101', '0000', '1101', '0000', '0011', '0000', '1011', '0000', '0111', '0000', '1111', '1000', '0000', '1000', '1000', '1000', '0100', '1000', '1100', '1000', '0010', '1000', '1010', '1000', '0110', '1000', '1110', '1000', '0001', '1000', '1001', '1000', '0101', '1000', '1101', '1000', '0011', '1000', '1011', '1000', '0111', '1000', '1111', '0100', '0000', '0100', '1000', '0100', '0100', '0100', '1100', '0100', '0010', '0100', '1010', '0100', '0110', '0100', '1110', '0100', '0001', '0100', '1001', '0100', '0101', '0100', '1101', '0100', '0011', '0100', '1011', '0100', '0111', '0100', '1111', '1100', '0000', '1100', '1000', '1100', '0100', '1100', '1100', '1100', '0010', '1100', '1010', '1100', '0110', '1100', '1110', '1100', '0001', '1100', '1001', '1100', '0101', '1100', '1101', '1100', '0011', '1100', '1011', '1100', '0111', '1100', '1111', '0010', '0000', '0010', '1000', '0010', '0100', '0010', '1100', '0010', '0010', '0010', '1010', '0010', '0110', '0010', '1110', '0010', '0001', '0010', '1001', '0010', '0101', '0010', '1101', '0010', '0011', '0010', '1011', '0010', '0111', '0010', '1111', '1010', '0000', '1010', '1000', '1010', '0100', '1010', '1100', '1010', '0010', '1010', '1010', '1010', '0110', '1010', '1110', '1010', '0001', '1010', '1001', '1010', '0101', '1010', '1101', '1010', '0011', '1010', '1011', '1010', '0111', '1010', '1111', '0110', '0000', '0110', '1000', '0110', '0100', '0110', '1100', '0110', '0010', '0110', '1010', '0110', '0110', '0110', '1110', '0110', '0001', '0110', '1001', '0110', '0101', '0110', '1101', '0110', '0011', '0110', '1011', '0110', '0111', '0110', '1111', '1110', '0000', '1110', '1000', '1110', '0100', '1110', '1100', '1110', '0010', '1110', '1010', '1110', '0110', '1110', '1110', '1110', '0001', '1110', '1001', '1110', '0101', '1110', '1101', '1110', '0011', '1110', '1011', '1110', '0111', '1110', '1111', '0001', '0000', '0001', '1000', '0001', '0100', '0001', '1100', '0001', '0010', '0001', '1010', '0001', '0110', '0001', '1110', '0001', '0001', '0001', '1001', '0001', '0101', '0001', '1101', '0001', '0011', '0001', '1011', '0001', '0111', '0001', '1111', '1001', '0000', '1001', '1000', '1001', '0100', '1001', '1100', '1001', '0010', '1001', '1010', '1001', '0110', '1001', '1110', '1001', '0001', '1001', '1001', '1001', '0101', '1001', '1101', '1001', '0011', '1001', '1011', '1001', '0111', '1001', '1111', '0101', '0000', '0101', '1000', '0101', '0100', '0101', '1100', '0101', '0010', '0101', '1010', '0101', '0110', '0101', '1110', '0101', '0001', '0101', '1001', '0101', '0101', '0101', '1101', '0101', '0011', '0101', '1011', '0101', '0111', '0101', '1111', '1101', '0000', '1101', '1000', '1101', '0100', '1101', '1100', '1101', '0010', '1101', '1010', '1101', '0110', '1101', '1110', '1101', '0001', '1101', '1001', '1101', '0101', '1101', '1101', '1101', '0011', '1101', '1011', '1101', '0111', '1101', '1111', '0011', '0000', '0011', '1000', '0011', '0100', '0011', '1100', '0011', '0010', '0011', '1010', '0011', '0110', '0011', '1110', '0011', '0001', '0011', '1001', '0011', '0101', '0011', '1101', '0011', '0011', '0011', '1011', '0011', '0111', '0011', '1111', '1011', '0000', '1011', '1000', '1011', '0100', '1011', '1100', '1011', '0010', '1011', '1010', '1011', '0110', '1011', '1110', '1011', '0001', '1011', '1001', '1011', '0101', '1011', '1101', '1011', '0011', '1011', '1011', '1011', '0111', '1011', '1111', '0111', '0000', '0111', '1000', '0111', '0100', '0111', '1100', '0111', '0010', '0111', '1010', '0111', '0110', '0111', '1110', '0111', '0001', '0111', '1001', '0111', '0101', '0111', '1101', '0111', '0011', '0111', '1011', '0111', '0111', '0111', '1111', '1111', '0000', '1111', '1000', '1111', '0100', '1111', '1100', '1111', '0010', '1111', '1010', '1111', '0110', '1111', '1110', '1111', '0001', '1111', '1001', '1111', '0101', '1111', '1101', '1111', '0011', '1111', '1011', '1111', '0111', '1111', '1111'
 };
 
-int byt2bin_ex(uint8_t var, char *buffer)
+uint8_t byt2bin_ex(uint8_t var, char *buffer)
 {
-	int result;
-	
-	result = var;
 	*(uint32_t *)buffer = bintable[2 * var];
 	*((uint32_t *)buffer + 1) = bintable[2 * var + 1];
 	buffer[8] = 0;
-	return result;
+	return var;
 }
 
-int BMBinSearch(size_t startpos, uint8_t *src, int srcLength, uint8_t *subStr, int subLength)
+ptrdiff_t BMBinSearch(size_t startpos, uint8_t *src, ssize_t srcLength, uint8_t *subStr, ssize_t subLength)
 {
-	ssize_t subLengthMin1;
-	uint8_t *currentSubPtr; 
-	uint8_t currentBufferOffset;
-	uint8_t *i;
-	ssize_t weirdThingo;
-	uint8_t currentIByte;
-	uint8_t currentIByte2;
-	ssize_t currentBufferByte;
 	ssize_t shiftTable[0x100];
-	ssize_t savedSubLengthMin1; 
 	
 	if ( subLength <= 1 )
 		return -2;
 	
-	memset32(shiftTable, subLength, 0x100u);
-	subLengthMin1 = subLength - 1;
-	currentSubPtr = subStr;
-	currentBufferOffset = 0;
+	memsetType(shiftTable, subLength, _countof(shiftTable));
+	ssize_t subLengthMin1 = subLength - 1;
+	uint8_t *currentSubPtr = subStr;
+	uint8_t currentBufferOffset = 0;
 	
 	do
 	{
@@ -265,17 +214,19 @@ int BMBinSearch(size_t startpos, uint8_t *src, int srcLength, uint8_t *subStr, i
 	} while ( subLengthMin1 );
 	
 	subLengthMin1 = subLength - 1;
-	savedSubLengthMin1 = subLength - 1;
-	i = &src[startpos];
+	ssize_t savedSubLengthMin1 = subLength - 1;
+	uint8_t *i = &src[startpos];
 	
+	ssize_t weirdThingo;
 	do
 	{
-		currentIByte = i[subLengthMin1];
-		
+		uint8_t currentIByte = i[subLengthMin1];
+		uint8_t currentIByte2 = 0;
+		ssize_t currentBufferByte = shiftTable[currentIByte2];
+			
 		if ( currentIByte == subStr[subLengthMin1] )
 		{
 			--subLengthMin1;
-			currentIByte2 = 0;
 			
 			while ( 1 )
 			{
@@ -286,7 +237,6 @@ int BMBinSearch(size_t startpos, uint8_t *src, int srcLength, uint8_t *subStr, i
 					return i - src;
 			}
 			
-			currentBufferByte = shiftTable[currentIByte2];
 			
 			if ( subLength != currentBufferByte )
 			{
@@ -312,76 +262,51 @@ addSuffixShift:
 	return -1;
 }
 
-int8_t *BinSearch(int stpos, uint8_t *src, ssize_t slen, uint8_t *patn, ssize_t plen)
+uint8_t *BinSearch(int stpos, uint8_t *src, ssize_t slen, uint8_t *patn, ssize_t plen)
 {
-	ssize_t slenMinPlen;
-	uint8_t *srcSlenMinPlen;
-	uint8_t *srcStPosMin1;
-	ssize_t i;
-	int8_t *result;
-	ssize_t plenMin1;
-	
-	slenMinPlen = slen - plen;
+	ssize_t slenMinPlen = slen - plen;
+	uint8_t *result;
 	if ( slen - plen < 0 )
-		result = (int8_t *)-2;
+		result = (uint8_t *)-2;
 	else if ( stpos > slenMinPlen )
-		result = (int8_t *)-3;
+		result = (uint8_t *)-3;
 	else
 	{
-		srcSlenMinPlen = &src[slenMinPlen];
-		plenMin1 = plen - 1;
-		srcStPosMin1 = &src[stpos - 1];
+		uint8_t *srcSlenMinPlen = &src[slenMinPlen];
+		ssize_t plenMin1 = plen - 1;
+		uint8_t *srcStPosMin1 = &src[stpos - 1];
 		while ( (intptr_t)++srcStPosMin1 <= (intptr_t)srcSlenMinPlen )
 		{
 			if ( *srcStPosMin1 == *patn )
 			{
-				i = -1;
+				ssize_t i = -1;
 				while ( 1 )
 				{
 					++i;
 					if ( srcStPosMin1[i] != patn[i] )
 						break;
 					if ( i == plenMin1 )
-						return (int8_t *)(srcStPosMin1 - src);
+						return (uint8_t *)(srcStPosMin1 - src);
 				}
 			}
 		}
-		result = (int8_t *)-1;
+		result = (uint8_t *)-1;
 	}
 	return result;
 }
 
-constexpr unsigned char Cmpi_tbl[0x100] =
+constexpr uint8_t Cmpi_tbl[0x100] =
 {
-	0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-	32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-	48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-	64, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,
-	112,113,114,115,116,117,118,119,120,121,122, 91, 92, 93, 94, 95,
-	96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,
-	112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
-	128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,
-	144,145,146,147,148,149,150,151,152,153,154,155,156,156,158,159,
-	160,161,162,163,164,165,166,167,168,169,170,171,172,173,173,175,
-	176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
-	192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,
-	208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
-	224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,
-	240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,
+	0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111, 112,113,114,115,116,117,118,119,120,121,122, 91, 92, 93, 94, 95, 96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111, 112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127, 128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143, 144,145,146,147,148,149,150,151,152,153,154,155,156,156,158,159, 160,161,162,163,164,165,166,167,168,169,170,171,172,173,173,175, 176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191, 192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207, 208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223, 224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239, 240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,
 };
 
-size_t Cmpi(uint8_t *src, uint8_t *dst)
+size_t Cmpi(uint8_t *src,uint8_t *dst)
 {
-	int i;
-	int currentDstByte;
-	uint8_t currentCmpiSrcByte;
-	
-	i = 0;
+	int i = 0;
 	while ( 1 )
 	{
-		currentDstByte = dst[i];
-		currentCmpiSrcByte = Cmpi_tbl[src[i++]];
+		uint8_t currentDstByte = dst[i];
+		uint8_t currentCmpiSrcByte = Cmpi_tbl[src[i++]];
 		if ( currentCmpiSrcByte != Cmpi_tbl[currentDstByte] )
 			break;
 		if ( !currentCmpiSrcByte )
@@ -390,68 +315,24 @@ size_t Cmpi(uint8_t *src, uint8_t *dst)
 	return i;
 }
 
-bool cmpmem(const uint8_t *mem1, const uint8_t *mem2, size_t size)
-{
-	int i;
-	size_t szCpy;
-	size_t szInDwords;
-	
-	i = 0;
-	szCpy = size;
-	
-	if ( size < 4 )
-	{
-under:
-		while ( mem1[i] == mem2[i] )
-		{
-			++i;
-			if ( !--szCpy )
-				return 1;
-		}
-	}
-	else
-	{
-		szInDwords = size >> 2;
-		while ( *(uint32_t *)&mem1[i] == *(uint32_t *)&mem2[i] )
-		{
-			i += 4;
-			if ( !--szInDwords )
-			{
-				szCpy = size & 3;
-				if ( size & 3 )
-					goto under;
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-
 void CombSortA(int32_t *arr, ssize_t arraySize)
 {
-	double funWithFloatingPoint;
-	ssize_t i;
-	int32_t toBeCompared2;
-	int32_t toBeCompared;
+	ssize_t arraySizeMin1  = arraySize - 1;
 	size_t swaps;
-	ssize_t arraySizeMin1;
-	
-	arraySizeMin1 = arraySize - 1;
-	
 	do
 	{
-		funWithFloatingPoint = (double)arraySize / 1.3;
+		double funWithFloatingPoint = (double)arraySize / 1.3;
 		arraySize = (signed int)funWithFloatingPoint - 1;
 		if ( (signed int)funWithFloatingPoint == 1 )
 			arraySize = 1;
 		
 		swaps = 0;
-		i = 0;
+		ssize_t i = 0;
 		
 		do
 		{
-			toBeCompared2 = arr[i];
-			toBeCompared = arr[arraySize + i];
+			int32_t toBeCompared2 = arr[i];
+			int32_t toBeCompared = arr[arraySize + i];
 			if ( toBeCompared2 > toBeCompared )
 			{
 				arr[arraySize + i] = toBeCompared2;
@@ -465,29 +346,23 @@ void CombSortA(int32_t *arr, ssize_t arraySize)
 
 void CombSortD(int32_t *arr, ssize_t arraySize)
 {
-	double funWithFloatingPoint;
-	ssize_t i;
-	int32_t toBeCompared; 
-	int32_t toBeCompared2;
+	ssize_t arraySizeMin1 = arraySize - 1;
+	
 	ssize_t swaps;
-	ssize_t arraySizeMin1;
-	
-	arraySizeMin1 = arraySize - 1;
-	
 	do
 	{
-		funWithFloatingPoint = (double)arraySize / 1.3;
+		double funWithFloatingPoint = (double)arraySize / 1.3;
 		arraySize = (signed int)funWithFloatingPoint - 1;
 		if ( (signed int)funWithFloatingPoint == 1 )
 			arraySize = 1;
 		
 		swaps = 0;
-		i = 0;
+		ssize_t i = 0;
 		
 		do
 		{
-			toBeCompared = arr[i];
-			toBeCompared2 = arr[arraySize + i];
+			int32_t toBeCompared = arr[i];
+			int32_t toBeCompared2 = arr[arraySize + i];
 			if ( toBeCompared < toBeCompared2 )
 			{
 				arr[arraySize + i] = toBeCompared;
@@ -501,14 +376,10 @@ void CombSortD(int32_t *arr, ssize_t arraySize)
 
 int8_t decomment(char *src)
 {
-	ssize_t arrIter;
-	ssize_t i; 
-	int8_t result;
-	char last;
+	ssize_t i;	
+	ssize_t arrIter = -1;
 	
-	arrIter = -1;
-	
-	for ( i = 0; ; i = arrIter )
+	for (i = 0; ; i = arrIter )
 	{
 		do
 		{
@@ -547,7 +418,9 @@ storeit:
 		;
 	}
 	src[i + 1] = 0;
-	last = src[i];
+	char last = src[i];
+	
+	int8_t result;
 	if ( last == ',' )
 		result = 1;
 	else
@@ -557,22 +430,16 @@ storeit:
 
 void dissort(const char **arr, ssize_t cnt)
 {
-	ssize_t i;
-	const char *swapittySwapped;
-	ssize_t j;
-	const char *arrayiThingo;
-	signed int k;
-	char comparedThingo;
-	
-	for ( i = 1; i < cnt; ++i )
+	for ( ssize_t i = 1; i < cnt; ++i )
 	{
-		swapittySwapped = arr[i];
-		j = i;
+		const char *swapittySwapped = arr[i];
+		ssize_t j = i;
 		
 inner:
-		arrayiThingo = arr[j - 1];
-		k = -1;
+		const char *arrayiThingo = arr[j - 1];
+		ssize_t k = -1;
 		
+		char comparedThingo;
 		do
 		{
 			comparedThingo = arrayiThingo[++k];
@@ -596,32 +463,25 @@ inner:
 
 void dw2ah(uint32_t value, char *buffer)
 {
-	char *revBuf;
-	uint8_t andedVal;
-	uint8_t tmp; 
-	uint32_t roredVal;
-	
 	*((uint16_t *)buffer + 4) = 'H';
-	revBuf = buffer + 7;
+	char *revBuf = buffer + 7;
 	do
 	{
-		andedVal = value & 0xF;
+		uint8_t andedVal = value & 0xF;
 		
+		uint8_t tmp;
 		if ( (value & 0xF) >= 0xA )
 			tmp = andedVal + '7';
 		else
 			tmp = andedVal + '0';
 		*revBuf-- = tmp;
-		roredVal = __ROR4__(value, 4);
-		value = roredVal;
+		value = __ROR4__(value, 4);
 	} while ( revBuf >= buffer );
 }
 
 void dw2bin_ex(int var, char *buffer)
-{
-	uint8_t tmp;
-	
-	tmp = BYTE3(var);
+{	
+	uint8_t tmp = BYTE3(var);
 	*(uint64_t *)buffer = *(uint64_t *)&bintable[2 * BYTE3(var)];
 	tmp = BYTE2(var);
 	*((uint32_t *)buffer + 2) = bintable[2 * tmp];
@@ -642,9 +502,7 @@ constexpr uint16_t hex_table[0x100] =
 
 void dw2hex_ex(uint32_t src, char *buf)
 {
-	uint32_t tmp;
-	
-	tmp = *(uint32_t *)&hex_table[(uint8_t)src] << 16;
+	uint32_t tmp = *(uint32_t *)&hex_table[(uint8_t)src] << 16;
 	LOWORD(tmp) = hex_table[BYTE1(src)];
 	*((uint32_t *)buf + 1) = tmp;
 	tmp = *(uint32_t *)&hex_table[BYTE2(src)] << 16;
@@ -655,9 +513,6 @@ void dw2hex_ex(uint32_t src, char *buf)
 
 void dwtoa(int32_t value, char *buffer)
 {
-	char *origBuffer;
-	int32_t tmpVal;
-	
 	if ( !value )
 	{
 		buffer[0] = '0';
@@ -672,11 +527,11 @@ void dwtoa(int32_t value, char *buffer)
 			++buffer;
 		}
 		
-		origBuffer = buffer;
+		char *origBuffer = buffer;
 		
 		while ( value )
 		{
-			tmpVal = value;
+			int32_t tmpVal = value;
 			value /= 10;
 			*buffer++ = tmpVal - 10 * value + '0';
 		}
@@ -694,19 +549,16 @@ void dwtoa(int32_t value, char *buffer)
 	}
 }
 
-int get_line_count(char *mem, size_t blen)
-{
-	signed int i;
-	int result;
-	
+size_t get_line_count(char *mem, size_t blen)
+{	
 	if ( *(uint16_t *)&mem[blen - 2] != '\n\r' )
 	{
 		*(uint16_t *)&mem[blen] = '\n\r';
 		mem[blen + 2] = 0;
 	}
 	
-	i = -1;
-	result = 0;
+	ssize_t i = -1;
+	size_t result = 0;
 	
 	while ( mem[++i] )
 	{
@@ -719,22 +571,13 @@ int get_line_count(char *mem, size_t blen)
 
 size_t get_ml(const char *src, char *dst, size_t rpos)
 {
-	const char *srcPlusRpos;
-	size_t i;
-	size_t k;
-	size_t l;
-	char tmpChar; 
-	size_t j;
-	char tmpChar2;
-	char tmpChar3;
+	size_t bsflag = 0;
+	const char *srcPlusRpos = &src[rpos];
+	size_t i = 0;
+	size_t k = 0;
+	size_t l = 0;
 	size_t result;
-	size_t bsflag;
-	
-	bsflag = 0;
-	srcPlusRpos = &src[rpos];
-	i = 0;
-	k = 0;
-	l = 0;
+	char tmpChar;
 	
 leadTrim:
 	while ( 1 )
@@ -748,28 +591,28 @@ leadTrim:
 			{
 				while ( 1 )
 				{
-					tmpChar2 = srcPlusRpos[i++];
-					if ( !tmpChar2 )
+					tmpChar = srcPlusRpos[i++];
+					if ( !tmpChar )
 						break;
-					if ( tmpChar2 == '\n' )
+					if ( tmpChar == '\n' )
 						goto leadTrim;
 				}
 			}
 			else
 			{
-				j = i - 1;
+				size_t j = i - 1;
 				
 				while ( 1 )
 				{
 					do
 					{
 mainText:	
-						tmpChar2 = srcPlusRpos[j++];
-						if ( !tmpChar2 )
+						tmpChar = srcPlusRpos[j++];
+						if ( !tmpChar )
 							goto setEnd;
-					} while ( tmpChar2 == '\r' );
+					} while ( tmpChar == '\r' );
 					
-					if ( tmpChar2 == '\n' )
+					if ( tmpChar == '\n' )
 					{
 testTail:	
 						if ( srcPlusRpos[l - 1] == ',' )
@@ -786,31 +629,31 @@ testTail:
 						goto lastByte;
 					}
 					
-					if ( tmpChar2 == ';' )
+					if ( tmpChar == ';' )
 						break;
 					
-					if ( tmpChar2 == '"' )
+					if ( tmpChar == '"' )
 					{
 						dst[k++] = '"';
 						while ( 1 )
 						{
-							tmpChar3 = srcPlusRpos[j++];
-							dst[k++] = tmpChar3;
+							tmpChar = srcPlusRpos[j++];
+							dst[k++] = tmpChar;
 							
-							if ( !tmpChar3 || tmpChar3 == '\n' )
+							if ( !tmpChar || tmpChar == '\n' )
 								goto qtError;
 							
-							if ( tmpChar3 == '"' )
+							if ( tmpChar == '"' )
 							{
 fTrim:
 								while ( 1 )
 								{
-									tmpChar3 = srcPlusRpos[j++];
+									tmpChar = srcPlusRpos[j++];
 									
-									if ( !tmpChar3 )
+									if ( !tmpChar )
 										goto setEnd;
 									
-									if ( tmpChar3 > ' ' )
+									if ( tmpChar > ' ' )
 									{
 										--j;
 										goto mainText;
@@ -819,31 +662,31 @@ fTrim:
 							}
 						}
 					}
-					if ( tmpChar2 == '\'' )
+					if ( tmpChar == '\'' )
 					{
 						dst[k++] = '\'';
 						
 						while ( 1 )
 						{
-							tmpChar3 = srcPlusRpos[j++];
-							dst[k++] = tmpChar3;
+							tmpChar = srcPlusRpos[j++];
+							dst[k++] = tmpChar;
 							
-							if ( !tmpChar3 || tmpChar3 == '\n' )
+							if ( !tmpChar || tmpChar == '\n' )
 								break;
 							
-							if ( tmpChar3 == '\'' )
+							if ( tmpChar == '\'' )
 								goto fTrim;
 						}
 qtError:		
 						result = -1;
 						goto lastByte;
 					}
-					if ( tmpChar2 > ' ' )
+					if ( tmpChar > ' ' )
 					{
 						l = j;
 						bsflag = k;
 					}
-					dst[k++] = tmpChar2;
+					dst[k++] = tmpChar;
 				}
 				--j;
 				while ( srcPlusRpos[++j] )
@@ -866,23 +709,18 @@ lastByte:
 
 signed int GetPercent(signed int source, signed int percent)
 {
-	return (signed int)((long double)percent * 0.0099999999999999999998 * (long double)source);
+	return (signed int)((double)percent * 0.0099999999999999999998 * (double)source);
 }
 
 void GetPathOnly(const char *src, char *dst)
 {
-	size_t i;
-	char *dstCopy;
-	size_t whereDoWePutTheZero;
-	char currentChar;
-	
-	i = 0;
-	dstCopy = dst;
-	whereDoWePutTheZero = 0;
+	size_t i = 0;
+	char *dstCopy = dst;
+	size_t whereDoWePutTheZero = 0;
 	
 	while ( 1 )
 	{
-		currentChar = *src++;
+		char currentChar = *src++;
 		++i;
 		
 		if ( !currentChar )
@@ -899,27 +737,19 @@ void GetPathOnly(const char *src, char *dst)
 
 int htodw(const char *str)
 {
-	const char *endStrPtr;
-	size_t minStrlen;
-	int retVal;
-	char part2;
-	int i;
-	char currentChar;
-	char tmpVal;
+	const char *endStrPtr = str;
+	while (*endStrPtr++)
+		;
 	
-	endStrPtr = str;
-	do
-		currentChar = *endStrPtr++;
-	while ( currentChar );
+	size_t minStrlen = str - endStrPtr;
+	int retVal = 0;
+	char part2 = 0;
 	
-	minStrlen = str - endStrPtr;
-	retVal = 0;
-	part2 = 0;
-	
-	for ( i = ~minStrlen; i; --i )
+	for ( int i = ~minStrlen; i; --i )
 	{
-		currentChar = *str;
+		char currentChar = *str;
 		
+		char tmpVal;
 		if ( *str < 'A' )
 			tmpVal = currentChar - '0';
 		else
@@ -937,30 +767,23 @@ int htodw(const char *str)
 
 ssize_t InString(ssize_t startPos, const char *source, const char *pattern)
 {
-	ssize_t patternLen;
 	ssize_t result;
-	const char *sourcePlusSourceLenMinPatternLenPlus1; 
-	ssize_t startPosMin1MinSourceLenMinPatternLenPlus1;
-	ssize_t patternLenCpy;
-	ssize_t sourceLen;
-	ssize_t sourceLenMinPatternLenPlus1;
-	ssize_t startPosMin1;
 	
-	sourceLen = strlen(source);
-	patternLen = strlen(pattern);
+	ssize_t sourceLen = strlen(source);
+	ssize_t patternLen = strlen(pattern);
 	
 	if ( startPos >= 1 )
 	{
-		startPosMin1 = startPos - 1;
+		ssize_t startPosMin1 = startPos - 1;
 		
 		if ( patternLen < sourceLen )
 		{
-			sourceLenMinPatternLenPlus1 = sourceLen - patternLen + 1;
+			ssize_t sourceLenMinPatternLenPlus1 = sourceLen - patternLen + 1;
 			
 			if ( sourceLenMinPatternLenPlus1 > startPosMin1 )
 			{
-				sourcePlusSourceLenMinPatternLenPlus1 = &source[sourceLenMinPatternLenPlus1];
-				startPosMin1MinSourceLenMinPatternLenPlus1 = startPosMin1 - sourceLenMinPatternLenPlus1;
+				const char *sourcePlusSourceLenMinPatternLenPlus1 = &source[sourceLenMinPatternLenPlus1];
+				ssize_t startPosMin1MinSourceLenMinPatternLenPlus1 = startPosMin1 - sourceLenMinPatternLenPlus1;
 scanLoop:
 				while ( *pattern != sourcePlusSourceLenMinPatternLenPlus1[startPosMin1MinSourceLenMinPatternLenPlus1] )
 				{
@@ -968,7 +791,7 @@ scanLoop:
 						return 0;
 				}
 				
-				patternLenCpy = patternLen;
+				ssize_t patternLenCpy = patternLen;
 				
 				do
 				{
@@ -1055,8 +878,8 @@ bool isupper(char ch)
 
 size_t lfcnt(char *str)
 {
-	size_t result = 0;
 	--str;
+	size_t result = 0;
 	while ( *++str )
 	{
 		if ( *str == '\n' )
@@ -1067,55 +890,18 @@ size_t lfcnt(char *str)
 
 void MemCopy(const void *src, void *dst, size_t count)
 {
-	memcpy(dst, src, count);
+	qmemcpy(dst, src, count);
 }
 
 void memfill(void *buffer, size_t cnt, int fill)
 {
-	uint32_t *buf32;
-	size_t i;
-	size_t loopCnt; 
-	size_t smallCnt;
-	
-	buf32 = (uint32_t *)buffer;
-	
-	for ( i = cnt >> 5; i; --i )
-	{
-		*buf32 = fill;
-		buf32[1] = fill;
-		buf32[2] = fill;
-		buf32[3] = fill;
-		buf32[4] = fill;
-		buf32[5] = fill;
-		buf32[6] = fill;
-		buf32[7] = fill;
-		buf32 += 8;
-	}
-	
-	smallCnt = cnt & 0x1F;
-	if ( smallCnt )
-	{
-		loopCnt = smallCnt >> 2;
-		do
-		{
-			*buf32 = fill;
-			++buf32;
-			--loopCnt;
-		} while ( loopCnt );
-	}
+	memset(buffer, fill, cnt);
 }
 
 int NameFromPath(const char *src, char *dst)
 {
-	size_t j;  
-	ssize_t i; 
-	const char *srcPtr; 
-	ssize_t k;
-	char currentChar; 
-	signed int result;
-	
-	j = (size_t)src;
-	i = -1;
+	size_t j = (size_t)src;
+	ssize_t i = -1;
 	
 	while ( src[++i] )
 	{
@@ -1123,19 +909,13 @@ int NameFromPath(const char *src, char *dst)
 			j = i;
 	}
 	
+	int result;
 	if ( j == (size_t)src )
 		result = -1;
 	else
 	{
-		srcPtr = &src[j + 1];
-		k = -1;
-		
-		do
-		{
-			currentChar = srcPtr[++k];
-			dst[k] = currentChar;
-		} while ( currentChar );
-		
+		const char *srcPtr = &src[j + 1];
+		strcpy(dst, srcPtr);
 		result = 0;
 	}
 	return result;
@@ -1145,10 +925,8 @@ int nrandom_seed = 12345678;
 
 uint32_t nrandom(uint32_t base)
 {
-	uint32_t tmp;
-	
-	tmp = nrandom_seed;
-	if ( nrandom_seed & 0x80000000 )
+	uint32_t tmp = nrandom_seed;
+	if ( nrandom_seed < 0 )
 		tmp = nrandom_seed + 0x7FFFFFFF;
 	nrandom_seed = 16807 * (tmp % 127773) - 2836 * (tmp / 127773);
 	return (16807 * (tmp % 127773) - 2836 * (tmp / 127773)) % base;
@@ -1164,17 +942,11 @@ constexpr bool ctbl[256] =
 	true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, true, false, false, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, false, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
 };
 
-
 int parse_line(const char *src, char **array)
 {
-	char *firstArrayMember;
-	char currentChar;
-	int argCounter; 
-	char currentChar2;
-	
-	firstArrayMember = *array;
-	currentChar = 0;
-	argCounter = 0;
+	char *firstArrayMember = *array;
+	char currentChar = 0;
+	int argCounter = 0;
 	
 	do
 	{
@@ -1198,7 +970,7 @@ gaOut:
 			*firstArrayMember++ = '"';
 			while ( 1 )
 			{
-				currentChar2 = *src++;
+				char currentChar2 = *src++;
 				if ( !currentChar2 )
 					return argCounter;
 				*firstArrayMember++ = currentChar2;
@@ -1239,26 +1011,17 @@ reIndex:
 
 size_t partial(size_t starat, const char *src, const char *pattern)
 {
-	const char *patMin1;
-	const char *afterFillerChars;
-	ssize_t i;
-	char currentChar;
-	const char *exitOffset;
-	size_t patternLength;
-	size_t srcLength;
+	const char *src2 = &src[starat];
+	size_t patternLength = strlen(pattern);
+	size_t srcLength = strlen(src2);
+	const char *patMin1 = pattern - 1;
+	
 	size_t fillerChars;
-	const char *src2;
-	
-	src2 = &src[starat];
-	patternLength = strlen(pattern);
-	srcLength = strlen(src2);
-	patMin1 = pattern - 1;
-	
 	for ( fillerChars = 0; *++patMin1 == '*'; ++fillerChars )
 		;
 	
-	afterFillerChars = &src2[fillerChars - 1];
-	exitOffset = &afterFillerChars[fillerChars] + srcLength - patternLength;
+	const char *afterFillerChars = &src2[fillerChars - 1];
+	const char *exitOffset = &afterFillerChars[fillerChars] + srcLength - patternLength;
 	
 mainLoop:
 	while ( *++afterFillerChars != *patMin1 )
@@ -1267,11 +1030,11 @@ mainLoop:
 			return -1;
 	}
 	
-	i = -1;
+	ssize_t i = -1;
 	
 	while ( ++i <= (ssize_t)(patternLength - fillerChars - 1) )
 	{
-		currentChar = patMin1[i];
+		char currentChar = patMin1[i];
 		if ( currentChar != '*' && currentChar != afterFillerChars[i] )
 			goto mainLoop;
 	}
@@ -1281,17 +1044,12 @@ mainLoop:
 
 void RolData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 {
-	uint8_t currentByte;
-	uint8_t currentKeyByte;
-	uint8_t bvar;
-	uint8_t *pcnt;
-	
-	pcnt = key;
-	bvar = *key;
+	uint8_t *pcnt = key;
+	uint8_t bvar = *key;
 	do
 	{
-		currentByte = __ROL1__(*src, bvar);
-		currentKeyByte = *++pcnt;
+		uint8_t currentByte = __ROL1__(*src, bvar);
+		uint8_t currentKeyByte = *++pcnt;
 		if ( pcnt == &key[keyLength] )
 		{
 			pcnt = key;
@@ -1305,17 +1063,12 @@ void RolData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 
 void RorData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 {
-	uint8_t currentByte;
-	uint8_t currentKeyByte;
-	uint8_t bvar;
-	uint8_t *pcnt;
-	
-	pcnt = key;
-	bvar = *key;
+	uint8_t *pcnt = key;
+	uint8_t bvar = *key;
 	do
 	{
-		currentByte = __ROR1__(*src, bvar);
-		currentKeyByte = *++pcnt;
+		uint8_t currentByte = __ROR1__(*src, bvar);
+		uint8_t currentKeyByte = *++pcnt;
 		if ( pcnt == &key[keyLength] )
 		{
 			pcnt = key;
@@ -1327,25 +1080,16 @@ void RorData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 	} while ( srcLength );
 }
 
-int SBMBinSearch(size_t startpos, char *src, ssize_t srcLength, const char *subStr, ssize_t subStrLength)
+ptrdiff_t SBMBinSearch(size_t startpos, char *src, ssize_t srcLength, const char *subStr, ssize_t subStrLength)
 {
-	int result;
-	ssize_t subStrLenMin1;
-	const char *subStrCpy;
-	char currentChar;
-	ssize_t subStrLenMin1v2; 
-	char currentChar3;
-	char *srcPlusStartPos;
-	ssize_t shiftTableThingo;
-	char currentChar2;
-	ssize_t shiftTable[256]; 
-	
+	ptrdiff_t result;
 	if ( subStrLength > 1 )
 	{
-		memset32(shiftTable, subStrLength, 0x100u);
-		subStrLenMin1 = subStrLength - 1;
-		subStrCpy = subStr;
-		currentChar = 0;
+		ssize_t shiftTable[256]; 
+		memsetType(shiftTable, subStrLength, _countof(shiftTable));
+		ssize_t subStrLenMin1 = subStrLength - 1;
+		const char *subStrCpy = subStr;
+		char currentChar = 0;
 		
 		do
 		{
@@ -1353,9 +1097,9 @@ int SBMBinSearch(size_t startpos, char *src, ssize_t srcLength, const char *subS
 			shiftTable[currentChar] = subStrLenMin1--;
 		} while ( subStrLenMin1 );
 		
-		subStrLenMin1v2 = subStrLength - 1;
-		currentChar3 = 0;
-		srcPlusStartPos = &src[startpos];
+		ssize_t subStrLenMin1v2 = subStrLength - 1;
+		char currentChar3 = 0;
+		char *srcPlusStartPos = &src[startpos];
 cmpLoop:
 		while ( 1 )
 		{
@@ -1365,9 +1109,11 @@ cmpLoop:
 			if ( --subStrLenMin1 < 0 )
 				return srcPlusStartPos - src;
 		}
-		shiftTableThingo = shiftTable[currentChar3] + subStrLenMin1 - subStrLenMin1v2;
+		ssize_t shiftTableThingo = shiftTable[currentChar3] + subStrLenMin1 - subStrLenMin1v2;
 		if ( shiftTableThingo < 0 )
 			shiftTableThingo = 1;
+		
+		char currentChar2;
 		for ( srcPlusStartPos += shiftTableThingo; (intptr_t)(&src[srcLength] - subStrLength) >= (intptr_t)srcPlusStartPos; srcPlusStartPos += shiftTable[currentChar2] )
 		{
 			currentChar2 = srcPlusStartPos[subStrLenMin1v2];
@@ -1385,14 +1131,25 @@ cmpLoop:
 	return result;
 }
 
+void StripLF(char *src)
+{
+	--src;
+	while ( *++src )
+	{
+		if ( *src == '\r' )
+		{
+			*src = '\0';
+			return;
+		}
+	}
+}
+
 void StripRangeI(const char *source, char *destination, char startByte, char endByte)
 {
-	char currentChar;
-	
 lpSt:
 	while ( 1 )
 	{
-		currentChar = *source++;
+		char currentChar = *source++;
 		
 		if ( !currentChar )
 			break;
@@ -1412,43 +1169,26 @@ lpSt:
 		*destination++ = currentChar;
 	}
 end:
-	*destination = currentChar;
-}
-
-void StripLF(char *src)
-{
-	--src;
-	while ( *++src )
-	{
-		if ( *src == '\r' )
-		{
-			*src = '\0';
-			return;
-		}
-	}
+	*destination = '\0';
 }
 
 void StripRangeX(const char *source, char *destination, char startByte, char endByte)
-{
-	char currentChar;
-	char *destPlus1;
-	char currentChar2;
-	
+{	
 srxSt:
 	while ( 1 )
 	{
-		currentChar = *source++;
+		char currentChar = *source++;
 		if ( !currentChar )
 			break;
 		
 		if ( currentChar == startByte )
 		{
 			*destination = currentChar;
-			destPlus1 = destination + 1;
+			char *destPlus1 = destination + 1;
 			
 			while ( 1 )
 			{
-				currentChar2 = *source++;
+				char currentChar2 = *source++;
 				if ( !currentChar2 )
 					return;
 				
@@ -1467,10 +1207,8 @@ srxSt:
 
 size_t szappend(char *dest, const char *src, size_t location)
 {
-	signed int i;
+	ssize_t i = -1;
 	int currentCharacter;
-	
-	i = -1;
 	do
 	{
 		currentCharacter = src[++i];
@@ -1481,26 +1219,9 @@ size_t szappend(char *dest, const char *src, size_t location)
 
 ssize_t szCmp(const char *str1, const char *str2)
 {
-	ssize_t result;
-	
-	result = -1;
+	ssize_t result = -1;
 	while ( 1 )
 	{
-		++result;
-		if ( str1[result] != str2[result] )
-			break;
-		if ( !str1[result] )
-			return result;
-		++result;
-		if ( str1[result] != str2[result] )
-			break;
-		if ( !str1[result] )
-			return result;
-		++result;
-		if ( str1[result] != str2[result] )
-			break;
-		if ( !str1[result] )
-			return result;
 		++result;
 		if ( str1[result] != str2[result] )
 			break;
@@ -1517,15 +1238,11 @@ constexpr unsigned char szCmpi_tbl[256] =
 
 size_t szCmpi(const char *str1, const char *str2, size_t len)
 {
-	size_t result;
-	int currentCharStr1;
-	int currentCharStr2;
-	
-	result = 0;
+	size_t result = 0;
 	while ( 1 )
 	{
-		currentCharStr1 = str1[result];
-		currentCharStr2 = str2[result++];
+		char currentCharStr1 = str1[result];
+		char currentCharStr2 = str2[result++];
 		if ( szCmpi_tbl[currentCharStr1] != szCmpi_tbl[currentCharStr2] )
 			break;
 		if ( result >= len )
@@ -1534,27 +1251,16 @@ size_t szCmpi(const char *str1, const char *str2, size_t len)
 	return result;
 }
 
-ssize_t szCopy(const char *src, char *dest)
+size_t szCopy(const char *src, char *dest)
 {
-	ssize_t result; 
-	int currentChar;
-	
-	result = -1;
-	do
-	{
-		currentChar = src[++result];
-		dest[result] = currentChar;
-	} while ( currentChar );
-	return result;
+	strcpy(dest, src);
+	return strlen(src);
 }
 
 char *szLeft(const char *src, char *dest, size_t length)
 {
-	char *destination;
-	size_t i;
-	
-	destination = &dest[length];
-	i = -length;
+	char *destination = &dest[length];
+	size_t i = -length;
 	do
 	{
 		destination[i] = *(&src[length] + i);
@@ -1566,29 +1272,12 @@ char *szLeft(const char *src, char *dest, size_t length)
 
 size_t szLen(const char *str)
 {
-	const char *string;
-	
-	string = str - 4;
-	while ( 1 )
-	{
-		string += 4;
-		if ( !*string )
-			break;
-		if ( !string[1] )
-			return string - str + 1;
-		if ( !string[2] )
-			return string - str + 2;
-		if ( !string[3] )
-			return string - str + 3;
-	}
-	return string - str;
+	return strlen(str);
 }
 
-char * szLower(char *str)
+char *szLower(char *str)
 {
-	char *string;
-	
-	string = str - 1;
+	char *string = str - 1;
 	while ( *++string )
 	{
 		if ( *string >= 'A' && *string <= 'Z' )
@@ -1598,12 +1287,8 @@ char * szLower(char *str)
 }
 
 size_t szLtrim(char *src, char *dest)
-{
-	size_t i;
-	size_t result;
-	char currentCharacter;
-	
-	i = 0;
+{	
+	size_t i = 0;
 	--src;
 	do
 	{
@@ -1612,14 +1297,11 @@ size_t szLtrim(char *src, char *dest)
 		while ( *src == ' ' );
 	} while ( *src == '\t' );
 	
+	size_t result;
 	if ( *src )
 	{
-		do
-		{
-			currentCharacter = src[i];
-			dest[i++] = currentCharacter;
-		} while ( currentCharacter );
-		result = i - 1;
+		strcpy(dest, src);
+		result = strlen(src) - 1;
 	}
 	else
 	{
@@ -1631,11 +1313,8 @@ size_t szLtrim(char *src, char *dest)
 
 char *szMid(const char *src, char *dst, size_t stp, size_t length)
 {
-	char *result;
-	size_t revLength;
-	
-	result = &dst[length];
-	revLength = -length;
+	char *result = &dst[length];
+	ssize_t revLength = -length;
 	
 	do
 	{
@@ -1649,13 +1328,10 @@ char *szMid(const char *src, char *dst, size_t stp, size_t length)
 
 char *szMonoSpace(char *src)
 {
-	char *sourceMin1; // ecx@1
-	char *source; // edx@1
-	int currentCharacter; // eax@3 MAPDST
+	char *sourceMin1 = src - 1;
+	char *source = src;
 	
-	sourceMin1 = src - 1;
-	source = src;
-	
+	int currentCharacter;
 	do
 	{
 		do
@@ -1685,45 +1361,16 @@ ftrim:
 
 char *szMultiCat(size_t paramCount, char *buf, ...)
 {
-	size_t i;
-	char *buffer;
-	char *currentParam;
-	char currentChar;
 	va_list va;
-	
 	va_start(va, buf);
-	i = 0;
-	buffer = buf - 1;
+	
+	size_t i = 0;
 	
 	do
 	{
-		if ( !*++buffer )
-			break;
-		++buffer;
-	} while ( *buffer );
-	
-	do
-	{
-		--buffer;
-		currentParam = ((char **)va)[i];
-		
-		do
-		{
-			++buffer;
-			currentChar = *currentParam;
-			*buffer = currentChar;
-			++currentParam;
-			if ( !currentChar )
-				break;
-			
-			++buffer;
-			currentChar = *currentParam;
-			*buffer = currentChar;
-			++currentParam;
-		} while ( currentChar );
-		
+		char *currentParam = ((char **)va)[i];
+		strcat(buf, currentParam);
 		++i;
-		
 	} while ( i != paramCount );
 	
 	return buf;
@@ -1731,12 +1378,8 @@ char *szMultiCat(size_t paramCount, char *buf, ...)
 
 char *szRemove(const char *src, char *dest, const char *remove)
 {
-	char firstRemChar;
-	char *destination;
-	size_t i;
-	
-	firstRemChar = *remove;
-	destination = dest;
+	char firstRemChar = *remove;
+	char *destination = dest;
 	--src;
 	
 	while ( 1 )
@@ -1746,30 +1389,12 @@ char *szRemove(const char *src, char *dest, const char *remove)
 scanLoop:
 		if ( *src == firstRemChar )
 		{
-			
-			i = 0;
+			size_t i = 0;
 			
 			while ( src[i] == remove[i] )
 			{
 				if ( remove[++i] )
-				{
-					if ( src[i] != remove[i] )
-						break;
-					
-					if ( remove[++i] )
-					{
-						if ( src[i] != remove[i] )
-							break;
-					
-						if ( remove[++i] )
-						{
-							if ( src[i] != remove[i] )
-								break;
-							if ( remove[++i] )
-								continue;
-						}
-					}
-				}
+					continue;
 				
 				src += i;
 				goto scanLoop;
@@ -1786,15 +1411,12 @@ scanLoop:
 
 void szRep(const char *src, char *dest, const char *txt1, const char *txt2)
 {
-	size_t srcLen;
+	size_t srcLen = strlen(src);
+	const char *lastCharacter = &(src--)[srcLen - strlen(txt1) + 1];
+
+rpst:
 	ssize_t i;
 	char currentChar;
-	const char *lastCharacter;
-	
-	srcLen = strlen(src);
-	lastCharacter = &(src--)[srcLen - strlen(txt1) + 1];
-	
-rpst:
 	while ( (intptr_t)lastCharacter > (intptr_t)++src )
 	{
 		if ( *src == *txt1 )
@@ -1832,35 +1454,20 @@ rpst:
 		else
 			*dest++ = *src;
 	}
-	
-	i = -1;
-	do
-	{
-		currentChar = src[++i];
-		dest[i] = currentChar;
-	} while ( currentChar );
+	strcpy(dest, src);
 }
 
 char *szRev(const char *src, char *dest)
-{
-	ssize_t i;
-	char currentChar; 
-	char *destination;
-	char *source;
+{	
+	strcpy(dest, src);
 	
-	i = 0;
-	do
-	{
-		currentChar = src[i];
-		dest[i++] = currentChar;
-	} while ( currentChar );
-	
-	destination = &dest[--i - 1];
+	ssize_t i = strlen(dest);
+	char *destination = &dest[--i - 1];
 	i = -((size_t)i >> 1);
-	source = &dest[-i];
+	char *source = &dest[-i];
 	do
 	{
-		currentChar = source[i];
+		char currentChar = source[i];
 		source[i] = *destination;
 		*destination-- = currentChar;
 		++i;
@@ -1869,33 +1476,15 @@ char *szRev(const char *src, char *dest)
 	return dest;
 }
 
-char *szRight(const char *src, char *dst, int len)
+char *szRight(const char *src, char *dst, size_t len)
 {
-	const char *source;
-	ssize_t i;
-	char currentChar;
-	
-	source = &src[strlen(src) - len];
-	i = -1;
-	
-	do
-	{
-		currentChar = source[++i];
-		dst[i] = currentChar;
-	} while ( currentChar );
-	
+	strcpy(dst, &src[strlen(src) - len]);
 	return dst;
 }
 
 size_t szRtrim(const char *src, char *dest)
 {
-	size_t i; // edx@0
-	const char *source; // esi@1
-	size_t result; // eax@5
-	size_t j; // ecx@6
-	char currentChar; // al@7
-	
-	source = src - 1;
+	const char *source = src - 1;
 	do
 	{
 		do
@@ -1905,12 +1494,12 @@ size_t szRtrim(const char *src, char *dest)
 	
 	if ( *source )
 	{
-		i = 0;
-		j = 0;
+		size_t i = 0;
+		size_t j = 0;
 		
 		while ( 1 )
 		{
-			currentChar = src[j];
+			char currentChar = src[j];
 			dest[j++] = currentChar;
 			if ( !currentChar )
 				break;
@@ -1919,62 +1508,56 @@ size_t szRtrim(const char *src, char *dest)
 		}
 		
 		dest[i] = '\0';
-		result = i;
+		return i;
 	}
 	else
 	{
-		result = 0;
 		*dest = '\0';
+		return 0;
 	}
-	
-	return result;
 }
 
 size_t szTrim(char *src)
 {
-	size_t i;
-	size_t j;
-	const char *source;
-	size_t result;
-	char currentChar;
-	
-	source = src - 1;
+	const char *source = src - 1;
 	do
 	{
 		do
-		++source;
+			++source;
 		while ( *source == ' ' );
 	} while ( *source == '\t' );
+	
 	if ( *source )
 	{
+		size_t i;
+		size_t j;
 		while ( 1 )
 		{
 			i = 0;
 			j = 0;
-			currentChar = source[j];
+			char currentChar = source[j];
 			src[j++] = currentChar;
 			if ( !currentChar )
 				break;
 			if ( (unsigned char)currentChar >= 0x21 )
 				i = j;
 		}
-		src[i] = 0;
-		result = i;
+		src[i] = '\0';
+		return i;
 	}
 	else
 	{
-		result = 0;
-		*src = 0;
+		*src = '\0';
+		return 0;
 	}
-	return result;
 }
 
 char *szUpper(char *src)
 {
 	char *source = src - 1;
 	while (*++source)
-		if (*source >= 'a' && *source <= 'z')
-			*source += 0x20;
+		if (islower(*source))
+			*source = toupper(*source);
 	return src;
 }
 
@@ -2010,27 +1593,14 @@ size_t ucappend(wchar_t *dest, const wchar_t *src, size_t cloc)
 
 wchar_t ucCatStr(wchar_t *dest, const wchar_t *src)
 {
-	--dest;
-	do
-		++dest;
-	while (*dest);
+	wcscat(dest, src);
 	
-	wchar_t currentChar;
-	do
-	{
-		currentChar = *src;
-		*dest = *src;
-		++src;
-		++dest;
-	} while (currentChar);
-	
-	return currentChar;
+	return 0;
 }
 
 size_t ucCmp(const wchar_t *str1, const wchar_t *str2)
 {
 	ssize_t i = -1;
-	
 	while (1)
 	{
 		++i;
@@ -2038,40 +1608,24 @@ size_t ucCmp(const wchar_t *str1, const wchar_t *str2)
 		if (currentChar != str2[i])
 			return 0;
 		if (!currentChar)
-			return ((size_t)i * 2) >> 1;
+			return ((size_t)i * sizeof(wchar_t)) / sizeof(wchar_t);
 	}
 }
 
-wchar_t ucCopy(const wchar_t *src, wchar_t *dest)
+void ucCopy(const wchar_t *src, wchar_t *dest)
 {
-	ssize_t i = -1;
-	
-	do
-	{
-		++i;
-		dest[i] = src[i];
-	} while (src[i]);
+	wcscpy(dest, src);
 }
 
 void ucLeft(const wchar_t *src, wchar_t *dest, size_t stop)
 {
-	size_t i = 0;
-	do
-	{
-		dest[i] = src[i];
-		i++;
-	} while (i != stop);
-	
-	dest[i] = 0;
+	wmemcpy(dest, src, stop);
+	dest[stop] = 0;
 }
 
 size_t ucLen(const wchar_t *src)
 {
-	size_t i = 0;
-	while (src[i])
-		++i;
-	
-	return i;
+	return wcslen(src);
 }
 
 wchar_t *ucMultiCat(size_t paramCount, wchar_t *buffer, ...)
@@ -2079,25 +1633,12 @@ wchar_t *ucMultiCat(size_t paramCount, wchar_t *buffer, ...)
 	va_list va;
 	va_start(va, buffer);
 	
-	auto dest = buffer;
-	do
-		++dest;
-	while (*dest);
-	
 	size_t i = 0;
 	do
 	{
-		--dest;
 		auto src = ((wchar_t **)va)[i];
 		
-		wchar_t currentChar;
-		do
-		{
-			++dest;
-			currentChar = *src;
-			*dest = *src;
-			++src;
-		} while (currentChar);
+		wcscat(buffer, src);
 		++i;
 	} while (i != paramCount);
 	

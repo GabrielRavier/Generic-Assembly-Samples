@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _ternlogd_scalar
 global _ternlogq_scalar
 global _pmadd52luq_scalar
@@ -28,8 +30,7 @@ segment .text align=16
 
 _ternlogd_scalar:
 	mov r10d, ecx
-	xor r9d, r9d
-	xor eax, eax
+	multizero r9d, eax
 	
 .loop:
 	mov r8d, edi

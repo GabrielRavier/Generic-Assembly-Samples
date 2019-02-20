@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _gf_mul
 global _AES_RotWord
 

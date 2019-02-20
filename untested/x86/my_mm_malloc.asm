@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _my_mm_malloc
 global _my_mm_free
 extern _malloc
@@ -7,8 +9,7 @@ extern ___errno_location
 segment .text align=16
 
 _my_mm_malloc:
-	push edi
-	push esi
+	multipush edi, esi
 	push eax
 	mov eax, [esp + 28]
 	
@@ -50,8 +51,7 @@ _my_mm_malloc:
 .retEsi:
 	mov eax, esi
 	add esp, 4
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 
 

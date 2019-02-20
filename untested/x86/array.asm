@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _sumArray
 global _getMedian
 
@@ -31,9 +33,7 @@ _sumArray:
 	
 	align 16
 _sumArraySSE2:
-	push esi
-	push ebx
-	push ebp
+	multipush esi, ebx, ebp
 	
 	mov ebx, [esp + 20]
 	test ebx, ebx
@@ -112,9 +112,7 @@ _sumArraySSE2:
 	xor eax, eax
 
 .return:
-	pop ebp
-	pop ebx
-	pop esi
+	multipop esi, ebx, ebp
 	ret
 	
 	align 16
@@ -127,9 +125,7 @@ _sumArraySSE2:
 	
 	align 16
 _sumArrayAVX:
-	push esi
-	push edi
-	push ebx
+	multipush esi, edi, ebx
 	
 	mov ebx, [esp + 20]
 	test ebx, ebx
@@ -204,9 +200,7 @@ _sumArrayAVX:
 	xor eax, eax
 	
 .return:
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx
 	ret
 	
 .noAVX:
@@ -218,9 +212,7 @@ _sumArrayAVX:
 	
 	align 16
 _sumArrayAVX2:
-	push esi
-	push edi
-	push ebx
+	multipush esi, edi, ebx
 	
 	mov ebx, [esp + 20]
 	test ebx, ebx
@@ -301,9 +293,7 @@ _sumArrayAVX2:
 	
 .return:
 	vzeroupper
-	pop ebx
-	pop edi
-	pop esi
+	multipop esi, edi, ebx
 	ret
 	
 	align 16
@@ -409,12 +399,10 @@ _getMedian:
 	
 	align 16
 _getMediani686:
-	push ebp
-	xor ecx, ecx
-	push edi
-	push esi
+	multipush ebp, edi, esi, ebx
+	
 	xor esi, esi
-	push ebx
+	xor ecx, ecx
 	xor ebx, ebx
 	sub esp, 4
 	
@@ -456,16 +444,13 @@ _getMediani686:
 	mov edi, [esp]
 	
 	pop ecx
-	pop ebx
 	
 	add eax, edi
 	mov edx, eax
 	shr edx, 31
-	pop esi
 	add eax, edx
 	sar eax, 1
-	pop edi
-	pop ebp
+	multipush ebp, edi, esi, ebx
 	ret
 	
 	align 16

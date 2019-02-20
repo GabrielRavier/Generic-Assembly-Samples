@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _wav_write
 global _wav_parse
 
@@ -106,8 +108,7 @@ _wav_parse:
 	movzx esi, word [rcx + 2]
 	mov [rdi + 32], esi
 	
-	xor r8d, r8d
-	xor edx, edx
+	multizero r8d, edx
 	div esi
 	
 	movzx ecx, word [rcx + 14]

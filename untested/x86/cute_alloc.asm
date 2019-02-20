@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _ca_stack_create
 global _ca_stack_alloc
 global _ca_stack_free
@@ -246,8 +248,7 @@ _ca_leak_check_alloc:
 	
 	align 16
 _ca_leak_check_calloc:
-	push esi
-	push ebx
+	multipush esi, ebx
 	sub esp, 8
 	
 	mov ebx, [esp + 24]
@@ -267,8 +268,7 @@ _ca_leak_check_calloc:
 	
 	add esp, 20
 	mov eax, esi
-	pop ebx
-	pop esi
+	multipop esi, ebx
 	ret
 	
 	

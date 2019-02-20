@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _my_bsfd
 global _my_bsrd
 global _my_bswapd
@@ -124,8 +126,7 @@ _BitReflect8:
 	
 	align 16
 _BitReflect16:
-	push ebx
-	push esi
+	multipush ebx, esi
 	push eax
 	
 	mov ebx, ecx
@@ -139,8 +140,7 @@ _BitReflect16:
 	or eax, esi
 	
 	add esp, 4
-	pop esi
-	pop ebx
+	multipop ebx, esi
 	ret
 	
 	
@@ -149,8 +149,7 @@ _BitReflect16:
 	
 	align 16
 _BitReflect32:
-	push edi
-	push esi
+	multipush edi, esi
 	push eax
 	
 	mov esi, ecx
@@ -166,8 +165,7 @@ _BitReflect32:
 	or edi, eax
 	mov eax, edi
 	add esp, 4
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	
@@ -304,10 +302,8 @@ _my_crc32w:
 	push edx
 	
 	shl ebp, 16
-	push ebp
 	
-	push 1
-	push 0x1EDC6F41
+	multipush ebp, 1, 0x1EDC6F41
 	call _mod2_64bit
 	add esp, 16
 	
@@ -333,11 +329,7 @@ _my_crc32d:
 	call _BitReflect32
 	
 	xor eax, esi
-	push eax
-	push 0
-	
-	push 1
-	push 0x1EDC6F41
+	multipush eax, 0, 1, 0x1EDC6F41
 	call _mod2_64bit
 	add esp, 16
 	
@@ -691,10 +683,7 @@ _my_crc32q:
 	call _BitReflect32
 	
 	xor eax, ebp
-	push eax
-	push 0
-	push 1
-	push 0x1EDC6F41
+	multipush eax, 0, 1, 0x1EDC6F41
 	call _mod2_64bit
 	mov ebp, eax
 	add esp, 16
@@ -703,9 +692,7 @@ _my_crc32q:
 	call _BitReflect32
 	
 	xor eax, ebp
-	push eax
-	push 0
-	push 0x1EDC6F41
+	multipush eax, 0, 0x1EDC6F41
 	call _mod2_64bit
 	add esp, 16
 	
@@ -835,10 +822,7 @@ _my_popcntqPOPCNT:
 	
 	align 16
 _my_rolq:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	mov eax, [esp + 20]
 	mov esi, [esp + 24]
 	mov ecx, [esp + 28]
@@ -868,10 +852,7 @@ _my_rolq:
 	or eax, edi
 	or edx, ebp
 	
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
@@ -922,10 +903,7 @@ _my_rolqAVX:
 	
 	align 16
 _my_rorq:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	mov esi, [esp + 20]
 	mov edx, [esp + 24]
 	mov ecx, [esp + 28]
@@ -957,10 +935,7 @@ _my_rorq:
 	or eax, ebp
 	or edx, edi
 	
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	

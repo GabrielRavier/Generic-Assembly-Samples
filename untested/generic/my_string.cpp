@@ -55,14 +55,14 @@ void *memcpy(void *__restrict dest, const void *__restrict src, size_t n)
     return dest;
 }
 
-void *memfrob(void *s, size_t n)
+void *memfrob(void *seg, size_t n)
 {
-	char *p = (char *)s;
+	char *segment = (char *)seg;
 	
 	while (n-- > 0)
-		*p++ ^= 42;
+		*segment++ ^= 0x2A;
 	
-	return s;
+	return seg;
 }
 
 void *memmem(const void *haystack, size_t n, const void *needle, size_t m)

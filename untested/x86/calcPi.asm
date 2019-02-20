@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _calcPi
 
 segment .rodata align=16

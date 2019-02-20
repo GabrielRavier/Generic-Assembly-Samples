@@ -1,25 +1,30 @@
 #include <cstdint>
+#include <cmath>
+
+#ifndef M_PI
+	#define M_PI 3.14159265358979323846264338327950288
+#endif
 
 #if defined(__GNUC__)
-  typedef          long long ll;
-  typedef unsigned long long ull;
-  #define __int64 long long
-  #define __int16 short
-  #define __int8  char
-  #define MAKELL(num) num ## LL
-  #define FMT_64 "ll"
+	typedef          long long ll;
+	typedef unsigned long long ull;
+	#define __int64 long long
+	#define __int16 short
+	#define __int8  char
+	#define MAKELL(num) num ## LL
+	#define FMT_64 "ll"
 #elif defined(_MSC_VER)
-  typedef          __int64 ll;
-  typedef unsigned __int64 ull;
-  #define MAKELL(num) num ## i64
-  #define FMT_64 "I64"
+	typedef          __int64 ll;
+	typedef unsigned __int64 ull;
+	#define MAKELL(num) num ## i64
+	#define FMT_64 "I64"
 #elif defined (__BORLANDC__)
-  typedef          __int64 ll;
-  typedef unsigned __int64 ull;
-  #define MAKELL(num) num ## i64
-  #define FMT_64 "L"
+	typedef          __int64 ll;
+	typedef unsigned __int64 ull;
+	#define MAKELL(num) num ## i64
+	#define FMT_64 "L"
 #else
-  #error "unknown compiler"
+	#error "unknown compiler"
 #endif
 typedef unsigned int uint;
 typedef unsigned char uchar;
@@ -46,7 +51,7 @@ typedef uint64_t uint64;
 #define _DWORD uint32
 #define _QWORD uint64
 #if !defined(_MSC_VER)
-#define _LONGLONG __int128
+	#define _LONGLONG __int128
 #endif
 
 // Non-standard boolean types. They are used when the decompiler can not use
@@ -57,11 +62,11 @@ typedef int16 _BOOL2;
 typedef int32 _BOOL4;
 
 #ifndef _WINDOWS_
-typedef int BOOL;       // uppercase BOOL is usually 4 bytes
+	typedef int BOOL;       // uppercase BOOL is usually 4 bytes
 #endif
 typedef int64 QWORD;
 #ifndef __cplusplus
-typedef int bool;       // we want to use bool in our C programs
+	typedef int bool;       // we want to use bool in our C programs
 #endif
 
 #ifdef __GNUC__
@@ -73,14 +78,14 @@ typedef int bool;       // we want to use bool in our C programs
 
 // Non-returning function
 #if defined(__GNUC__)
-#define __noreturn  __attribute__((noreturn))
+	#define __noreturn  __attribute__((noreturn))
 #else
-#define __noreturn  __declspec(noreturn)
+	#define __noreturn  __declspec(noreturn)
 #endif
 
 
 #ifndef NULL
-#define NULL 0
+	#define NULL 0
 #endif
 
 // Some convenience macros to make partial accesses nicer
@@ -156,17 +161,17 @@ typedef int bool;       // we want to use bool in our C programs
 // check that unsigned multiplication does not overflow
 template<class T> bool is_mul_ok(T count, T elsize)
 {
-  static_assert((T)(-1) > 0); // make sure T is unsigned
-  if ( elsize  == 0 || count == 0 )
-    return true;
-  return count <= ((T)(-1)) / elsize;
+	static_assert((T)(-1) > 0); // make sure T is unsigned
+	if ( elsize  == 0 || count == 0 )
+		return true;
+	return count <= ((T)(-1)) / elsize;
 }
 
 // multiplication that saturates (yields the biggest value) instead of overflowing
 // such a construct is useful in "operator new[]"
 template<class T> T saturated_mul(T count, T elsize)
 {
-  return is_mul_ok(count, elsize) ? count * elsize : T(-1);
+	return is_mul_ok(count, elsize) ? count * elsize : T(-1);
 }
 
 #include <stddef.h> // for size_t
@@ -176,21 +181,20 @@ template<class T> T saturated_mul(T count, T elsize)
 // note: it copies byte by byte, so it is not equivalent to, for example, rep movsd
 inline void *qmemcpy(void *__restrict dst, const void *__restrict src, size_t cnt)
 {
-  char *out = (char *)dst;
-  const char *in = (const char *)src;
-  while ( cnt > 0 )
-  {
-    *out++ = *in++;
-    --cnt;
-  }
-  return dst;
+	char *out = (char *)dst;
+	const char *in = (const char *)src;
+	while ( cnt > 0 )
+	{
+		*out++ = *in++;
+		--cnt;
+	}
+	return dst;
 }
 
-inline void memset32(void *dest, uint32_t ch, size_t len)
+template <typename T> void memsetType(T *dest, T fill, size_t numElem)
 {
-    uint32_t *dst = (uint32_t *)dest;
-    for (size_t i = 0; i < len / 4; ++i)
-        dst[i] = ch;
+	for (size_t i = 0; i < numElem; ++i)
+		dest[i] = fill;
 }
 
 // Generate a reference to pair of operands
@@ -204,25 +208,25 @@ template<class T> uint64 __PAIR__(uint32 high, T low) { return (((uint64)high) <
 // rotate left
 template<class T> T __ROL__(T value, int count)
 {
-  const uint nbits = sizeof(T) * 8;
-
-  if ( count > 0 )
-  {
-    count %= nbits;
-    T high = value >> (nbits - count);
-    if ( T(-1) < 0 ) // signed value
-      high &= ~((T(-1) << count));
-    value <<= count;
-    value |= high;
-  }
-  else
-  {
-    count = -count % nbits;
-    T low = value << (nbits - count);
-    value >>= count;
-    value |= low;
-  }
-  return value;
+	const uint nbits = sizeof(T) * 8;
+	
+	if ( count > 0 )
+	{
+		count %= nbits;
+		T high = value >> (nbits - count);
+		if ( T(-1) < 0 ) // signed value
+			high &= ~((T(-1) << count));
+		value <<= count;
+		value |= high;
+	}
+	else
+	{
+		count = -count % nbits;
+		T low = value << (nbits - count);
+		value >>= count;
+		value |= low;
+	}
+	return value;
 }
 
 inline uint8  __ROL1__(uint8  value, int count) { return __ROL__((uint8)value, count); }
@@ -237,88 +241,88 @@ inline uint64 __ROR8__(uint64 value, int count) { return __ROL__((uint64)value, 
 // carry flag of left shift
 template<class T> bool __MKCSHL__(T value, uint count)
 {
-  const uint nbits = sizeof(T) * 8;
-  count %= nbits;
-
-  return (value >> (nbits-count)) & 1;
+	const uint nbits = sizeof(T) * 8;
+	count %= nbits;
+	
+	return (value >> (nbits-count)) & 1;
 }
 
 // carry flag of right shift
 template<class T> bool __MKCSHR__(T value, uint count)
 {
-  return (value >> (count-1)) & 1;
+	return (value >> (count-1)) & 1;
 }
 
 // sign flag
 template<class T> bool __SETS__(T x)
 {
-  if ( sizeof(T) == 1 )
-    return int8(x) < 0;
-  if ( sizeof(T) == 2 )
-    return int16(x) < 0;
-  if ( sizeof(T) == 4 )
-    return int32(x) < 0;
-  return int64(x) < 0;
+	if ( sizeof(T) == 1 )
+		return int8(x) < 0;
+	if ( sizeof(T) == 2 )
+		return int16(x) < 0;
+	if ( sizeof(T) == 4 )
+		return int32(x) < 0;
+	return int64(x) < 0;
 }
 
 // overflow flag of subtraction (x-y)
 template<class T, class U> bool __OFSUB__(T x, U y)
 {
-  if ( sizeof(T) < sizeof(U) )
-  {
-    U x2 = x;
-    int8 sx = __SETS__(x2);
-    return (sx ^ __SETS__(y)) & (sx ^ __SETS__(x2-y));
-  }
-  else
-  {
-    T y2 = y;
-    int8 sx = __SETS__(x);
-    return (sx ^ __SETS__(y2)) & (sx ^ __SETS__(x-y2));
-  }
+	if ( sizeof(T) < sizeof(U) )
+	{
+		U x2 = x;
+		int8 sx = __SETS__(x2);
+		return (sx ^ __SETS__(y)) & (sx ^ __SETS__(x2-y));
+	}
+	else
+	{
+		T y2 = y;
+		int8 sx = __SETS__(x);
+		return (sx ^ __SETS__(y2)) & (sx ^ __SETS__(x-y2));
+	}
 }
 
 // overflow flag of addition (x+y)
 template<class T, class U> bool __OFADD__(T x, U y)
 {
-  if ( sizeof(T) < sizeof(U) )
-  {
-    U x2 = x;
-    int8 sx = __SETS__(x2);
-    return ((1 ^ sx) ^ __SETS__(y)) & (sx ^ __SETS__(x2+y));
-  }
-  else
-  {
-    T y2 = y;
-    int8 sx = __SETS__(x);
-    return ((1 ^ sx) ^ __SETS__(y2)) & (sx ^ __SETS__(x+y2));
-  }
+	if ( sizeof(T) < sizeof(U) )
+	{
+		U x2 = x;
+		int8 sx = __SETS__(x2);
+		return ((1 ^ sx) ^ __SETS__(y)) & (sx ^ __SETS__(x2+y));
+	}
+	else
+	{
+		T y2 = y;
+		int8 sx = __SETS__(x);
+		return ((1 ^ sx) ^ __SETS__(y2)) & (sx ^ __SETS__(x+y2));
+	}
 }
 
 // carry flag of subtraction (x-y)
 template<class T, class U> bool __CFSUB__(T x, U y)
 {
-  int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
-  if ( size == 1 )
-    return uint8(x) < uint8(y);
-  if ( size == 2 )
-    return uint16(x) < uint16(y);
-  if ( size == 4 )
-    return uint32(x) < uint32(y);
-  return uint64(x) < uint64(y);
+	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
+	if ( size == 1 )
+		return uint8(x) < uint8(y);
+	if ( size == 2 )
+		return uint16(x) < uint16(y);
+	if ( size == 4 )
+		return uint32(x) < uint32(y);
+	return uint64(x) < uint64(y);
 }
 
 // carry flag of addition (x+y)
 template<class T, class U> bool __CFADD__(T x, U y)
 {
-  int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
-  if ( size == 1 )
-    return uint8(x) > uint8(x+y);
-  if ( size == 2 )
-    return uint16(x) > uint16(x+y);
-  if ( size == 4 )
-    return uint32(x) > uint32(x+y);
-  return uint64(x) > uint64(x+y);
+	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
+	if ( size == 1 )
+		return uint8(x) > uint8(x+y);
+	if ( size == 2 )
+		return uint16(x) > uint16(x+y);
+	if ( size == 4 )
+		return uint32(x) > uint32(x+y);
+	return uint64(x) > uint64(x+y);
 }
 
 #else
@@ -339,18 +343,18 @@ template<class T, class U> bool __CFADD__(T x, U y)
 // Check windows
 #if _WIN32 || _WIN64
 #if _WIN64
-#define ENVIRONMENT64
+	#define ENVIRONMENT64
 #else
-#define ENVIRONMENT32
+	#define ENVIRONMENT32
 #endif
 #endif
 
 // Check GCC
 #if __GNUC__
 #if __x86_64__ || __ppc64__
-#define ENVIRONMENT64
+	#define ENVIRONMENT64
 #else
-#define ENVIRONMENT32
+	#define ENVIRONMENT32
 #endif
 #endif
 
@@ -363,3 +367,54 @@ template<class T, class U> bool __CFADD__(T x, U y)
 #define __int8 char
 #define __int16 short
 #define __int64 long long
+
+#ifndef _countof
+#if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900)
+template <typename T, size_t N> constexpr size_t _countof(T const (&)[N]) noexcept
+{
+    return N;
+}
+
+// For dynamic containers
+template <class C> size_t _countof(C const& arr)
+{
+    return arr.size();
+}
+#elif __cplusplus >= 199711L
+template <typename T, size_t N> char (&COUNTOF_REQUIRES_ARRAY_ARGUMENT(T(&)[N]))[N];
+#define _countof(arr) sizeof(COUNTOF_REQUIRES_ARRAY_ARGUMENT(x))
+#else
+#define _countof(arr) (sizeof(arr) / sizeof((arr)[0]))
+#endif
+#endif
+
+#include <sys/types.h>	// For ssize_t
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;	// For some demented reason MSVC doesn't have ssize_t
+#endif
+
+inline size_t bsf(uint32_t mask)
+{
+	return __builtin_ctz(mask);
+}
+
+inline size_t bsr(uint32_t mask)
+{
+	return ((sizeof(uint32_t) * CHAR_BIT) - 1)  - __builtin_clz(mask);
+}
+
+inline size_t bitScanForward64(uint64_t mask)
+{
+	return __builtin_ctzll(mask);
+}
+
+inline size_t bitScanReverse64(uint64_t mask)
+{
+	return ((sizeof(uint64_t) * CHAR_BIT) - 1) - __builtin_ctzll(mask);
+}
+
+template <typename T> inline bool bitTest(T a, size_t b)
+{
+	return (a >> b) & 1;
+}

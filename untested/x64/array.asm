@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _sumArray
 global _getMedian
 
@@ -195,8 +197,7 @@ _sumArrayAVX2:
 	
 	align 16
 _getMedian:
-	xor ecx, ecx
-	xor r9d, r9d
+	multizero ecx, r9d
 	mov r10, rsi
 	mov [rsp - 16], r12
 	mov r8, rdi

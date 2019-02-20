@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _wav_write
 global _wav_parse
 
@@ -16,9 +18,7 @@ segment .rodata align=16
 segment .text align=16
 
 _wav_write:
-	push ebx
-	push edi
-	push esi
+	multipush ebx, edi, esi
 	
 	mov edi, [esp + 20]
 	mov esi, [edi + 32]
@@ -97,9 +97,7 @@ _wav_write:
 	mov [ecx + 40], edx
 	
 .return:
-	pop esi
-	pop edi
-	pop edx
+	multipop ebx, edi, esi
 	ret
 	
 	
@@ -108,9 +106,7 @@ _wav_write:
 	
 	align 16
 _wav_parse:
-	push ebx
-	push edi
-	push esi
+	multipush ebx, edi, esi
 	mov edx, [esp + 20]
 	mov ecx, -1
 	
@@ -179,7 +175,5 @@ _wav_parse:
 	
 .return:
 	mov eax, ecx
-	pop esi
-	pop edi
-	pop ebx
+	multipop ebx, edi, esi
 	ret

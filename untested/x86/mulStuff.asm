@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _isMulOk
 global _saturatedMul
 
@@ -28,6 +30,7 @@ _isMulOk:
 	cmp ecx, eax
 	mov eax, 0
 	setbe al
+	
 	pop ebp
 	ret
 	

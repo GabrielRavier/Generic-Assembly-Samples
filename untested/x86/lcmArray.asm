@@ -1,11 +1,11 @@
+%include "macros.inc"
+
 global _lcmArray
 
 segment .text align=16
 
 _lcmArray:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	
 	mov eax, [esp + 16]
 	mov edx, [esp + 20]
@@ -51,9 +51,7 @@ _lcmArray:
 	jne .loop
 	
 .returnEcx:
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	mov eax, ecx
 	ret
 	

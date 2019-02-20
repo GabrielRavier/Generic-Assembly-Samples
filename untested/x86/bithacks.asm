@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _getSign1
 global _getSign2
 global _getSign3
@@ -134,9 +136,7 @@ _conditionalClearOrSet:
 	
 	align 16
 _swapBits:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	
 	mov eax, [esp + 28]	; bitsToSwap
 	movzx edi, byte [esp + 16]	; swapPos1
@@ -163,19 +163,15 @@ _swapBits:
 	sal edx, cl
 	or edx, ebx
 	
-	pop ebx
-	pop esi
 	xor eax, edx
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
 	
 	align 16
 _swapBitsBMI:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	
 	mov ebx, [esp + 28]	; bitsToSwap
 	movzx edx, byte [esp + 16]	; swapPos1
@@ -193,9 +189,7 @@ _swapBitsBMI:
 	or eax, edx
 	xor eax, ebx
 	
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -263,9 +257,7 @@ _getSign264:
 	
 	align 16
 _getSign364:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	mov edi, [esp + 20]	; x.hi
 	mov esi, [esp + 16]	; x.lo
 	
@@ -276,11 +268,9 @@ _getSign364:
 	sbb ebx, edi
 	shr edx, 31
 	
-	pop ebx
-	pop esi
 	shr eax, 31
-	pop edi
 	sub eax, edx
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -383,6 +373,7 @@ _conditionalClearOrSet64:
 	and edx, [esp + 20]	; bitMask.hi
 	xor eax, ecx
 	xor edx, edi
+	
 	pop edi
 	ret
 	
@@ -620,7 +611,8 @@ _parity64:
 	mov edx, ebx
 	shr ebx, 16
 	xor edx, ebx
-	pop ebx
 	xor dl, dh
 	setnp al
+	
+	pop ebx
 	ret

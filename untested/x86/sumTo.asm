@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _sumTo
 global _sumTo64
 
@@ -27,10 +29,7 @@ _sumTo:
 	
 	align 16
 _sumTo64:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	sub esp, 8
 	mov ecx, [esp + 32]
 	mov edx, [esp + 28]
@@ -73,14 +72,10 @@ _sumTo64:
 	jmp .return
 	
 .ret0:
-	xor eax, eax
-	xor ecx, ecx
+	multizero eax, ecx
 	
 .return:
 	mov edx, ecx
 	add esp, 8
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret

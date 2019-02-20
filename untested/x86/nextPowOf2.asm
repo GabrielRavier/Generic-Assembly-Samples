@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _nextPowerOf2
 global _nextPowerOf264
 

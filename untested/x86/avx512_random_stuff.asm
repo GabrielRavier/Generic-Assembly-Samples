@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _ternlogd_scalar
 global _ternlogq_scalar
 global _pmadd52luq_scalar
@@ -5,10 +7,7 @@ global _pmadd52luq_scalar
 segment .text align=16
 
 _ternlogd_scalar:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	xor edx, edx
 	
 	mov edi, [esp + 24]
@@ -44,10 +43,7 @@ _ternlogd_scalar:
 	cmp edx, 32
 	jne .loop
 	
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	
@@ -56,10 +52,7 @@ _ternlogd_scalar:
 	
 	align 16
 _ternlogq_scalar:
-	push ebp
-	push ebx
-	push edi
-	push esi
+	multipush ebp, ebx, edi, esi
 	push eax
 	mov dword [esp], 0
 	xor edx, edx
@@ -121,10 +114,7 @@ _ternlogq_scalar:
 	
 	mov eax, [esp]
 	add esp, 4
-	pop esi
-	pop edi
-	pop ebx
-	pop ebp
+	multipop ebp, ebx, edi, esi
 	ret
 	
 	

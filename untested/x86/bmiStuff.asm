@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _andn
 global _bextr
 global _blsi

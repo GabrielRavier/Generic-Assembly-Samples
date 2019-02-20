@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _isPowerOf4
 global _isPowerOf464
 
@@ -41,11 +43,9 @@ _isPowerOf4:
 	
 	
 	align 16
-_isPowerOf464:	
-	push edi
+_isPowerOf464:
+	multipush edi, esi, ebx
 	xor eax, eax
-	push esi
-	push ebx
 	mov edi, [esp + 20]
 	mov esi, [esp + 16]
 	
@@ -89,8 +89,6 @@ _isPowerOf464:
 	
 	align 16
 .return0:
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	xor eax, eax
 	ret

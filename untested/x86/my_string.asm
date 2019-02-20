@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _bcopy
 global _bzero
 global _memccpy
@@ -68,9 +70,7 @@ _bzero:
 	
 	align 16
 _memccpy:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	
 	mov ebx, [esp + 28]
 	mov esi, [esp + 20]
@@ -96,9 +96,7 @@ _memccpy:
 	add eax, [esp + 16]
 	
 .return:
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 .found:
@@ -109,9 +107,7 @@ _memccpy:
 	mov ecx, ebx
 	rep movsb
 	
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -150,8 +146,7 @@ _memchr:
 	
 	align 16
 _memcmp:
-	push esi
-	push ebx
+	multipush esi, ebx
 	mov esi, [esp + 20]
 	mov eax, [esp + 12]
 	mov edx, [esp + 16]
@@ -190,8 +185,7 @@ _memcmp:
 	movzx eax, cl
 	sub eax, ebx
 	
-	pop ebx
-	pop esi
+	multipop esi, ebx
 	ret
 	
 	
@@ -200,8 +194,7 @@ _memcmp:
 	
 	align 16
 _memcpy:
-	push edi
-	push esi
+	multipush edi, esi
 	
 	mov eax, [esp + 12]
 	mov esi, [esp + 16]
@@ -210,16 +203,14 @@ _memcpy:
 	mov edi, eax
 	rep movsb
 	
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	
 	
 	align 16
 _memcpyMovsd:
-	push edi
-	push esi
+	multipush edi, esi
 	mov ecx, [esp + 20]
 	mov eax, [esp + 12]
 	mov esi, [esp + 16]
@@ -231,8 +222,7 @@ _memcpyMovsd:
 	jne .small
 	
 .return:
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	align 16
@@ -250,8 +240,7 @@ _memcpyMovsd:
 	shr ecx, 2
 	rep movsd
 	
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 .small:
@@ -295,10 +284,7 @@ _memfrob:
 	
 	align 16
 _memmem:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	sub esp, 44
 	
 	mov edi, [esp + 76]
@@ -393,10 +379,7 @@ _memmem:
 	
 .return:
 	add esp, 44
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	align 16
@@ -406,10 +389,7 @@ _memmem:
 	mov [esp + 68], eax
 	
 	add esp, 44
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	jmp _memchr
 	
 	
@@ -418,10 +398,7 @@ _memmem:
 	
 	align 16
 _memmove:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	
 	mov edx, [esp + 20]
 	mov ebp, [esp + 24]
@@ -448,11 +425,8 @@ _memmove:
 	jb .forwardsLoop
 	
 .returnEbp:
-	pop ebx
-	pop esi
-	pop edi
 	mov eax, ebp
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	align 16
@@ -474,11 +448,8 @@ _memmove:
 	cmp esi, ebx
 	jb .backwardsLoop
 	
-	pop ebx
-	pop esi
-	pop edi
 	mov eax, ebp
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -487,17 +458,15 @@ _memmove:
 	
 	align 16
 _mempcpy:
-	push edi
-	push esi
+	multipush edi, esi
 	mov esi, [esp + 16]
 	mov ecx, [esp + 20]
 	mov edi, [esp + 12]
 	
 	rep movsb
 	
-	pop esi
 	mov eax, edi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	
@@ -554,13 +523,11 @@ _memset:
 	
 	align 16
 _stpcpy:
-	push edi
+	multipush edi, esi, ebx
 
 	xor eax, eax
 	or ecx, -1
 	
-	push esi
-	push ebx
 	mov esi, [esp + 20]
 	mov edx, [esp + 16]
 	
@@ -577,9 +544,7 @@ _stpcpy:
 	
 	lea eax, [eax + edx - 1]
 	
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -588,12 +553,11 @@ _stpcpy:
 	
 	align 16
 _stpncpy:
-	push ebp
+	multipush ebp, edi, esi, ebx
+	
 	xor eax, eax
 	or ecx, -1
-	push edi
-	push esi
-	push ebx
+	
 	mov esi, [esp + 24]
 	mov ebx, [esp + 28]
 	
@@ -619,11 +583,8 @@ _stpncpy:
 	rep stosb
 	
 .return:
-	pop ebx
 	mov eax, esi
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -632,10 +593,7 @@ _stpncpy:
 	
 	align 16
 _strcasecmp:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	mov ebp, [esp + 24]
 	
 	cmp [esp + 20], ebp
@@ -671,19 +629,13 @@ _strcasecmp:
 	je .loop
 	
 .return:
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	align 16
 .return0:
-	pop ebx
-	pop esi
-	pop edi
 	xor eax, eax
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -692,10 +644,7 @@ _strcasecmp:
 	
 	align 16
 _strcasestr:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	sub esp, 28
 	
 	mov eax, [esp + 52]
@@ -744,10 +693,7 @@ _strcasestr:
 	je .toLowerLoop
 	
 .doCaseCmp:
-	push eax
-	push esi
-	push dword [esp + 20]
-	push edi
+	multipush eax, esi, dword [esp + 20], edi
 	call _strncasecmp
 	add esp, 16
 	
@@ -761,11 +707,8 @@ _strcasestr:
 	
 .returnEbp:
 	add esp, 28
-	pop ebx
-	pop esi
-	pop edi
 	mov eax, ebp
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -774,15 +717,12 @@ _strcasestr:
 	
 	align 16
 _strcat:
-	push ebp
+	multipush ebp, edi, esi, ebx
 	
 	or ebp, -1
 	xor eax, eax
 	
-	push edi
 	mov ecx, ebp
-	push esi
-	push ebx
 	
 	mov edx, [esp + 20]
 	mov esi, [esp + 24]
@@ -802,10 +742,7 @@ _strcat:
 	not ecx
 	rep movsb
 	
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -866,9 +803,8 @@ _strchrnul:
 	
 	align 16
 _strcmp:
-	push esi
+	multipush esi, ebx
 	xor eax, eax
-	push ebx
 	
 	mov esi, [esp + 12]
 	mov ebx, [esp + 16]
@@ -895,9 +831,8 @@ _strcmp:
 	
 .return:
 	movzx eax, dl
-	pop ebx
 	sub eax, ecx
-	pop esi
+	multipop esi, ebx
 	ret
 	
 	
@@ -906,11 +841,10 @@ _strcmp:
 	
 	align 16
 _strcpy:
-	push edi
+	multipush edi, esi
 	
 	xor eax, eax
 	or ecx, -1
-	push esi
 	mov esi, [esp + 16]
 	mov edi, esi
 	repnz scasb
@@ -923,8 +857,7 @@ _strcpy:
 	mov ecx, edx
 	rep movsb
 	
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	
@@ -933,11 +866,9 @@ _strcpy:
 	
 	align 16
 _strcspn:
-	push edi
+	multipush edi, esi, ebx
 	xor edi, edi
 	
-	push esi
-	push ebx
 	mov esi, [esp + 20]
 	mov ebx, [esp + 16]
 	
@@ -965,9 +896,7 @@ _strcspn:
 	
 .returnEdi:
 	mov eax, edi
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -976,10 +905,9 @@ _strcspn:
 	
 	align 16
 _strdup:
-	push edi
+	multipush edi, esi
 	xor eax, eax
 	or ecx, -1
-	push esi
 	sub esp, 32
 	mov esi, [esp + 44]
 	mov edi, esi
@@ -1004,8 +932,7 @@ _strdup:
 	
 .return:
 	add esp, 20
-	pop esi
-	pop edi
+	multipop edi, esi
 	ret
 	
 	
@@ -1033,10 +960,7 @@ _strlen:
 	
 	align 16
 _strncasecmp:
-	push ebp
-	push edi
-	push esi
-	push ebx
+	multipush ebp, edi, esi, ebx
 	
 	mov ebx, [esp + 20]
 	cmp ebx, [esp + 24]
@@ -1079,19 +1003,13 @@ _strncasecmp:
 	je .loop
 	
 .return:
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	align 16
 .return0:
-	pop ebx
-	pop esi
-	pop edi
+	multipop ebp, edi, esi, ebx
 	xor eax, eax
-	pop ebp
 	ret
 	
 	
@@ -1100,12 +1018,10 @@ _strncasecmp:
 	
 	align 16
 _strncat:
-	push ebp
+	multipush ebp, edi, esi, ebx
 	
 	or ebp, -1
 	xor eax, eax
-	push edi
-	push esi
 	mov ecx, ebp
 	mov edx, [esp + 20]
 	mov esi, [esp + 24]
@@ -1129,10 +1045,7 @@ _strncat:
 	mov byte [ebx + ecx], 0
 	rep movsb
 	
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -1216,14 +1129,10 @@ _strncmp:
 	
 	align 16
 _strncpy:
-	push ebp
+	multipush ebp, edi, esi, ebx
 	
 	xor eax, eax
 	or ecx, -1
-	
-	push edi
-	push esi
-	push ebx
 	
 	mov esi, [esp + 24]
 	mov ebp, [esp + 28]
@@ -1257,10 +1166,7 @@ _strncpy:
 	rep movsb
 	
 	mov eax, ebx
-	pop ebx
-	pop esi
-	pop edi
-	pop ebp
+	multipop ebp, edi, esi, ebx
 	ret
 	
 	
@@ -1270,12 +1176,11 @@ _strncpy:
 	
 	align 16
 _strndup:
-	push edi
+	multipush edi, esi, ebx
+	
 	xor eax, eax
 	or ecx, -1
 	
-	push esi
-	push ebx
 	sub esp, 28
 	mov esi, [esp + 44]
 	mov edi, [esp + 48]
@@ -1307,9 +1212,7 @@ _strndup:
 	
 .return:
 	add esp, 16
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -1318,11 +1221,10 @@ _strndup:
 	
 	align 16
 _strnlen:
-	push edi
+	multipush edi, ebx
 	
 	xor eax, eax
 	or ecx, -1
-	push ebx
 	
 	mov edi, [esp + 12]
 	mov edx, [esp + 16]
@@ -1333,8 +1235,7 @@ _strnlen:
 	not ebx
 	mov ecx, ebx
 	
-	pop ebx
-	pop edi
+	multipop edi, ebx
 	
 	dec ecx
 	cmp ecx, edx
@@ -1351,8 +1252,7 @@ _strpbrk:
 	sub esp, 16
 	mov ebx, [esp + 24]
 	
-	push dword [esp + 28]
-	push ebx
+	multipush dword [esp + 28], ebx
 	call _strcspn
 	add eax, ebx
 	
@@ -1370,9 +1270,7 @@ _strpbrk:
 	
 	align 16
 _strrchr:
-	push edi
-	push esi
-	push ebx
+	multipush edi, esi, ebx
 	movzx esi, byte [esp + 20]
 	
 	xor ebx, ebx
@@ -1394,10 +1292,7 @@ _strrchr:
 	align 16
 .notZero:
 .loop:
-	push eax
-	push eax
-	push esi
-	push edx
+	multipush eax, eax, esi, edx
 	call _strchr
 	add esp, 16
 	
@@ -1410,9 +1305,7 @@ _strrchr:
 	
 .returnEbx:
 	mov eax, ebx
-	pop ebx
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -1421,8 +1314,7 @@ _strrchr:
 	
 	align 16
 _strsep:
-	push esi
-	push ebx
+	multipush esi, ebx
 	sub esp, 4
 	
 	mov ebx, [esp + 16]
@@ -1448,8 +1340,7 @@ _strsep:
 .returnEsi:
 	add esp, 4
 	mov eax, esi
-	pop ebx
-	pop esi
+	multipop esi, ebx
 	ret
 	
 	align 16
@@ -1458,8 +1349,7 @@ _strsep:
 	
 	add esp, 4
 	mov eax, esi
-	pop ebx
-	pop esi
+	multipop esi, ebx
 	ret
 	
 	
@@ -1468,10 +1358,8 @@ _strsep:
 	
 	align 16
 _strspn:
-	push edi
+	multipush edi, esi, ebx
 	xor edi, edi
-	push esi
-	push ebx
 	mov ebx, [esp + 16]
 	mov esi, [esp + 20]
 	
@@ -1498,10 +1386,8 @@ _strspn:
 	jne .loop
 	
 .returnEdi:
-	pop ebx
-	pop esi
 	mov eax, edi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -1510,11 +1396,9 @@ _strspn:
 	
 	align 16
 _strstr:
-	push edi
+	multipush edi, esi, ebx
 	or ecx, -1
 	xor eax, eax
-	push esi
-	push ebx
 	
 	mov edi, [esp + 20]
 	mov esi, [esp + 16]
@@ -1528,11 +1412,8 @@ _strstr:
 	cmp byte [esi], 0
 	je .return0
 	
-	push eax
 	lea edi, [esi + 1]
-	push ebx
-	push dword [esp + 28]
-	push esi
+	multipush eax, ebx, dword [esp + 28], esi
 	call _memcmp
 	add esp, 16
 	
@@ -1547,10 +1428,8 @@ _strstr:
 	xor esi, esi
 	
 .returnEsi:
-	pop ebx
 	mov eax, esi
-	pop esi
-	pop edi
+	multipop edi, esi, ebx
 	ret
 	
 	
@@ -1559,8 +1438,7 @@ _strstr:
 	
 	align 16
 _swab:
-	push esi
-	push ebx
+	multipush esi, ebx
 	
 	mov eax, [esp + 20]
 	mov ecx, [esp + 12]
@@ -1581,6 +1459,5 @@ _swab:
 	jne .loop
 	
 .return:
-	pop ebx
-	pop esi
+	multipop esi, ebx
 	ret

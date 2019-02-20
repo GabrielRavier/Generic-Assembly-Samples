@@ -1,3 +1,5 @@
+%include "macros.inc"
+
 global _fmin
 global _fmax
 global _ftrunc
