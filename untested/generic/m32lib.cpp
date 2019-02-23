@@ -19,6 +19,23 @@ inline size_t lstrlenA(const char *str)
     return strlen(str);
 }
 
+static const char *getSpacesEnd(const char *str)
+{
+	--str;
+	do
+	{
+		do
+			++str;
+		while ( *str == ' ' );
+	} while ( *str == '\t' );
+	return str;
+}
+
+inline char *getSpacesEnd(char *str)
+{
+	return const_cast<char *>(getSpacesEnd(static_cast<const char *>(str)));
+}
+
 int a2dw(const char *str)
 {
 	int result;
@@ -79,29 +96,6 @@ void **arr_add(void **arr, size_t cnt, size_t plus)
 	return result;
 }
 
-ssize_t arrcnt(void **arr)
-{
-	return (ssize_t)*arr;
-}
-
-void *arrget(void **arr, ssize_t indx)
-{
-	void *result;
-
-	if ( indx < 1 )
-		result = (void *)-1;
-	else if ( indx > (ssize_t)*arr )
-		result = (void *)-2;
-	else
-		result = arr[indx];
-	return result;
-}
-
-size_t arrlen(void **arr, size_t indx)
-{
-	return *((uintptr_t *)arr[indx] - 1);
-}
-
 void **arr_mul(void **arr, size_t cnt, int mult)
 {
 	void **result = &arr[cnt];
@@ -116,6 +110,29 @@ void **arr_sub(void **arr, size_t cnt, int sub)
 	for (size_t i = -1 * cnt; i * 4; ++i)
 		result[i] = (void *)((uintptr_t)result[i] - sub);
 	return result;
+}
+
+ssize_t arrcnt(void **arr)
+{
+	return (ssize_t)*arr;
+}
+
+void *arrget(void **arr, ssize_t index)
+{
+	void *result;
+
+	if ( index < 1 )
+		result = (void *)-1;
+	else if ( index > (ssize_t)*arr )
+		result = (void *)-2;
+	else
+		result = arr[index];
+	return result;
+}
+
+size_t arrlen(void **arr, size_t indx)
+{
+	return *((uintptr_t *)arr[indx] - 1);
 }
 
 char *arrtotal(void **arr, bool crlf)
@@ -318,6 +335,7 @@ size_t Cmpi(uint8_t *src,uint8_t *dst)
 void CombSortA(int32_t *arr, ssize_t arraySize)
 {
 	ssize_t arraySizeMin1  = arraySize - 1;
+	
 	size_t swaps;
 	do
 	{
@@ -376,18 +394,11 @@ void CombSortD(int32_t *arr, ssize_t arraySize)
 
 int8_t decomment(char *src)
 {
-	ssize_t i;	
-	ssize_t arrIter = -1;
+	ssize_t i;
 	
 	for (i = 0; ; i = arrIter )
 	{
-		do
-		{
-			do
-			{
-				++arrIter;
-			} while ( src[arrIter] == ' ' );
-		} while ( src[arrIter] == '\t' );
+		ssize_t arrIter = getSpacesEnd(src) - src;
 		
 		if ( !src[arrIter] )
 			return 0;
@@ -430,7 +441,7 @@ storeit:
 
 void dissort(const char **arr, ssize_t cnt)
 {
-	for ( ssize_t i = 1; i < cnt; ++i )
+	for (ssize_t i = 1; i < cnt; ++i)
 	{
 		const char *swapittySwapped = arr[i];
 		ssize_t j = i;
@@ -444,18 +455,18 @@ inner:
 		{
 			comparedThingo = arrayiThingo[++k];
 			
-			if ( comparedThingo > swapittySwapped[k] )
+			if (comparedThingo > swapittySwapped[k])
 				break;
 			
 			if ( comparedThingo < swapittySwapped[k] )
 			{
 				arr[j--] = arrayiThingo;
-				if ( j )
-				goto inner;
+				if (j)
+					goto inner;
 				break;
 			}
 			
-		} while ( comparedThingo );
+		} while (comparedThingo);
 		
 		arr[j] = swapittySwapped;
 	}
@@ -1042,13 +1053,18 @@ mainLoop:
 	return starat + afterFillerChars - src2 - fillerChars;
 }
 
-void RolData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
+static void RotateDataCore(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength, bool isRor)
 {
 	uint8_t *pcnt = key;
 	uint8_t bvar = *key;
 	do
 	{
-		uint8_t currentByte = __ROL1__(*src, bvar);
+		uint8_t currentByte;
+		if (isRor)
+			currentByte = __ROR1__(*src, bvar);
+		else
+			currentByte = __ROL1__(*src, bvar);
+		
 		uint8_t currentKeyByte = *++pcnt;
 		if ( pcnt == &key[keyLength] )
 		{
@@ -1061,23 +1077,14 @@ void RolData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 	} while ( srcLength );
 }
 
+void RolData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
+{
+	RotateDataCore(src, srcLength, key, keyLength, false);
+}
+
 void RorData(uint8_t *src, size_t srcLength, uint8_t *key, size_t keyLength)
 {
-	uint8_t *pcnt = key;
-	uint8_t bvar = *key;
-	do
-	{
-		uint8_t currentByte = __ROR1__(*src, bvar);
-		uint8_t currentKeyByte = *++pcnt;
-		if ( pcnt == &key[keyLength] )
-		{
-			pcnt = key;
-			currentKeyByte = *key;
-		}
-		bvar = currentKeyByte;
-		*src++ = currentByte;
-		--srcLength;
-	} while ( srcLength );
+	RotateDataCore(src, srcLength, key, keyLength, true);
 }
 
 ptrdiff_t SBMBinSearch(size_t startpos, char *src, ssize_t srcLength, const char *subStr, ssize_t subStrLength)
@@ -1280,22 +1287,16 @@ char *szLower(char *str)
 	char *string = str - 1;
 	while ( *++string )
 	{
-		if ( *string >= 'A' && *string <= 'Z' )
-			*string += 32;
+		if ( isupper(*string) )
+			*string = tolower(*string);
 	}
 	return str;
 }
 
-size_t szLtrim(char *src, char *dest)
+size_t szLtrim(const char *src, char *dest)
 {	
 	size_t i = 0;
-	--src;
-	do
-	{
-		do
-			++src;
-		while ( *src == ' ' );
-	} while ( *src == '\t' );
+	src = getSpacesEnd(src);
 	
 	size_t result;
 	if ( *src )
@@ -1328,24 +1329,17 @@ char *szMid(const char *src, char *dst, size_t stp, size_t length)
 
 char *szMonoSpace(char *src)
 {
-	char *sourceMin1 = src - 1;
 	char *source = src;
 	
 	int currentCharacter;
-	do
-	{
-		do
 ftrim:
-			currentCharacter = *++sourceMin1;
-		while ( currentCharacter == ' ' );
-	}
-	while ( currentCharacter == '\t' );
+	char *spacesEnd = getSpacesEnd(src); 
 	
-	--sourceMin1;
+	--spacesEnd;
 	
 	do
 	{
-		currentCharacter = *++sourceMin1;
+		currentCharacter = *++spacesEnd;
 		if ( currentCharacter == ' ' || currentCharacter == '\t' )
 		{
 			*source++ = ' ';
@@ -1458,10 +1452,8 @@ rpst:
 }
 
 char *szRev(const char *src, char *dest)
-{	
-	strcpy(dest, src);
-	
-	ssize_t i = strlen(dest);
+{
+	ssize_t i = stpcpy(dest, src);
 	char *destination = &dest[--i - 1];
 	i = -((size_t)i >> 1);
 	char *source = &dest[-i];
@@ -1484,13 +1476,7 @@ char *szRight(const char *src, char *dst, size_t len)
 
 size_t szRtrim(const char *src, char *dest)
 {
-	const char *source = src - 1;
-	do
-	{
-		do
-			++source;
-		while ( *source == ' ' );
-	} while ( *source == '\t' );
+	const char *source = getSpacesEnd(src);
 	
 	if ( *source )
 	{
@@ -1519,13 +1505,7 @@ size_t szRtrim(const char *src, char *dest)
 
 size_t szTrim(char *src)
 {
-	const char *source = src - 1;
-	do
-	{
-		do
-			++source;
-		while ( *source == ' ' );
-	} while ( *source == '\t' );
+	const char *source = getSpacesEnd(src);
 	
 	if ( *source )
 	{
@@ -1563,13 +1543,7 @@ char *szUpper(char *src)
 
 const char *tstline(const char *str)
 {
-	--str;
-	
-	do
-		do
-			++str;
-		while (*str == ' ');
-	while (*str == '\t');
+	str = getSpacesEnd(str);
 		
 	if (*str < 0x20)
 		return nullptr;
@@ -1645,4 +1619,4 @@ wchar_t *ucMultiCat(size_t paramCount, wchar_t *buffer, ...)
 	return buffer;
 }
 
-// atodw_ex, a2wc, AboutBox, AboutBoxProc, acisort, aissort, Alloc, GetAppPath, GetAppPathW, arralloc, arrbin, arrealloc, realloc_string_array, arrextnd, arrfile, arrfree, arrset, arrtrunc, arrtxt, extend_string_array, AsciiDump, StringTable, asqsort, assort, PowerOf10, StrToFloat, byte_count, BrowseForFolder, cbBrowse, bin2byte_ex, bin2he, BitmapFromFile, BitmapFromMemory, BitmapFromResource, create_array, BmpButton, BmpButnProc, bstsorta, bstsortd, ccsorta, ccsortd, circle, ArgCl, ArgClC, ClearScreen, CloseMMF, ColorDialog, CreateMMF, cstsorta, cstsortd, DisplayBmp, dcisort, DisplayIcon, dsqsort, dssort, dw2a, dw2hex, exist, existW, filesize, filesizeW, FontDialog, FloatToBCD, FloatToStr, FloatToBCD2, FloatToStr2, Frame3D, FrameGrp, FrameWindow, Free, FrameCtrl, GetClipboardText, GetCL, getcl_ex, GetErrDescription, UnKnown, GetFile, GetFileProc, ListProc, GetIP, GetIPProc, GetTextInput, GetTextProc, hex2bin, HexDump, hex_table, hexflip32, IPtoString, line, LoadList, locate, load_drives, ltoa, ltok, NameFromPathW, OpenFileDialog, PageSetupDialog, GetPathOnlyW, PrintDialog, nrQsortA, nrQsortD, qssorta, qssortd, read_disk_file, read_disk_fileW, readline, Read_File_In, ofCallback, Write_To_Disk, sfCallback, RetFontHandle, ret_key, RichEd1, RichEd2, run_synch_process_ex, run_synch_process, SaveFileDialog, SetBMcolor, SetClipboardText, shell, shell_ex, ssorta, ssortd, StdErr, StdErrW, StdIn, StdInW, StdOut, StdOutW, StrLen, szCatStr, szCmp, szWcnt, ucArgByNum, ucCmdTail, ucFind, ucGetCl, ucgetline, ucLower, ucLtrim either use complicated Win32 API functions or weird ASM shit, so they aren't portably implementable. Those after ucMid will be done later.
+// atodw_ex, a2wc, AboutBox, AboutBoxProc, acisort, aissort, Alloc, GetAppPath, GetAppPathW, arralloc, arrbin, arrealloc, realloc_string_array, arrextnd, arrfile, arrfree, arrset, arrtrunc, arrtxt, extend_string_array, AsciiDump, StringTable, asqsort, assort, PowerOf10, StrToFloat, byte_count, BrowseForFolder, cbBrowse, bin2byte_ex, bin2he, BitmapFromFile, BitmapFromMemory, BitmapFromResource, create_array, BmpButton, BmpButnProc, bstsorta, bstsortd, ccsorta, ccsortd, circle, ArgCl, ArgClC, ClearScreen, CloseMMF, ColorDialog, CreateMMF, cstsorta, cstsortd, DisplayBmp, dcisort, DisplayIcon, dsqsort, dssort, dw2a, dw2hex, exist, existW, filesize, filesizeW, FontDialog, FloatToBCD, FloatToStr, FloatToBCD2, FloatToStr2, Frame3D, FrameGrp, FrameWindow, Free, FrameCtrl, GetClipboardText, GetCL, getcl_ex, GetErrDescription, UnKnown, GetFile, GetFileProc, ListProc, GetIP, GetIPProc, GetTextInput, GetTextProc, hex2bin, HexDump, hex_table, hexflip32, IPtoString, line, LoadList, locate, load_drives, ltoa, ltok, NameFromPathW, OpenFileDialog, PageSetupDialog, GetPathOnlyW, PrintDialog, nrQsortA, nrQsortD, qssorta, qssortd, read_disk_file, read_disk_fileW, readline, Read_File_In, ofCallback, Write_To_Disk, sfCallback, RetFontHandle, ret_key, RichEd1, RichEd2, run_synch_process_ex, run_synch_process, SaveFileDialog, SetBMcolor, SetClipboardText, shell, shell_ex, ssorta, ssortd, StdErr, StdErrW, StdIn, StdInW, StdOut, StdOutW, StrLen, szCatStr, szCmp, szWcnt, ucArgByNum, ucCmdTail, ucFind, ucGetCl, ucgetline, ucLower, ucLtrim either use complicated Win32 API functions or weird ASM shit, so they aren't portably implementable. Those after ucMid mau be done later.

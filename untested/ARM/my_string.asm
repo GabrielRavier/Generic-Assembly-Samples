@@ -10,6 +10,7 @@
 	public _memcpy
 	public _memfrob
 	public _memmem
+	public _memmove
 	public _mempcpy
 	public _memrchr
 	public _memset

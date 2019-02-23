@@ -23,6 +23,7 @@ fasmarm isLeapYear.asm
 fasmarm isPowerOf2.asm
 fasmarm isPowerOf4.asm
 fasmarm lcmArray.asm
+fasmarm m32lib.asm
 fasmarm mostSignificantIndex.asm
 fasmarm mulDiv.asm
 fasmarm mulStuff.asm

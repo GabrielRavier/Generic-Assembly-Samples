@@ -1,5 +1,8 @@
 #include <cstdint>
 #include <cmath>
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 
 #ifndef M_PI
 	#define M_PI 3.14159265358979323846264338327950288
@@ -358,16 +361,6 @@ template<class T, class U> bool __CFADD__(T x, U y)
 #endif
 #endif
 
-// No definition for rcl/rcr because the carry flag is unknown
-#define __RCL__(x, y)    invalid_operation // Rotate left thru carry
-#define __RCR__(x, y)    invalid_operation // Rotate right thru carry
-#define __MKCRCL__(x, y) invalid_operation // Generate carry flag for a RCL
-#define __MKCRCR__(x, y) invalid_operation // Generate carry flag for a RCR
-#define __SETP__(x, y)   invalid_operation // Generate parity flag for (x-y)
-#define __int8 char
-#define __int16 short
-#define __int64 long long
-
 #ifndef _countof
 #if __cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900)
 template <typename T, size_t N> constexpr size_t _countof(T const (&)[N]) noexcept
@@ -394,27 +387,176 @@ template <typename T, size_t N> char (&COUNTOF_REQUIRES_ARRAY_ARGUMENT(T(&)[N]))
 typedef SSIZE_T ssize_t;	// For some demented reason MSVC doesn't have ssize_t
 #endif
 
-inline size_t bsf(uint32_t mask)
+#ifndef __GNUC__
+
+#ifdef _MSC_VER
+
+constexpr inline size_t __builtin_ctz(uint32_t mask)
+{
+	unsigned long index = 0;
+	
+	if (_BitScanForward(&index, mask))
+		return index;
+	else
+		return 32;
+}
+
+constexpr inline size_t __builtin_clz(uint32_t mask)
+{
+	unsigned long index = 0;
+	
+	if (_BitScanReverse(&index, mask)
+		return 31 - index;
+	else
+		return 32;
+}
+
+#else
+
+constexpr inline size_t __builtin_ctz(uint32_t mask)
+{
+	int32_t t = (!(mask & 0xFFFF)) << 4;	// If (mask has no small bits) t = 16 else 0
+	
+	mask >>= t;	// mask = [0 - 0xFFFF] + higher garbage bits
+	
+	uint32_t r = t;	// r = [0, 16]
+	
+	t = (!(mask & 0xFF)) << 3;
+	mask >>= t;	// mask = [0 - 0xFF] + higher garbage bits
+	r += t;	// r = [0, 8, 16, 24]
+	
+	t = (!(mask & 0xF)) << 2;
+	mask >>= t;	// mask = [0 - 0xF] + higher garbage bits
+	r += t;	// r = [0, 4, 8, 12, 16, 20, 24, 28]
+	
+	t = (!(mask & 3)) << 1;
+	mask >>= t;
+	mask &= 3;	// x = [0 - 3]
+	r += t;	// r = [0 - 30] and is even
+	
+	/* The return statement is equivalent to :
+		switch (mask)
+		{
+		case 0:
+			return r + 2;
+			
+		case 2:
+			return r + 1;
+			
+		case 1:
+		case 3:
+			return r;
+		}
+	*/
+	return r + ((2 - (mask >> 1)) & -(!(mask & 1)));
+}
+
+constexpr inline size_t __builtin_clz(uint32_t mask)
+{
+	int32_t t = (!(mask & 0xFFFF0000)) << 4;	// If (mask is 16-bit big or less) t = 16 else 0
+	
+	mask >>= 16 - t;	// mask = [0 - 0xFFFF]
+	
+	uint32_t r = t;	// r = [0, 16]
+	
+	t = (!(mask & 0xFF00)) << 3;
+	mask >>= 8 - t;	// mask = [0 - 0xFF]
+	r += t;	// r = [0, 8, 16, 24]
+	
+	t = (!(mask & 0xF0)) << 2;
+	mask >>= t;	// mask = [0 - 0xF]
+	r += t;	// r = [0, 4, 8, 12, 16, 20, 24, 28]
+	
+	t = (!(mask & 0xC)) << 1;
+	mask >>= 2 - t;	// x = [0 - 3]
+	r += t;	// r = [0 - 30] and is even
+	
+	/* The return statement is equivalent to :
+		switch (mask)
+		{
+		case 0:
+			return r + 2;
+			
+		case 2:
+			return r + 1;
+			
+		case 1:
+		case 3:
+			return r;
+		}
+	*/
+	return r + ((2 - mask) & -(!(mask & 2)));
+}
+
+#endif
+
+constexpr inline size_t __builtin_ctzll(uint64_t mask)
+{
+	union
+	{
+		uint64_t all;
+		struct
+		{
+			uint32_t low;
+			uint32_t high;
+		};
+	} x = {mask};
+	
+	x.all = mask;
+	const int32_t f = -(!x.low);
+	return __builtin_clz((x.high & f) | (x.low & ~f)) + (f & ((int32_t)(sizeof(int32_t) * CHAR_BIT)));
+}
+
+constexpr inline size_t __builtin_clzll(uint64_t mask)
+{
+	union
+	{
+		uint64_t all;
+		struct
+		{
+			uint32_t low;
+			uint32_t high;
+		};
+	} x = {mask};
+	
+	x.all = mask;
+	const int32_t f = -(!x.high);
+	return __builtin_clz((x.high & ~f) | (x.low & f)) + (f & ((int32_t)(sizeof(int32_t) * CHAR_BIT)));
+}
+
+#endif
+
+constexpr inline size_t bsf(uint32_t mask)
 {
 	return __builtin_ctz(mask);
 }
 
-inline size_t bsr(uint32_t mask)
+constexpr inline size_t bsr(uint32_t mask)
 {
 	return ((sizeof(uint32_t) * CHAR_BIT) - 1)  - __builtin_clz(mask);
 }
 
-inline size_t bitScanForward64(uint64_t mask)
+constexpr inline size_t bsf64(uint64_t mask)
 {
 	return __builtin_ctzll(mask);
 }
 
-inline size_t bitScanReverse64(uint64_t mask)
+constexpr inline size_t bsr64(uint64_t mask)
 {
-	return ((sizeof(uint64_t) * CHAR_BIT) - 1) - __builtin_ctzll(mask);
+	return ((sizeof(uint64_t) * CHAR_BIT) - 1) - __builtin_clzll(mask);
 }
 
-template <typename T> inline bool bitTest(T a, size_t b)
+constexpr template <typename T> inline bool bitTest(T a, size_t b)
 {
 	return (a >> b) & 1;
 }
+
+// No definition for rcl/rcr because the carry flag is unknown
+#define __RCL__(x, y)    invalid_operation // Rotate left thru carry
+#define __RCR__(x, y)    invalid_operation // Rotate right thru carry
+#define __MKCRCL__(x, y) invalid_operation // Generate carry flag for a RCL
+#define __MKCRCR__(x, y) invalid_operation // Generate carry flag for a RCR
+#define __SETP__(x, y)   invalid_operation // Generate parity flag for (x-y)
+#define __int8 char
+#define __int16 short
+#define __int64 long long

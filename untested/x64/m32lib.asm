@@ -53,6 +53,7 @@ global _SBMBinSearch
 global _StripRangeI
 global _StripLF
 global _StripRangeX
+global _szappend
 global _szCmp
 global _szCmpi
 global _szCopy
