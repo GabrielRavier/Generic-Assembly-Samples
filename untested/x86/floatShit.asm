@@ -517,9 +517,8 @@ _faddSSE:
 	
 	movss xmm0, [esp + 16]
 	addss xmm0, [esp + 20]
-	movss [esp], xmm0
-	
-	fld dword [esp]
+
+	retFloat esp, xmm0
 	add esp, 12
 	ret
 	
@@ -532,8 +531,7 @@ _faddAVX:
 	vmovss xmm0, [esp + 12]
 	vaddss xmm0, [esp + 8]
 	
-	vmovss [esp], xmm0
-	fld dword [esp]
+	retFloatAVX esp, xmm0
 	add esp, 4
 	ret
 	
@@ -561,8 +559,7 @@ _fchsSSE:
 	movss xmm0, [esp + 4]
 	xorps xmm0, [xmmDat2]
 	
-	movss [esp], xmm0
-	fld dword [esp]
+	retFloat esp, xmm0
 	pop eax
 	ret
 	
@@ -575,8 +572,7 @@ _fchsAVX:
 	vmovss xmm0, [esp + 4]
 	vxorps xmm0, [xmmDat2]
 	
-	vmovss [esp], xmm0
-	fld dword [esp]
+	retFloatAVX esp, xmm0
 	pop eax
 	ret
 	
@@ -634,8 +630,7 @@ _fdivSSE:
 	divss xmm0, xmm1
 	
 .return:
-	movss [esp], xmm0
-	fld dword [esp]
+	retFloat esp, xmm0
 	pop eax
 	ret
 	
@@ -653,8 +648,7 @@ _fdivAVX:
 	vdivss xmm0, xmm1
 	
 .return:
-	vmovss [esp], xmm0
-	fld dword [esp]
+	retFloatAVX esp, xmm0
 	add esp, 4
 	ret
 	
@@ -738,8 +732,8 @@ _fclampSSE:
 	movss xmm0, [esp + 8]
 	minss xmm0, [esp + 16]
 	maxss xmm0, [esp + 12]
-	movss [esp], xmm0
-	fld dword [esp]
+
+	retFloat esp, xmm0
 	pop eax
 	ret
 	
@@ -751,8 +745,8 @@ _fclampAVX:
 	vmovss xmm0, [esp + 8]
 	vminss xmm0, [esp + 16]
 	vmaxss xmm0, [esp + 12]
-	vmovss [esp], xmm0
-	fld dword [esp]
+
+	retFloatAVX esp, xmm0
 	pop eax
 	ret
 	
@@ -848,8 +842,8 @@ _fintersectSSE:
 	movaps xmm1, xmm0
 	subss xmm1, [esp + 12]
 	divss xmm0, xmm1
-	movss [esp], xmm0
-	fld dword [esp]
+
+	retFloat esp, xmm0
 	pop eax
 	ret
 	
@@ -861,8 +855,8 @@ _fintersectAVX:
 	vmovss xmm0, [esp + 8]
 	vsubss xmm1, xmm0, [esp + 12]
 	vdivss xmm0, xmm1
-	vmovss [esp], xmm0
-	fld dword [esp]
+
+	retFloatAVX esp, xmm0
 	pop eax
 	ret
 	
@@ -960,8 +954,8 @@ _fceil:
 _fceilSSE4:
 	sub esp, 4
 	roundss xmm0, [esp + 8], 10
-	movss [esp], xmm0
-	fld dword [esp]
+
+	retFloat esp, xmm0
 	add esp, 4
 	ret
 	
@@ -1042,8 +1036,8 @@ _ffloorSSE:
 	cmpnless xmm5, xmm3
 	andps xmm5, xmm4
 	subss xmm6, xmm5
-	movss [esp], xmm6
-	fld dword [esp]
+
+	retFloat esp, xmm6
 	add esp, 12
 	ret
 	
@@ -1053,8 +1047,8 @@ _ffloorSSE:
 _ffloorSSE4:
 	sub esp, 4
 	roundss xmm0, [esp + 8], 9
-	movss [esp], xmm0
-	fld dword [esp]
+
+	retFloat esp, xmm0
 	add esp, 4
 	ret
 	
@@ -1487,8 +1481,7 @@ _fcopysignSSE:
 	
 	orps xmm0, xmm1
 	
-	movss [esp], xmm0
-	fld dword [esp]
+	retFloat esp, xmm0
 	pop eax
 	ret
 	
@@ -1947,8 +1940,7 @@ _fhypotSSE:
 	xorps xmm4, xmm4
 	
 .return:
-	movss [esp], xmm4
-	fld dword [esp]
+	retFloat esp, xmm4
 	add esp, 12
 	ret
 	
@@ -1991,8 +1983,7 @@ _fhypotAVX:
 	vmulss xmm4, xmm0, xmm1
 	
 .retXmm4:
-	vmovss [esp], xmm4
-	fld dword [esp]
+	retFloatAVX esp, xmm4
 	pop eax
 	ret
 	
@@ -2032,7 +2023,6 @@ _fhypotFMA:
 	vmulss xmm4, xmm0, xmm1
 	
 .retXmm4:
-	vmovss [esp], xmm4
-	fld dword [esp]
+	retFloatAVX esp, xmm4
 	pop eax
 	ret

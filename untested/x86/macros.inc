@@ -44,4 +44,40 @@
 
 %endmacro
 
+; Extensive macro to return a float
+%macro makeRetFloatingPoint 4
+
+	%3 [%1], %2
+	fld %4 [%1]
+
+%endmacro
+
+; Return a float from xmmX through a memory location into st0
+%macro retFloat 2
+
+	makeRetFloatingPoint %1, %2, movss, dword
+
+%endmacro
+
+; Return a double from xmmX through a memory location into st0
+%macro retDouble 2
+
+	makeRetFloatingPoint %1, %2, movsd, qword
+
+%endmacro
+
+; Return a float from xmmX through a memory location into st0, in AVX
+%macro retFloatAVX 2
+
+	makeRetFloatingPoint %1, %2, vmovss, dword
+
+%endmacro
+
+; Return a double from xmmX through a memory location into st0, in AVX
+%macro retDoubleAVX 2
+
+	makeRetFloatingPoint %1, %2, vmovsd, qword
+
+%endmacro
+
 %endif

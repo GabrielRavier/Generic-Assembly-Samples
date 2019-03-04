@@ -260,8 +260,8 @@ _calcPiSSE2:
 	
 .returnSumByStep:
 	mulsd xmm0, xmm5
-	movsd [esp], xmm0
-	fld qword [esp]
+
+	retDouble esp, xmm0
 	add esp, 56
 	pop ebx
 	ret
@@ -359,8 +359,8 @@ _calcPiAVX:
 	
 .returnSumByStep:
 	vmulsd xmm0, xmm2
-	vmovsd [esp], xmm0
-	fld qword [esp]
+
+	retDoubleAVX esp, xmm0
 	vzeroupper
 	add esp, 12
 	ret

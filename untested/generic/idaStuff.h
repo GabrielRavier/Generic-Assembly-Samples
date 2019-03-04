@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cmath>
+#include <climits>
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
@@ -546,7 +547,7 @@ constexpr inline size_t bsr64(uint64_t mask)
 	return ((sizeof(uint64_t) * CHAR_BIT) - 1) - __builtin_clzll(mask);
 }
 
-constexpr template <typename T> inline bool bitTest(T a, size_t b)
+template <typename T> inline bool bitTest(T a, size_t b)
 {
 	return (a >> b) & 1;
 }
