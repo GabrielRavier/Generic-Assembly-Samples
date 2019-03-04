@@ -18,6 +18,10 @@ global _ror64
 
 segment .text align=16
 
+%macro makeAdd64 1
+
+	align 16
+%if %1 == 0
 _add64:
 	mov eax, [esp + 12]
 	mov edx, [esp + 16]
@@ -25,33 +29,32 @@ _add64:
 	add eax, [esp + 4]
 	adc edx, [esp + 8]
 	ret
-	
-	
-	
-	align 16
+%elif %1 == 1 || %1 == 2
+%if %1 == 1
 _add64SSE3:
-	movq xmm1, [esp + 4]
-	movq xmm0, [esp + 12]
-	
-	paddq xmm1, xmm0
-	
-	movd eax, xmm1
-	psrlq xmm1, 32
-	movd edx, xmm1
-	ret
-	
-	
-	
-	align 16
+%elif %1 == 2
 _add64SSE4:
-	movq xmm1, [esp + 4]
-	movq xmm0, [esp + 12]
+%endif
+	movq xmm0, [esp + 4]
+	movq xmm1, [esp + 12]
 	
 	paddq xmm0, xmm1
-	
 	movd eax, xmm0
-	pextrd edx, xmm0, 1
+
+%if %1 == 1
+	psrlq xmm1, 32
+	movd edx, xmm1
+%elif %1 == 2
+	pextrd edx, xmm1, 1
+%endif
 	ret
+%endif
+
+%endmacro
+
+	makeAdd64 0
+	makeAdd64 1
+	makeAdd64 2
 	
 	
 	
@@ -123,43 +126,39 @@ _sub64AVX:
 	
 	
 	
+%macro makeMul64 1
+
 	align 16
+%if %1 == 0
 _mul64:
-	push ebx
-	mov eax, [esp + 8]
-	mov edx, [esp + 16]
-	mov ecx, [esp + 12]
-	
-	imul ecx, edx
-	mov ebx, [esp + 20]
-	
-	imul ebx, eax
-	add ecx, ebx
-	mul edx
-	add edx, ecx
-	
-	pop ebx
-	ret
-	
-	
-	
-	align 16
+%elif %1 == 1
 _mul64BMI:
+%endif
+
 	push ebx
-	
 	mov eax, [esp + 8]
 	mov edx, [esp + 16]
 	mov ecx, [esp + 12]
 	mov ebx, [esp + 20]
-	
+
 	imul ecx, edx
 	imul ebx, eax
-	mulx edx, eax, eax
 	add ecx, ebx
-	
-	pop ebx
+
+%if %1 == 0
+	mul edx
+%elif %1 == 1
+	mulx edx, eax, eax
+%endif
+
 	add edx, ecx
+	pop ebx
 	ret
+
+%endmacro
+
+	makeMul64 0
+	makeMul64 1
 	
 	
 	
