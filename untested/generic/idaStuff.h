@@ -9,6 +9,9 @@
 	#define M_PI 3.14159265358979323846264338327950288
 #endif
 
+#define attrConst __attribute__((const));
+#define attrPure __attribute__((pure));
+
 #if defined(__GNUC__)
 	typedef          long long ll;
 	typedef unsigned long long ull;

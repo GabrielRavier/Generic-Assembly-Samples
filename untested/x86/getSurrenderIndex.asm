@@ -18,7 +18,7 @@ segment .rodata align=16
 	zeroDot8 dq 0.8
 
 	align 16
-	one dq 1
+	one dq 1.0
 
 	align 16
 	oneDot1 dq 1.1

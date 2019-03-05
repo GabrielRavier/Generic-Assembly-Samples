@@ -1,40 +1,40 @@
 #!/bin/bash
 
-nasm -Wall -f elf32 aes_random_stuff.asm
-nasm -Wall -f elf32 arith64.asm
-nasm -Wall -f elf32 array.asm
-nasm -Wall -f elf32 arrayBitManip.asm
-nasm -Wall -f elf32 avx512_random_stuff.asm
-nasm -Wall -f elf32 aw-wav.asm
-nasm -Wall -f elf32 bithacks.asm
-nasm -Wall -f elf32 bmi2Stuff.asm
-nasm -Wall -f elf32 bmiStuff.asm
-nasm -Wall -f elf32 bswap.asm
-nasm -Wall -f elf32 calcPi.asm
-nasm -Wall -f elf32 convert.asm
-nasm -Wall -f elf32 cute_alloc.asm
-nasm -Wall -f elf32 detab.asm
-nasm -Wall -f elf32 findFirstSet.asm
-nasm -Wall -f elf32 floatShit.asm
-nasm -Wall -f elf32 gcd_Lcm.asm
-nasm -Wall -f elf32 getSurrenderIndex.asm
-nasm -Wall -f elf32 intDiv.asm
-nasm -Wall -f elf32 intSqrt.asm
-nasm -Wall -f elf32 intToBase.asm
-nasm -Wall -f elf32 isLeapYear.asm
-nasm -Wall -f elf32 isPowerOf2.asm
-nasm -Wall -f elf32 isPowerOf4.asm
-nasm -Wall -f elf32 lcmArray.asm
-nasm -Wall -f elf32 m32lib.asm
-nasm -Wall -f elf32 mostSignificantBitIndex.asm
-nasm -Wall -f elf32 mulDiv.asm
-nasm -Wall -f elf32 mulStuff.asm
-nasm -Wall -f elf32 my_ia32intrin.asm
-nasm -Wall -f elf32 my_mm_malloc.asm
-nasm -Wall -f elf32 my_prfchwintrin.asm
-nasm -Wall -f elf32 my_string.asm
-nasm -Wall -f elf32 nextPowOf2.asm
-nasm -Wall -f elf32 oppositeSigns.asm
-nasm -Wall -f elf32 rand.asm
-nasm -Wall -f elf32 rotate.asm
-nasm -Wall -f elf32 sumTo.asm
+nasm -Wall -f elf32 aes_random_stuff.asm &
+nasm -Wall -f elf32 arith64.asm &
+nasm -Wall -f elf32 array.asm &
+nasm -Wall -f elf32 arrayBitManip.asm &
+nasm -Wall -f elf32 avx512_random_stuff.asm &
+nasm -Wall -f elf32 aw-wav.asm &
+nasm -Wall -f elf32 bithacks.asm &
+nasm -Wall -f elf32 bmi2Stuff.asm &
+nasm -Wall -f elf32 bmiStuff.asm &
+nasm -Wall -f elf32 bswap.asm &
+nasm -Wall -f elf32 calcPi.asm &
+nasm -Wall -f elf32 convert.asm &
+nasm -Wall -f elf32 cute_alloc.asm &
+nasm -Wall -f elf32 detab.asm &
+nasm -Wall -f elf32 findFirstSet.asm &
+nasm -Wall -f elf32 floatShit.asm &
+nasm -Wall -f elf32 gcd_Lcm.asm &
+nasm -Wall -f elf32 getSurrenderIndex.asm &
+nasm -Wall -f elf32 intDiv.asm &
+nasm -Wall -f elf32 intSqrt.asm &
+nasm -Wall -f elf32 intToBase.asm &
+nasm -Wall -f elf32 isLeapYear.asm &
+nasm -Wall -f elf32 isPowerOf2.asm &
+nasm -Wall -f elf32 isPowerOf4.asm &
+nasm -Wall -f elf32 lcmArray.asm &
+nasm -Wall -f elf32 m32lib.asm &
+nasm -Wall -f elf32 mostSignificantBitIndex.asm &
+nasm -Wall -f elf32 mulDiv.asm &
+nasm -Wall -f elf32 mulStuff.asm &
+nasm -Wall -f elf32 my_ia32intrin.asm &
+nasm -Wall -f elf32 my_mm_malloc.asm &
+nasm -Wall -f elf32 my_prfchwintrin.asm &
+nasm -Wall -f elf32 my_string.asm &
+nasm -Wall -f elf32 nextPowOf2.asm &
+nasm -Wall -f elf32 oppositeSigns.asm &
+nasm -Wall -f elf32 rand.asm &
+nasm -Wall -f elf32 rotate.asm &
+nasm -Wall -f elf32 sumTo.asm &
