@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include <cstdint>
+#include <climits>
 
 int64_t add64(int64_t a1, int64_t a2)
 {

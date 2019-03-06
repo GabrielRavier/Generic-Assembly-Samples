@@ -15,6 +15,7 @@ nasm -Wall -f elf32 convert.asm &
 nasm -Wall -f elf32 cute_alloc.asm &
 nasm -Wall -f elf32 detab.asm &
 nasm -Wall -f elf32 findFirstSet.asm &
+nasm -Wall -f elf32 file2wcs.asm &
 nasm -Wall -f elf32 floatShit.asm &
 nasm -Wall -f elf32 gcd_Lcm.asm &
 nasm -Wall -f elf32 getSurrenderIndex.asm &
